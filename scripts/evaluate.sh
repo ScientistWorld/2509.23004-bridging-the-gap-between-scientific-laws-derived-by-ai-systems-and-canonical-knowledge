@@ -26,7 +26,17 @@ cd /home/user
 
 mkdir -p scoring
 
+include_multi=0
+if [ "${1:-}" = "--include-multi" ]; then
+  include_multi=1
+  shift
+fi
+
 if [ "$#" -eq 0 ]; then
   set -- scoring/ai_noether_exact_outputs.json
 fi
-python eval/evaluate_exact.py --input "$@" --output scoring/scores.json
+if [ "$include_multi" -eq 1 ]; then
+  python eval/evaluate_exact.py --input "$@" --output scoring/scores.json --include-multi
+else
+  python eval/evaluate_exact.py --input "$@" --output scoring/scores.json
+fi

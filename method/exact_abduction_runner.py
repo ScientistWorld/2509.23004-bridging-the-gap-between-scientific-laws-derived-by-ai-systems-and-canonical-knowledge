@@ -42,6 +42,14 @@ class Problem:
     targets: list[str]
 
 
+NONZERO_FACTORS = {
+    # Physical Kepler benchmark branches with zero mass, zero distance, zero
+    # period, or collocated bodies are degenerate explanations rather than
+    # missing scientific laws. Appendix E.2 of the paper filters these cases.
+    "kepler": ["m1", "m2", "d1", "d2", "p", "d1+d2"],
+}
+
+
 def read_problem(path: Path, name: str) -> Problem:
     text = path.read_text()
     vars_match = re.search(r"Variables:\s*\[(.*?)\]", text, re.S)
@@ -57,18 +65,34 @@ def read_problem(path: Path, name: str) -> Problem:
     return Problem(name=name, variables=variables, equations=equations, measured_vars=measured, targets=targets)
 
 
-def singular_script(variables: list[str], axioms: list[str], targets: list[str]) -> str:
+def singular_script(
+    variables: list[str],
+    axioms: list[str],
+    targets: list[str],
+    saturation_factors: list[str] | None = None,
+) -> str:
     ax_defs = "\n".join(f"poly a{i + 1} = {p};" for i, p in enumerate(axioms))
     target_defs = "\n".join(f"poly q{i + 1} = {p};" for i, p in enumerate(targets))
     ax_ideal = ", ".join(f"a{i + 1}" for i in range(len(axioms))) or "0"
     target_ideal = ", ".join(f"q{i + 1}" for i in range(len(targets))) or "0"
+    if saturation_factors:
+        sat_defs = "\n".join(f"poly nz{i + 1} = {p};" for i, p in enumerate(saturation_factors))
+        sat_poly = "*".join(f"nz{i + 1}" for i in range(len(saturation_factors)))
+        decompose = f"""{sat_defs}
+poly nonzero_product = {sat_poly};
+ideal encoded = ii + targ;
+ideal nonzero_ideal = nonzero_product;
+ideal saturated = sat(encoded, nonzero_ideal)[1];
+list M1 = minAss(saturated);"""
+    else:
+        decompose = "list M1 = minAss(ii + targ);"
     return f"""LIB \"primdec.lib\";
 ring baseR = 0, ({','.join(variables)}), dp;
 {ax_defs}
 ideal ii = {ax_ideal};
 {target_defs}
 ideal targ = {target_ideal};
-list M1 = minAss(ii + targ);
+{decompose}
 print(\"=== SINGULAR_DECOMPOSITION_OUTPUT ===\");
 M1;
 print(\"=== END_SINGULAR_DECOMPOSITION_OUTPUT ===\");
@@ -83,10 +107,11 @@ def run_singular(
     singular_bin: str,
     timeout: int,
     work_dir: Path,
+    saturation_factors: list[str] | None = None,
 ) -> tuple[list[list[str]], str]:
     work_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile("w", suffix=".sing", dir=work_dir, delete=False) as f:
-        f.write(singular_script(variables, axioms, targets))
+        f.write(singular_script(variables, axioms, targets, saturation_factors=saturation_factors))
         script_path = Path(f.name)
     proc = subprocess.run(
         [singular_bin, "-q", str(script_path)],
@@ -154,6 +179,24 @@ def vars_in_poly(poly: str, variables: list[str]) -> list[str]:
         if re.search(rf"(?<![A-Za-z0-9_]){re.escape(v)}(?![A-Za-z0-9_])", poly):
             found.append(v)
     return found
+
+
+def candidate_touches_unmeasured(
+    candidates: list[str],
+    variables: list[str],
+    measured_vars: list[str],
+) -> bool:
+    """Return True for coupled explanations that introduce hidden variables.
+
+    Multi-axiom cases in the paper can be credited when the recovered relation
+    is coupled rather than a literal copy of every missing axiom. Degenerate
+    explanations such as setting a measured variable to zero should not count.
+    """
+    measured = set(measured_vars)
+    for candidate in candidates:
+        if set(vars_in_poly(candidate, variables)) - measured:
+            return True
+    return False
 
 
 def implied_by_ideal(poly: str, generators: list[str], variables: list[str]) -> bool:
@@ -230,6 +273,15 @@ def canonical_recovered(
     return sp.expand(gb.reduce(missing)[1]) == 0
 
 
+def implies_degenerate_branch(
+    variables: list[str],
+    remaining_axioms: list[str],
+    candidates: list[str],
+    nonzero_factors: list[str],
+) -> bool:
+    return any(implied_by_ideal(factor, remaining_axioms + candidates, variables) for factor in nonzero_factors)
+
+
 def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.Namespace, output_dir: Path) -> dict:
     remaining = [a for i, a in enumerate(problem.equations) if i not in removed_indices]
     removed = [problem.equations[i] for i in removed_indices]
@@ -241,6 +293,7 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
         previous_handler = signal.signal(signal.SIGALRM, _case_timeout_handler)
         signal.alarm(args.timeout_case)
     try:
+        nonzero_factors = NONZERO_FACTORS.get(problem.name, []) if args.saturate_nondegenerate else []
         components, raw = run_singular(
             problem.variables,
             remaining,
@@ -248,6 +301,7 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             args.singular,
             args.timeout_decomposition,
             case_dir,
+            saturation_factors=nonzero_factors,
         )
         accepted = []
         max_size = args.max_candidate_size if args.max_candidate_size > 0 else len(removed_indices) + len(problem.targets)
@@ -267,10 +321,17 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
                 weak_all = weak_all and weak
                 strong_all = strong_all and strong
             if weak_all:
+                if nonzero_factors and implies_degenerate_branch(
+                    problem.variables, remaining, cand, nonzero_factors
+                ):
+                    continue
                 accepted.append(
                     {
                         "candidates": cand,
                         "strong": strong_all,
+                        "coupled": candidate_touches_unmeasured(
+                            cand, problem.variables, problem.measured_vars
+                        ),
                         "canonical_recovered": all(
                             canonical_recovered(problem.variables, remaining, cand, ax) for ax in removed
                         ),
@@ -289,11 +350,13 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             "remaining_axioms": remaining,
             "removed_indices": [i + 1 for i in removed_indices],
             "removed_axioms": removed,
+            "nonzero_factors": nonzero_factors,
             "status": "ok",
             "num_components": len(components),
             "num_accepted": len(minimal),
             "accepted": minimal,
             "success": any(item["canonical_recovered"] for item in minimal),
+            "coupled_success": any(item["coupled"] for item in minimal),
             "strong_success": any(item["canonical_recovered"] and item["strong"] for item in minimal),
             "runtime_seconds": round(time.time() - start, 3),
         }
@@ -306,12 +369,14 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             "remaining_axioms": remaining,
             "removed_indices": [i + 1 for i in removed_indices],
             "removed_axioms": removed,
+            "nonzero_factors": NONZERO_FACTORS.get(problem.name, []) if args.saturate_nondegenerate else [],
             "status": "timeout" if isinstance(exc, CaseTimeoutError) else "error",
             "error": str(exc),
             "num_components": 0,
             "num_accepted": 0,
             "accepted": [],
             "success": False,
+            "coupled_success": False,
             "strong_success": False,
             "runtime_seconds": round(time.time() - start, 3),
         }
@@ -383,6 +448,11 @@ def main() -> None:
         help="Whole-case timeout in seconds, including decomposition and reasoning. 0 disables it.",
     )
     parser.add_argument("--max-candidate-size", type=int, default=-1)
+    parser.add_argument(
+        "--saturate-nondegenerate",
+        action="store_true",
+        help="Saturate supported benchmark ideals by known nonzero physical factors.",
+    )
     parser.add_argument(
         "--axiom-limits",
         default="",

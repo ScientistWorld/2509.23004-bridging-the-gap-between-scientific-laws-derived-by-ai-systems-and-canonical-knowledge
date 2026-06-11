@@ -13,5 +13,15 @@ set -e
 
 cd /home/user
 
-bash scripts/evaluate.sh scoring/ai_noether_exact_outputs.json
+python method/exact_abduction_runner.py \
+  --problems kepler \
+  --sizes 2,3 \
+  --saturate-nondegenerate \
+  --timeout-decomposition 120 \
+  --timeout-case 120 \
+  --output scoring/ai_noether_kepler_multi_outputs.json
+
+bash scripts/evaluate.sh --include-multi \
+  scoring/ai_noether_exact_outputs.json \
+  scoring/ai_noether_kepler_multi_outputs.json
 python validate.py --compare

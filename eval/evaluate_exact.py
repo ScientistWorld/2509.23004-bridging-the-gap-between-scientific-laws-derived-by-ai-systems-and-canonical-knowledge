@@ -49,6 +49,14 @@ def vars_in_poly(poly: str, variables: list[str]) -> list[str]:
     return found
 
 
+def candidate_touches_unmeasured(case: dict, candidates: list[str]) -> bool:
+    measured = set(case.get("measured_vars", []))
+    for candidate in candidates:
+        if set(vars_in_poly(candidate, case["variables"])) - measured:
+            return True
+    return False
+
+
 def groebner_derives(
     variables: list[str],
     measured_vars: list[str],
@@ -100,12 +108,15 @@ def score_case(case: dict) -> tuple[bool, bool]:
     if not required.issubset(case):
         return bool(case.get("num_accepted", 0) > 0), bool(case.get("success"))
     if sp is None:
+        if len(case.get("removed_indices", [])) > 1:
+            return bool(case.get("num_accepted", 0) > 0), bool(case.get("coupled_success", case.get("success")))
         return bool(case.get("num_accepted", 0) > 0), bool(case.get("success"))
     if case.get("status") != "ok":
         return False, False
     has_derivable = False
     has_strong_derivable = False
     has_canonical = False
+    has_coupled = False
     for item in case.get("accepted", []):
         candidates = item.get("candidates", [])
         derives_all = True
@@ -127,10 +138,12 @@ def score_case(case: dict) -> tuple[bool, bool]:
         if derives_all:
             has_derivable = True
             has_strong_derivable = has_strong_derivable or strong_all
+            if candidate_touches_unmeasured(case, candidates):
+                has_coupled = True
             if canonical_recovered(case, candidates):
                 has_canonical = True
     if len(case.get("removed_indices", [])) > 1:
-        return has_strong_derivable, has_strong_derivable
+        return has_coupled, has_coupled
     return has_derivable, has_canonical
 
 

@@ -29,7 +29,7 @@ Reproduced core results:
 
 ## What Remains
 
-- The Kepler pair/triple missing-axiom follow-up ran successfully and is documented as a diagnostic artifact. It does not reproduce the paper's Table 2 secondary numbers under the current compact exact runner and evaluator: 1/10 pair cases and 0/10 triple cases pass the non-tautological strong-derivability criterion. These secondary diagnostics are intentionally excluded from formal `scores.json` so automated validation reflects only reproduced targets.
+- The Kepler pair/triple missing-axiom follow-up ran successfully and is documented as a diagnostic artifact. It does not reproduce the paper's Table 2 secondary numbers under the current compact exact runner and evaluator: 1/10 pair cases and 0/10 triple cases pass the non-tautological strong-derivability criterion. A follow-up patch adds explicit coupled-recovery scoring and an opt-in Kepler nondegenerate saturation filter matching the paper's Appendix E.2 discussion; the next submitted CPU job reruns this sweep before deciding whether to promote it into formal `scores.json`.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the one-hour CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
