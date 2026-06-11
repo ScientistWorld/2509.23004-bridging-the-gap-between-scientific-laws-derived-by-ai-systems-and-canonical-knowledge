@@ -1,0 +1,28 @@
+{
+  "experiments": {
+    "exact_single_axiom_core": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 6,
+          "cases_total": 6,
+          "derivable_candidate_count": 6,
+          "derivable_candidate_rate": 1.0,
+          "success_count": 6,
+          "success_rate": 1.0
+        }
+      }
+    },
+    "simple_harmonic_single_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 6,
+          "cases_total": 6,
+          "derivable_candidate_count": 6,
+          "derivable_candidate_rate": 1.0,
+          "success_count": 6,
+          "success_rate": 1.0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+LIB "primdec.lib";
+ring baseR = 0, (S,ap,sintheta,dA,dtheta,r,P,qc,x0,w), dp;
+poly a1 = 100*dA - 628*dtheta*r^2*sintheta;
+poly a2 = P - S*dA;
+poly a3 = -3*dtheta*sintheta^3 + 4;
+poly a4 = 2*ap^2 - w^4*x0^2;
+ideal ii = a1, a2, a3, a4;
+poly q1 = 75*P - 314*qc^2*w^4*x0^2;
+ideal targ = q1;
+list M1 = minAss(ii + targ);
+print("=== SINGULAR_DECOMPOSITION_OUTPUT ===");
+M1;
+print("=== END_SINGULAR_DECOMPOSITION_OUTPUT ===");
+quit;

@@ -1,0 +1,14 @@
+LIB "primdec.lib";
+ring baseR = 0, (Eki,Ekf,Ugi,Ugf,G,M,m,ve,r), dp;
+poly a1 = Ekf;
+poly a2 = G*M*m + Ugi*r;
+poly a3 = Ugf;
+poly a4 = -Ekf + Eki - Ugf + Ugi;
+ideal ii = a1, a2, a3, a4;
+poly q1 = 2*G*M*m - m*r*ve^2;
+ideal targ = q1;
+list M1 = minAss(ii + targ);
+print("=== SINGULAR_DECOMPOSITION_OUTPUT ===");
+M1;
+print("=== END_SINGULAR_DECOMPOSITION_OUTPUT ===");
+quit;

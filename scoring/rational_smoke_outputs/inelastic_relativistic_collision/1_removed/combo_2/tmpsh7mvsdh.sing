@@ -1,0 +1,18 @@
+LIB "primdec.lib";
+ring baseR = 0, (mr,vm,vc,pc,Em,Er,Ec,mc,mm,pm,c), dp;
+poly a1 = -c^2*mm^2*vm^2 + c^2*pm^2 - pm^2*vm^2;
+poly a2 = Er - c^2*mr;
+poly a3 = Ec^2 - c^2*mc^2 - c^2*pc^2;
+poly a4 = -Ec^2 + Em^2 + 2*Em*Er + Er^2;
+poly a5 = pc - pm;
+poly a6 = -4*c + 5*vm;
+poly a7 = -mm + mr;
+poly a8 = -c^2*mc^2*vc^2 + c^2*pc^2 - pc^2*vc^2;
+ideal ii = a1, a2, a3, a4, a5, a6, a7, a8;
+poly q1 = 16*c^4*mm^2 - 9*c^2*pm^2;
+ideal targ = q1;
+list M1 = minAss(ii + targ);
+print("=== SINGULAR_DECOMPOSITION_OUTPUT ===");
+M1;
+print("=== END_SINGULAR_DECOMPOSITION_OUTPUT ===");
+quit;
