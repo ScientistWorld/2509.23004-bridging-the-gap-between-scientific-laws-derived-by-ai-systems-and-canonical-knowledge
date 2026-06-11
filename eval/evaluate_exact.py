@@ -55,7 +55,7 @@ def groebner_derives(
     remaining_axioms: list[str],
     candidates: list[str],
     target: str,
-) -> bool:
+) -> tuple[bool, bool]:
     symbols = symbol_table(variables)
     measured = [symbols[v] for v in measured_vars if v in symbols]
     non_measured = [symbols[v] for v in variables if v not in measured_vars]
@@ -63,13 +63,15 @@ def groebner_derives(
     polynomials = [sympify_poly(p, symbols) for p in remaining_axioms + candidates]
     target_expr = sympify_poly(target, symbols)
     if not polynomials or not measured:
-        return False
+        return False, False
     gb = sp.groebner(polynomials, *order, order="lex")
     elim = [g.as_expr() for g in gb.polys if set(g.as_expr().free_symbols).issubset(set(measured))]
     if not elim:
-        return False
+        return False, False
     gb_elim = sp.groebner(elim, *measured, order="lex")
-    return sp.expand(gb_elim.reduce(target_expr)[1]) == 0
+    weak = sp.expand(gb_elim.reduce(target_expr)[1]) == 0
+    strong = any(poly_equal_up_to_scalar(g, target_expr, measured) for g in elim)
+    return bool(weak), bool(strong)
 
 
 def canonical_recovered(case: dict, candidates: list[str]) -> bool:
@@ -102,26 +104,33 @@ def score_case(case: dict) -> tuple[bool, bool]:
     if case.get("status") != "ok":
         return False, False
     has_derivable = False
+    has_strong_derivable = False
     has_canonical = False
     for item in case.get("accepted", []):
         candidates = item.get("candidates", [])
         derives_all = True
+        strong_all = True
         for target in case["targets"]:
             target_vars = vars_in_poly(target, case["variables"])
             measured_subset = [v for v in case["measured_vars"] if v in target_vars]
-            if not groebner_derives(
+            weak, strong = groebner_derives(
                 case["variables"],
                 measured_subset,
                 case["remaining_axioms"],
                 candidates,
                 target,
-            ):
+            )
+            if not weak:
                 derives_all = False
                 break
+            strong_all = strong_all and strong
         if derives_all:
             has_derivable = True
+            has_strong_derivable = has_strong_derivable or strong_all
             if canonical_recovered(case, candidates):
                 has_canonical = True
+    if len(case.get("removed_indices", [])) > 1:
+        return has_strong_derivable, has_strong_derivable
     return has_derivable, has_canonical
 
 

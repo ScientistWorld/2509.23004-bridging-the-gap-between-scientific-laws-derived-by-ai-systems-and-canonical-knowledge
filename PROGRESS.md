@@ -28,7 +28,9 @@ Reproduced core results:
 
 ## What Remains
 
-- A CPU job is queued to run Kepler pair/triple missing-axiom cases and merge the result with the existing single-axiom score file.
+- A first CPU job ran Kepler pair/triple missing-axiom cases. It exposed a scoring/selection issue: target-equivalent decomposition generators were being accepted as candidate axioms, making `derivable_candidate_rate` meaningless for multi-axiom cases.
+- The runner now filters generators that are already implied by the remaining axioms plus target before candidate enumeration. The evaluator scores multi-axiom success by strong derivability of these non-tautological candidates, matching the paper's coupled-axiom recovery setting better than requiring each original missing axiom to be separately derivable.
+- A follow-up CPU job is queued to rerun Kepler pair/triple missing-axiom cases with the corrected filter and merge the result with existing single-axiom scores.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the one-hour CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Add additional pair/triple missing-axiom systems beyond Kepler if future compute budget allows.
@@ -42,6 +44,8 @@ A first broad all-paper sweep attempt was canceled after the Compton first-axiom
 The completed 75-case retry used a 120-second whole-case timeout to fit the scheduler's one-hour CPU job limit. Most systems complete quickly, but 9 Compton cases and 2 relativistic-law cases time out in the reasoning stage after decomposition. Two additional cases hit SymPy rational-coefficient handling errors. These are implementation limits of the compact reproduction, not changes to the paper's algorithm.
 
 The continuation audit found the method implementation to be a real exact AI-Noether encode/decompose/reason pipeline rather than a surrogate. It also found that the previous evaluator trusted success flags from method outputs. The evaluator now independently recomputes symbolic validity for new outputs that include variables, remaining axioms, targets, and accepted candidate polynomials.
+
+Job `9543f132-504` completed all 20 Kepler pair/triple cases in about one minute, but produced 0 canonical recoveries for both pair and triple settings. Inspection showed this was not a method crash; multi-axiom cases often recover coupled relations rather than individual canonical axioms. The job also revealed target-tautology candidates in the accepted sets, which have now been filtered.
 
 ## Deviations from Paper
 

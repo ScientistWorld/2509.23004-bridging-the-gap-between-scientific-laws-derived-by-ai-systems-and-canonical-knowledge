@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Run Kepler pair/triple exact missing-axiom recovery and merge it with existing single-axiom scores. This targets a secondary Table 2 claim using the same encode/decompose/reason algorithm."
+notes: "Rerun Kepler pair/triple exact missing-axiom recovery after filtering target-tautology candidates and scoring coupled multi-axiom recovery by strong derivability."

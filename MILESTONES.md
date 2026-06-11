@@ -14,5 +14,10 @@
 - Strengthened the evaluator so new outputs are symbolically rescored outside `method/`.
 - Prepared a CPU job for the Kepler pair/triple missing-axiom experiments from Table 2.
 
+### [2026-06-11 13:01] - core_claim_plus
+- Reviewed completed Kepler multi-axiom job `9543f132-504`.
+- Fixed target-tautology candidate selection by filtering generators already implied by remaining axioms plus targets.
+- Updated multi-axiom evaluation semantics to count strong coupled derivability rather than canonical recovery of every removed axiom.
+
 ## Stop Justification
-- Not stopped: submitting Kepler multi-axiom secondary experiment.
+- Not stopped: rerunning Kepler multi-axiom secondary experiment after filtering target-tautology candidates.

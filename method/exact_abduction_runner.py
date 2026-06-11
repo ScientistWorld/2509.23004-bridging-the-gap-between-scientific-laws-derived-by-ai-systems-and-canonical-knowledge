@@ -156,10 +156,30 @@ def vars_in_poly(poly: str, variables: list[str]) -> list[str]:
     return found
 
 
-def candidate_sets(components: list[list[str]], max_size: int) -> Iterable[list[str]]:
+def implied_by_ideal(poly: str, generators: list[str], variables: list[str]) -> bool:
+    if not generators:
+        return False
+    symbols = symbol_table(variables)
+    order = [symbols[v] for v in variables]
+    gb = sp.groebner([sympify_poly(p, symbols) for p in generators], *order, order="lex")
+    return sp.expand(gb.reduce(sympify_poly(poly, symbols))[1]) == 0
+
+
+def candidate_sets(
+    components: list[list[str]],
+    max_size: int,
+    variables: list[str],
+    remaining_axioms: list[str],
+    targets: list[str],
+) -> Iterable[list[str]]:
     seen: set[tuple[str, ...]] = set()
+    known_generators = remaining_axioms + targets
     for component in components:
-        usable = [g for g in component if g not in {"0", "1", "-1"}]
+        usable = [
+            g
+            for g in component
+            if g not in {"0", "1", "-1"} and not implied_by_ideal(g, known_generators, variables)
+        ]
         for size in range(1, min(max_size, len(usable)) + 1):
             for subset in itertools.combinations(usable, size):
                 key = tuple(sorted(subset))
@@ -231,7 +251,13 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
         )
         accepted = []
         max_size = args.max_candidate_size if args.max_candidate_size > 0 else len(removed_indices) + len(problem.targets)
-        for cand in candidate_sets(components, max_size=max_size):
+        for cand in candidate_sets(
+            components,
+            max_size=max_size,
+            variables=problem.variables,
+            remaining_axioms=remaining,
+            targets=problem.targets,
+        ):
             weak_all = True
             strong_all = True
             for target in problem.targets:
