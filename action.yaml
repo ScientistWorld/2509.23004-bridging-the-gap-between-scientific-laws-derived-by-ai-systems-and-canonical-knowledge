@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Run the paper-counted 75-case exact single-axiom sweep across all benchmark systems; expected to add exact_single_axiom_all_paper to scoring/scores.json."
+notes: "Retry the paper-counted 75-case exact single-axiom sweep with per-case progress logging, incremental outputs, and 120s whole-case timeouts."
