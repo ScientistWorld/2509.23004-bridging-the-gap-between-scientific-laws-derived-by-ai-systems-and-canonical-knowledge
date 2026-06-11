@@ -19,17 +19,17 @@ Reference paper targets recorded in `scoring/reference.json`:
 - Kepler pair missing axioms: 7/10.
 - Kepler triple missing axioms: 2/10.
 
-Reproduced results before the pending rerun:
+Reproduced results before the next rerun:
 
 - Simple harmonic oscillator single missing axiom: 6/6.
 - Kepler single missing axiom: 5/5.
 - Combined core subset: 11/11.
 - All paper-counted exact single missing axiom cases: 57/75 canonical recoveries, 62/75 cases with at least one derivable candidate, and 62/75 cases completed without error or timeout.
-- Kepler pair/triple missing axioms were run as a secondary sweep. Earlier strict canonical scoring produced poor values because Table 2 credits coupled explanations rather than only literal recovery of every removed axiom. A patched evaluator now separates weak derivability from coupled recovery, and the next CPU job will regenerate these scores.
+- Kepler pair/triple missing axioms were run as a secondary sweep. Earlier strict canonical scoring produced poor values because Table 2 credits coupled explanations rather than only literal recovery of every removed axiom. A patched evaluator now separates weak derivability from coupled recovery. Job `04eec4cc-06f` showed that ideal saturation by all nonzero physical factors was too aggressive for this compact Singular workflow and removed every accepted candidate; the next CPU job uses post-decomposition degeneracy filtering instead.
 
 ## What Remains
 
-- Rerun the Kepler pair/triple missing-axiom sweep with coupled-recovery scoring and opt-in Kepler nondegenerate saturation. This is the next submitted CPU job and will decide whether the Table 2 secondary claim can be promoted beyond partial reproduction.
+- Rerun the Kepler pair/triple missing-axiom sweep with coupled-recovery scoring and post-decomposition Kepler degeneracy filtering. This is the next submitted CPU job and will decide whether the Table 2 secondary claim can be promoted beyond partial reproduction.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the one-hour CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
@@ -48,6 +48,10 @@ The continuation audit found the method implementation to be a real exact AI-Noe
 Job `9543f132-504` completed all 20 Kepler pair/triple cases in about one minute, but produced 0 canonical recoveries for both pair and triple settings. Inspection showed this was not a method crash; multi-axiom cases often recover coupled relations rather than individual canonical axioms. The job also revealed target-tautology candidates in the accepted sets, which have now been filtered.
 
 Job `71a51b0b-a58` reran all 20 Kepler pair/triple cases after the non-tautology filter and completed successfully. The evaluator merged the new multi-axiom output with the existing single-axiom sweep and validated the score file. The resulting secondary scores are below the paper's Table 2: 1/10 Kepler pair cases and 0/10 Kepler triple cases under the current strong coupled-derivability scoring.
+
+Job `04eec4cc-06f` completed with exit code 0 and validated the combined score file, but the Kepler pair/triple sweep used ideal saturation by the nonzero physical factors before primary decomposition. That removed all 20 Kepler multi-axiom candidate sets. This is not a method crash, but it is too restrictive compared with the intended nondegenerate-branch filtering. The runner now separates algebraic saturation from post-decomposition filtering, and the checked-in scripts use the latter for Kepler multi-axiom reruns.
+
+The no-abduction baseline initially enumerated all 77 parsed single-axiom removals, including two Hall axioms outside the paper-counted 75-case table used by the method run. The baseline script now applies the same `hall=7` cap as the method run so all-paper baseline and method scores are comparable.
 
 ## Deviations from Paper
 

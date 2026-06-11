@@ -12,4 +12,5 @@
 - [x] Audit inherited implementation and evaluation integrity.
 - [x] Add independent symbolic recomputation path to evaluator for new outputs.
 - [x] Run Kepler pair/triple missing-axiom secondary experiment.
-- [ ] Rerun Kepler pair/triple with coupled-recovery scoring and nondegenerate saturation.
+- [x] Test Kepler pair/triple with coupled-recovery scoring and nondegenerate saturation.
+- [ ] Rerun Kepler pair/triple with post-decomposition degeneracy filtering.

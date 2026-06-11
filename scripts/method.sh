@@ -34,7 +34,7 @@ python method/exact_abduction_runner.py \
 python method/exact_abduction_runner.py \
   --problems kepler \
   --sizes 2,3 \
-  --saturate-nondegenerate \
+  --filter-degenerate \
   --timeout-decomposition 120 \
   --timeout-case 120 \
   --output scoring/ai_noether_kepler_multi_outputs.json

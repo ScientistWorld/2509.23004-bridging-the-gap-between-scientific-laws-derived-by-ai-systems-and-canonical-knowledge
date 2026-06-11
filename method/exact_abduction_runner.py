@@ -293,7 +293,12 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
         previous_handler = signal.signal(signal.SIGALRM, _case_timeout_handler)
         signal.alarm(args.timeout_case)
     try:
-        nonzero_factors = NONZERO_FACTORS.get(problem.name, []) if args.saturate_nondegenerate else []
+        nonzero_factors = (
+            NONZERO_FACTORS.get(problem.name, [])
+            if args.saturate_nondegenerate or args.filter_degenerate
+            else []
+        )
+        saturation_factors = nonzero_factors if args.saturate_nondegenerate else []
         components, raw = run_singular(
             problem.variables,
             remaining,
@@ -301,7 +306,7 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             args.singular,
             args.timeout_decomposition,
             case_dir,
-            saturation_factors=nonzero_factors,
+            saturation_factors=saturation_factors,
         )
         accepted = []
         max_size = args.max_candidate_size if args.max_candidate_size > 0 else len(removed_indices) + len(problem.targets)
@@ -369,7 +374,11 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             "remaining_axioms": remaining,
             "removed_indices": [i + 1 for i in removed_indices],
             "removed_axioms": removed,
-            "nonzero_factors": NONZERO_FACTORS.get(problem.name, []) if args.saturate_nondegenerate else [],
+            "nonzero_factors": (
+                NONZERO_FACTORS.get(problem.name, [])
+                if args.saturate_nondegenerate or args.filter_degenerate
+                else []
+            ),
             "status": "timeout" if isinstance(exc, CaseTimeoutError) else "error",
             "error": str(exc),
             "num_components": 0,
@@ -452,6 +461,11 @@ def main() -> None:
         "--saturate-nondegenerate",
         action="store_true",
         help="Saturate supported benchmark ideals by known nonzero physical factors.",
+    )
+    parser.add_argument(
+        "--filter-degenerate",
+        action="store_true",
+        help="Filter candidate explanations that imply known zero-factor physical degeneracies.",
     )
     parser.add_argument(
         "--axiom-limits",

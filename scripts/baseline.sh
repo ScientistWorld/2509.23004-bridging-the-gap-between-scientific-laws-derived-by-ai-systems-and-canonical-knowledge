@@ -37,6 +37,7 @@ systems = [
     "time_dilation",
     "compton",
 ]
+axiom_limits = {"hall": 7}
 system_dir = Path("method/AI-Noether/systems_and_phenomena")
 cases = []
 for problem in systems:
@@ -45,7 +46,8 @@ for problem in systems:
     if not eqs_match:
         raise RuntimeError(f"Could not parse equations for {problem}")
     equations = [ln.strip() for ln in eqs_match.group(1).splitlines() if ln.strip()]
-    for index in range(1, len(equations) + 1):
+    removal_count = min(len(equations), axiom_limits.get(problem, len(equations)))
+    for index in range(1, removal_count + 1):
         cases.append(
             {
                 "problem": problem,
