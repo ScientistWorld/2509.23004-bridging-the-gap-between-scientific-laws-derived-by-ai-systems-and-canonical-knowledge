@@ -5,4 +5,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Validated core AI-Noether reproduction and expanded to the 75-case single-axiom sweep. Kepler multi-axiom secondary sweep ran and is recorded as partial, so stopping honestly at core_claim_plus."
+notes: "Validation fixed and passing. Formal scores cover reproduced single-axiom experiments; Kepler multi-axiom sweep remains documented as a diagnostic partial result, so stopping at core_claim_plus."

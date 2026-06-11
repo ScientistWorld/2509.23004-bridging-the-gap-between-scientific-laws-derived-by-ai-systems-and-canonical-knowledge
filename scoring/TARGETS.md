@@ -32,14 +32,6 @@ Primary target: recover all 5 single missing axioms in the Kepler system.
 
 Constraint targets: maintain `derivable_candidate_rate` and complete all 5 cases.
 
-## kepler_pair_axiom
+## Diagnostic Not Currently Scored
 
-Primary target: recover the 7 of 10 two-missing-axiom Kepler cases reported in Table 2.
-
-Constraint targets: maintain `derivable_candidate_rate` and complete all 10 cases.
-
-## kepler_triple_axiom
-
-Primary target: recover the 2 of 10 three-missing-axiom Kepler cases reported in Table 2.
-
-Constraint targets: maintain `derivable_candidate_rate` and complete all 10 cases.
+The Kepler pair/triple missing-axiom Table 2 sweep has been run and documented in `PROGRESS.md`, but it is not a formal scoring target in this gym because the compact reproduction does not yet match the paper's reported multi-axiom results. Future agents can opt into diagnostic scoring with `python eval/evaluate_exact.py --include-multi ...` after improving the coupled-relation selection procedure enough for the results to be numerically consistent with the paper.

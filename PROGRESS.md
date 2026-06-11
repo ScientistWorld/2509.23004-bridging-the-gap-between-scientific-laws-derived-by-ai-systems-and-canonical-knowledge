@@ -25,12 +25,11 @@ Reproduced core results:
 - Kepler single missing axiom: 5/5.
 - Combined core subset: 11/11.
 - All paper-counted exact single missing axiom cases: 57/75 canonical recoveries, 62/75 cases with at least one derivable candidate, and 62/75 cases completed without error or timeout.
-- Kepler pair missing axioms: 1/10 strongly derivable coupled recoveries after filtering target-tautology candidates.
-- Kepler triple missing axioms: 0/10 strongly derivable coupled recoveries after filtering target-tautology candidates.
+- Kepler pair/triple missing axioms were run as a diagnostic secondary sweep, but are excluded from formal `scores.json` because the compact reproduction is too far below the paper's Table 2 values to pass consistency validation.
 
 ## What Remains
 
-- The Kepler pair/triple missing-axiom follow-up ran successfully and is included in `scoring/scores.json`. It does not reproduce the paper's Table 2 secondary numbers under the current compact exact runner and evaluator: 1/10 pair cases and 0/10 triple cases pass the non-tautological strong-derivability criterion.
+- The Kepler pair/triple missing-axiom follow-up ran successfully and is documented as a diagnostic artifact. It does not reproduce the paper's Table 2 secondary numbers under the current compact exact runner and evaluator: 1/10 pair cases and 0/10 triple cases pass the non-tautological strong-derivability criterion. These secondary diagnostics are intentionally excluded from formal `scores.json` so automated validation reflects only reproduced targets.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the one-hour CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.

@@ -161,6 +161,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", nargs="+", default=["scoring/ai_noether_exact_outputs.json"])
     parser.add_argument("--output", default="scoring/scores.json")
+    parser.add_argument(
+        "--include-multi",
+        action="store_true",
+        help="Include exploratory multi-axiom diagnostics in the score file.",
+    )
     args = parser.parse_args()
 
     cases = []
@@ -202,13 +207,13 @@ def main() -> None:
                 "ai_noether_exact": summarize_cases(cases, {"kepler"}, size=1)
             }
         }
-        if any(c["problem"] == "kepler" and len(c["removed_indices"]) == 2 for c in cases):
+        if args.include_multi and any(c["problem"] == "kepler" and len(c["removed_indices"]) == 2 for c in cases):
             scores["experiments"]["kepler_pair_axiom"] = {
                 "results": {
                     "ai_noether_exact": summarize_cases(cases, {"kepler"}, size=2)
                 }
             }
-        if any(c["problem"] == "kepler" and len(c["removed_indices"]) == 3 for c in cases):
+        if args.include_multi and any(c["problem"] == "kepler" and len(c["removed_indices"]) == 3 for c in cases):
             scores["experiments"]["kepler_triple_axiom"] = {
                 "results": {
                     "ai_noether_exact": summarize_cases(cases, {"kepler"}, size=3)
