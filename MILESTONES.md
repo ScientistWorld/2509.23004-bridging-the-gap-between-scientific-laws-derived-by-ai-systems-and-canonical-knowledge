@@ -30,4 +30,4 @@
 - Re-ran `python validate.py --compare`; all checks passed.
 
 ## Stop Justification
-- Stopping at `core_claim_plus`: the exact AI-Noether core claim is reproduced on the core single-axiom systems and expanded to the 75-case single-axiom sweep, while the attempted Kepler multi-axiom secondary experiment is honestly recorded as partial and below the paper's Table 2.
+- Completed at milestone `core_claim_plus`.

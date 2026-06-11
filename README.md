@@ -2,7 +2,7 @@
 
 The paper introduces AI-Noether, a symbolic system for repairing incomplete scientific theories. Given polynomial background axioms and a target relation that the incomplete theory cannot derive, AI-Noether uses algebraic geometry to propose missing axioms whose addition makes the target derivable.
 
-This workspace reproduces the exact symbolic core claim on single-missing-axiom benchmark cases from the simple harmonic oscillator and Kepler systems. The environment includes the official benchmark definitions, a runner for the paper's encode-decompose-reason algorithm, reusable evaluation scripts, and scoring targets for future agents.
+This workspace reproduces the exact symbolic core claim on single-missing-axiom benchmark cases from the simple harmonic oscillator and Kepler systems. It also defines broader exact single-axiom and Kepler multi-axiom scoring targets. The environment includes the official benchmark definitions, a runner for the paper's encode-decompose-reason algorithm, reusable evaluation scripts, and scoring targets for future agents.
 
 ---
 
@@ -56,6 +56,8 @@ The reproduced experiments are:
 - `exact_single_axiom_all_paper`: all 75 single-axiom cases reported in the paper's Appendix D.1 / Table 6.
 - `simple_harmonic_single_axiom`: 6 single-axiom cases for the simple harmonic oscillator.
 - `kepler_single_axiom`: 5 single-axiom cases for Kepler.
+- `kepler_pair_axiom`: 10 two-missing-axiom cases for Kepler from Table 2.
+- `kepler_triple_axiom`: 10 three-missing-axiom cases for Kepler from Table 2.
 
 The paper reports 6/6 and 5/5 success for these two single-axiom systems, so the core reference target is 11/11. A no-abduction baseline that returns no candidates scores 0/11 and is included to validate that the evaluator is measuring recovered explanations rather than simply counting completed cases.
 
@@ -94,12 +96,42 @@ The paper reports 6/6 and 5/5 success for these two single-axiom systems, so the
 
 </details>
 
+### Iteration 2: gpt-5.5
+- **Milestone**: `core_claim_plus` | **Status**: done
+- **Working time**: 8m | **GPU**: 0.0h
+- **Jobs**: 5 total (4 completed, 0 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-06-11 12:49] - core_claim_plus
+- Validated the exact AI-Noether symbolic abduction environment with `python validate.py --compare`.
+- Reproduced the core exact single-axiom claim on simple harmonic oscillator and Kepler: 11/11 recoveries.
+- Expanded beyond the minimum to the paper-counted 75 exact single-axiom cases: 57/75 canonical recoveries and 62/75 derivable-candidate cases under the compact timeout.
+
+### [2026-06-11 12:54] - core_claim_plus
+- Audited the inherited workspace and confirmed the implementation follows the paper's exact encode, primary-decompose, and reason algorithm.
+- Strengthened the evaluator so new outputs are symbolically rescored outside `method/`.
+- Prepared a CPU job for the Kepler pair/triple missing-axiom experiments from Table 2.
+
+### [2026-06-11 13:01] - core_claim_plus
+- Reviewed completed Kepler multi-axiom job `9543f132-504`.
+- Fixed target-tautology candidate selection by filtering generators already implied by remaining axioms plus targets.
+- Updated multi-axiom evaluation semantics to count strong coupled derivability rather than canonical recovery of every removed axiom.
+
+### [2026-06-11 13:02] - core_claim_plus
+- Reviewed completed Kepler multi-axiom rerun `71a51b0b-a58`.
+- The rerun completed all 20 Kepler pair/triple cases and `python validate.py --compare` passed.
+- Secondary Kepler Table 2 reproduction remains partial: 1/10 pair cases and 0/10 triple cases under the non-tautological strong-derivability criterion, so the milestone stays at `core_claim_plus`.
+
+</details>
+
 
 ---
 
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 ## Stop Justification
-- Completed at milestone `core_claim`.
+- Completed at milestone `core_claim_plus`.
