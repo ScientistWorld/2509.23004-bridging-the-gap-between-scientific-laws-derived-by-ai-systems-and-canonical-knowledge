@@ -10,5 +10,7 @@ The reproduced experiments are:
 - `exact_single_axiom_all_paper`: all 75 single-axiom cases reported in the paper's Appendix D.1 / Table 6.
 - `simple_harmonic_single_axiom`: 6 single-axiom cases for the simple harmonic oscillator.
 - `kepler_single_axiom`: 5 single-axiom cases for Kepler.
+- `kepler_pair_axiom`: 10 two-missing-axiom cases for Kepler from Table 2.
+- `kepler_triple_axiom`: 10 three-missing-axiom cases for Kepler from Table 2.
 
 The paper reports 6/6 and 5/5 success for these two single-axiom systems, so the core reference target is 11/11. A no-abduction baseline that returns no candidates scores 0/11 and is included to validate that the evaluator is measuring recovered explanations rather than simply counting completed cases.

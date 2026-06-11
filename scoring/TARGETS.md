@@ -31,3 +31,15 @@ Constraint targets: maintain `derivable_candidate_rate` and complete all 6 cases
 Primary target: recover all 5 single missing axioms in the Kepler system.
 
 Constraint targets: maintain `derivable_candidate_rate` and complete all 5 cases.
+
+## kepler_pair_axiom
+
+Primary target: recover the 7 of 10 two-missing-axiom Kepler cases reported in Table 2.
+
+Constraint targets: maintain `derivable_candidate_rate` and complete all 10 cases.
+
+## kepler_triple_axiom
+
+Primary target: recover the 2 of 10 three-missing-axiom Kepler cases reported in Table 2.
+
+Constraint targets: maintain `derivable_candidate_rate` and complete all 10 cases.

@@ -31,4 +31,14 @@ python method/exact_abduction_runner.py \
   --timeout-case 120 \
   --output scoring/ai_noether_exact_outputs.json
 
-bash scripts/evaluate.sh scoring/ai_noether_exact_outputs.json
+python method/exact_abduction_runner.py \
+  --problems kepler \
+  --sizes 2,3 \
+  --max-candidate-size 3 \
+  --timeout-decomposition 900 \
+  --timeout-case 900 \
+  --output scoring/ai_noether_kepler_multi_outputs.json
+
+bash scripts/evaluate.sh \
+  scoring/ai_noether_exact_outputs.json \
+  scoring/ai_noether_kepler_multi_outputs.json

@@ -257,6 +257,10 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
                 minimal.append(item)
         return {
             "problem": problem.name,
+            "variables": problem.variables,
+            "measured_vars": problem.measured_vars,
+            "targets": problem.targets,
+            "remaining_axioms": remaining,
             "removed_indices": [i + 1 for i in removed_indices],
             "removed_axioms": removed,
             "status": "ok",
@@ -270,6 +274,10 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
     except Exception as exc:  # noqa: BLE001 - record failed case for evaluation
         return {
             "problem": problem.name,
+            "variables": problem.variables,
+            "measured_vars": problem.measured_vars,
+            "targets": problem.targets,
+            "remaining_axioms": remaining,
             "removed_indices": [i + 1 for i in removed_indices],
             "removed_axioms": removed,
             "status": "timeout" if isinstance(exc, CaseTimeoutError) else "error",

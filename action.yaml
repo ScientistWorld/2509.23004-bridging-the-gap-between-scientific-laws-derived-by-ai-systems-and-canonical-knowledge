@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
+action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Exact AI-Noether reproduction is packaged and validated. Core subset matches the paper at 11/11, with an additional 75-case exact single-axiom sweep scored at 57/75 canonical recoveries and 62/75 derivable candidates."
+notes: "Run Kepler pair/triple exact missing-axiom recovery and merge it with existing single-axiom scores. This targets a secondary Table 2 claim using the same encode/decompose/reason algorithm."

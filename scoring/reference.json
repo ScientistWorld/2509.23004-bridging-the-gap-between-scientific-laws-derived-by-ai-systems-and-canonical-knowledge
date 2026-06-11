@@ -2,7 +2,7 @@
   "experiments": {
     "exact_single_axiom_all_paper": {
       "description": "Exact data-free single-axiom recovery across the 75 cases reported in Appendix D.1 / Table 6.",
-      "weight": 0.5,
+      "weight": 0.35,
       "primary_metric": "success_rate",
       "metrics": {
         "cases_total": {"higher_is_better": true, "coefficient": 0.0},
@@ -35,7 +35,7 @@
     },
     "exact_single_axiom_core": {
       "description": "Exact data-free single-axiom recovery on the core symbolic benchmark subset used in this reproduction.",
-      "weight": 0.3,
+      "weight": 0.25,
       "primary_metric": "success_rate",
       "metrics": {
         "cases_total": {"higher_is_better": true, "coefficient": 0.0},
@@ -111,6 +111,54 @@
           "success_rate": 1.0,
           "derivable_candidate_count": 5,
           "derivable_candidate_rate": 1.0
+        }
+      }
+    },
+    "kepler_pair_axiom": {
+      "description": "Kepler two-missing-axiom recovery reported in Table 2 as 7/10.",
+      "weight": 0.12,
+      "primary_metric": "success_rate",
+      "metrics": {
+        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
+        "success_count": {"higher_is_better": true, "coefficient": 0.0},
+        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
+        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
+        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
+        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+      },
+      "results": {
+        "ai_noether_exact": {
+          "type": "proposed",
+          "cases_total": 10,
+          "cases_completed": 10,
+          "success_count": 7,
+          "success_rate": 0.7,
+          "derivable_candidate_count": 7,
+          "derivable_candidate_rate": 0.7
+        }
+      }
+    },
+    "kepler_triple_axiom": {
+      "description": "Kepler three-missing-axiom recovery reported in Table 2 as 2/10.",
+      "weight": 0.08,
+      "primary_metric": "success_rate",
+      "metrics": {
+        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
+        "success_count": {"higher_is_better": true, "coefficient": 0.0},
+        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
+        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
+        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
+        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+      },
+      "results": {
+        "ai_noether_exact": {
+          "type": "proposed",
+          "cases_total": 10,
+          "cases_completed": 10,
+          "success_count": 2,
+          "success_rate": 0.2,
+          "derivable_candidate_count": 2,
+          "derivable_candidate_rate": 0.2
         }
       }
     }

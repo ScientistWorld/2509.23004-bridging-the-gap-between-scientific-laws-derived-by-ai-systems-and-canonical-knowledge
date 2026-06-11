@@ -26,5 +26,7 @@ cd /home/user
 
 mkdir -p scoring
 
-INPUT="${1:-scoring/ai_noether_exact_outputs.json}"
-python eval/evaluate_exact.py --input "$INPUT" --output scoring/scores.json
+if [ "$#" -eq 0 ]; then
+  set -- scoring/ai_noether_exact_outputs.json
+fi
+python eval/evaluate_exact.py --input "$@" --output scoring/scores.json
