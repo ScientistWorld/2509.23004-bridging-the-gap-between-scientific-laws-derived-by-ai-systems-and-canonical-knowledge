@@ -1,0 +1,753 @@
+{
+  "algorithm": "encode_primary_decompose_reason",
+  "cases": [
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "j"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "omega^2*L-g"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "L"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "sintheta"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        }
+      ],
+      "num_accepted": 5,
+      "num_components": 5,
+      "problem": "simple_harmonic_oscillator",
+      "removed_axioms": [
+        "ad-g*sintheta"
+      ],
+      "removed_indices": [
+        1
+      ],
+      "runtime_seconds": 0.381,
+      "status": "ok",
+      "strong_success": false,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "sintheta*L-d"
+          ],
+          "canonical_recovered": true,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "d*g-ad*L"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "2*omega*L*Pi-T*g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "omega^2*L-g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T^2*g-4*L*Pi^2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "Tj"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "j"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 10,
+      "num_components": 6,
+      "problem": "simple_harmonic_oscillator",
+      "removed_axioms": [
+        "d-L*theta"
+      ],
+      "removed_indices": [
+        2
+      ],
+      "runtime_seconds": 0.293,
+      "status": "ok",
+      "strong_success": true,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "j"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "L"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T*omega-2*Pi"
+          ],
+          "canonical_recovered": true,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "T*omega+2*Pi"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "sintheta"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 5,
+      "num_components": 5,
+      "problem": "simple_harmonic_oscillator",
+      "removed_axioms": [
+        "T*omega-2*Pi"
+      ],
+      "removed_indices": [
+        3
+      ],
+      "runtime_seconds": 0.223,
+      "status": "ok",
+      "strong_success": true,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "d"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "sintheta"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "theta"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "L"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "Tj"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "j"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "2*omega*L*Pi-T*g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "2*omega*d*Pi-ad*T"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "omega^2*L-g"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T^2*g-4*L*Pi^2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "omega^2*d-ad"
+          ],
+          "canonical_recovered": true,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "ad*T^2-4*d*Pi^2"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        }
+      ],
+      "num_accepted": 13,
+      "num_components": 5,
+      "problem": "simple_harmonic_oscillator",
+      "removed_axioms": [
+        "d*omega^2-ad"
+      ],
+      "removed_indices": [
+        4
+      ],
+      "runtime_seconds": 0.242,
+      "status": "ok",
+      "strong_success": true,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "T*j+Tj"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "T*j-Tj"
+          ],
+          "canonical_recovered": true,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "L"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "omega"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "sintheta"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 6,
+      "num_components": 5,
+      "problem": "simple_harmonic_oscillator",
+      "removed_axioms": [
+        "Tj-j*T"
+      ],
+      "removed_indices": [
+        5
+      ],
+      "runtime_seconds": 0.244,
+      "status": "ok",
+      "strong_success": true,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "theta-sintheta"
+          ],
+          "canonical_recovered": true,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "sintheta*L-d"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "d*g-ad*L"
+          ],
+          "canonical_recovered": false,
+          "strong": true
+        },
+        {
+          "candidates": [
+            "2*omega*L*Pi-T*g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "omega^2*L-g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T^2*g-4*L*Pi^2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "theta"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "L"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "g"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "Tj"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "T"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "j"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 13,
+      "num_components": 8,
+      "problem": "simple_harmonic_oscillator",
+      "removed_axioms": [
+        "sintheta - theta"
+      ],
+      "removed_indices": [
+        6
+      ],
+      "runtime_seconds": 0.407,
+      "status": "ok",
+      "strong_success": true,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "m1*d1-m2*d2"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 2,
+      "num_components": 5,
+      "problem": "kepler",
+      "removed_axioms": [
+        "m1*d1-m2*d2"
+      ],
+      "removed_indices": [
+        1
+      ],
+      "runtime_seconds": 0.271,
+      "status": "ok",
+      "strong_success": false,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "Fg*d1^2+2*Fg*d1*d2+Fg*d2^2-m1*m2"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m1"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m2"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        }
+      ],
+      "num_accepted": 4,
+      "num_components": 4,
+      "problem": "kepler",
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2"
+      ],
+      "removed_indices": [
+        2
+      ],
+      "runtime_seconds": 0.231,
+      "status": "ok",
+      "strong_success": false,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "w*m2*d2-Fg*p"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m1"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1+d2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 6,
+      "num_components": 7,
+      "problem": "kepler",
+      "removed_axioms": [
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_indices": [
+        3
+      ],
+      "runtime_seconds": 0.395,
+      "status": "ok",
+      "strong_success": false,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "Fc-Fg"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "w*m2*d2-Fg*p"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m1"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1+d2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 7,
+      "num_components": 7,
+      "problem": "kepler",
+      "removed_axioms": [
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        4
+      ],
+      "runtime_seconds": 0.356,
+      "status": "ok",
+      "strong_success": false,
+      "success": true
+    },
+    {
+      "accepted": [
+        {
+          "candidates": [
+            "w*p-1"
+          ],
+          "canonical_recovered": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "w*p+1"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d2"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "m1"
+          ],
+          "canonical_recovered": false,
+          "strong": false
+        }
+      ],
+      "num_accepted": 8,
+      "num_components": 5,
+      "problem": "kepler",
+      "removed_axioms": [
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        5
+      ],
+      "runtime_seconds": 0.434,
+      "status": "ok",
+      "strong_success": false,
+      "success": true
+    }
+  ],
+  "method": "ai_noether_exact",
+  "problems": [
+    "simple_harmonic_oscillator",
+    "kepler"
+  ],
+  "sizes": [
+    1
+  ]
+}
