@@ -10,5 +10,11 @@ set -e
 
 cd /home/user
 
-# TODO: run the paper's method
-# TODO: call scripts/evaluate.sh to score
+python method/exact_abduction_runner.py \
+  --problems simple_harmonic_oscillator kepler \
+  --sizes 1 \
+  --max-candidate-size 1 \
+  --timeout-decomposition 900 \
+  --output scoring/ai_noether_exact_outputs.json
+
+bash scripts/evaluate.sh scoring/ai_noether_exact_outputs.json

@@ -2,36 +2,31 @@
 
 ## What Works
 
-<!-- What has been successfully reproduced so far. -->
+The workspace now contains a runnable exact symbolic reproduction path for AI-Noether's single-missing-axiom benchmark setting. The implementation wraps the official benchmark systems and executes the paper's encode, primary-decompose, and reason workflow for the simple harmonic oscillator and Kepler systems.
 
-## Results
+The evaluator is independent from `method/` and scores saved method outputs only. A no-abduction baseline is available for evaluator sanity checks.
 
-<!-- Reproduced numbers compared to the paper's reported numbers. -->
+## Results Achieved
 
-## Remaining
+No compute-node results have been recorded yet in this iteration. The next submitted job will run the core exact single-axiom reproduction and write `scoring/scores.json`.
 
-<!-- What still needs to be done to reach higher milestones. -->
+Reference paper targets recorded in `scoring/reference.json`:
 
-## Issues
+- Simple harmonic oscillator single missing axiom: 6/6.
+- Kepler single missing axiom: 5/5.
+- Combined core subset: 11/11.
 
-<!-- Blockers, bugs, or difficulties encountered. -->
+## What Remains
+
+- Run the CPU smoke job in the target container.
+- Inspect `scoring/scores.json` and compare against `reference.json`.
+- If the exact core succeeds, update the milestone to `core_claim`.
+- If time remains, add additional systems or pair/triple missing-axiom cases.
+
+## Issues Encountered
+
+The official repository contains broader noisy and theorem-prover workflows, but the initial reproduction focuses on the exact symbolic branch because it directly supports the paper's main data-free abductive inference claim and can run without external datasets.
 
 ## Deviations from Paper
 
-<!-- Do not edit this section unless you deviated from the paper's original setup.
-     For each deviation, document: what the paper used, what you substituted, and why.
-
-     ACCEPTABLE deviations (data/resource/scale substitutions — milestones still valid):
-       - Replaced a proprietary dataset with a public one
-       - Used a smaller model of the same architecture
-       - Scaled down training (fewer epochs, smaller batch)
-       - Used a different library for the same algorithm
-
-     UNACCEPTABLE deviations (algorithm substitutions — milestones above 'none' are void):
-       - Replaced the paper's algorithm with a fundamentally different one
-       - Wrote a generic model trained to approximate the method's outputs
-         instead of implementing the method's computational steps
-
-     The test: could someone reading your code identify which algorithm from
-     the paper you implemented? If not, you replaced the method. -->
-
+This first job scales the experiment to two exact single-axiom benchmark systems rather than all reported systems. The algorithmic procedure is preserved: polynomial encoding, primary decomposition, candidate extraction, and symbolic derivability verification.

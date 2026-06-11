@@ -1,17 +1,16 @@
 # Problem Definition
 
-What problem does this paper address? Write this so that someone with no knowledge of the paper can understand what needs to be solved and how success is measured.
+The benchmark is polynomial abductive inference for scientific theories. Each instance provides:
 
-Do NOT describe the paper's method or solution here — only the problem itself. Think about if a future scientist agent try to solve this problem from scratch without knowing what approach the paper took. If you leak the solution, you compromise the benchmark.
+- a finite set of background polynomial equations treated as known axioms,
+- one or more polynomial target hypotheses, and
+- a deliberately incomplete axiom set produced by removing one or more required axioms.
 
-## Research Question
+The task is to propose additional polynomial equations which, when added to the incomplete axiom set, make the target hypothesis algebraically derivable. A candidate succeeds only if it is not merely numerically correlated with the target but actually closes the logical gap between the incomplete theory and the target relation.
 
-<!-- What problem or challenge does this paper tackle? What gap in existing work does it address? -->
+The core setting reproduced here is exact symbolic recovery with one missing axiom on two benchmark physical systems:
 
-## Why It Matters
+- simple harmonic oscillator, with 6 single-axiom removal cases;
+- Kepler/orbital dynamics, with 5 single-axiom removal cases.
 
-<!-- Why is this problem important? What would a good solution enable? Make it short -->
-
-## Success Criteria
-
-<!-- What would a successful solution look like? What properties should it have? This is about the goal, not the paper's specific approach. Make it short -->
+Inputs and outputs are symbolic polynomial strings, not sampled data. Evaluation must be independent of any particular implementation: a future method may use a different search strategy as long as it writes the same output format for recovered candidates.

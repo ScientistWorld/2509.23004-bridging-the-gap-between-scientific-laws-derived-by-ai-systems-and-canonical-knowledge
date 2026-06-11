@@ -1,15 +1,13 @@
-# Evaluation
+# Evaluation Protocol
 
-How success is measured. Describe only the metrics, targets, and evaluation procedure — do NOT describe the paper's method or how they achieved these results. Think of this as a general evaluation protocal for other scientists trying to solve the same problem, where they should not see this paper's solution.
+Evaluation reads method artifacts from `scoring/ai_noether_exact_outputs.json` or a compatible JSON file. It does not import from `method/` and does not rerun candidate generation.
 
-## Metrics
+Each case is scored by whether the method produced at least one candidate axiom set that passes symbolic derivability checks for the target. The main metric is `success_rate`, the fraction of benchmark cases solved. The stricter companion metric, `strong_success_rate`, counts cases where the recovered candidate also reproduces the removed canonical axiom up to the equivalence check implemented by the method artifact. `cases_completed` records how many cases ran to normal completion rather than timing out or failing.
 
-<!-- What metrics are used? How are they computed? What does higher/lower mean? -->
+The reproduced experiments are:
 
-## Baselines and Targets
+- `exact_single_axiom_core`: all 11 single-axiom cases from simple harmonic oscillator and Kepler.
+- `simple_harmonic_single_axiom`: 6 single-axiom cases for the simple harmonic oscillator.
+- `kepler_single_axiom`: 5 single-axiom cases for Kepler.
 
-<!-- What performance levels exist as reference points? Include the paper's reported numbers as targets, and any standard baselines. A scientist agent should know what "good" looks like. -->
-
-## Evaluation Protocol
-
-<!-- How should evaluation be run? What data split, what conditions? Any important details about how to compare fairly (e.g., fixed seeds, specific test sets, averaging over runs). -->
+The paper reports 6/6 and 5/5 success for these two single-axiom systems, so the core reference target is 11/11. A no-abduction baseline that returns no candidates scores 0/11 and is included to validate that the evaluator is measuring recovered explanations rather than simply counting completed cases.
