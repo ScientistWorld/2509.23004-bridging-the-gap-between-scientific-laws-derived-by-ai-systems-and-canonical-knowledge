@@ -1,0 +1,853 @@
+{
+  "method": "no_abduction_baseline",
+  "algorithm": "remaining_axioms_only",
+  "cases": [
+    {
+      "problem": "decay",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "decay",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "decay",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "decay",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "decay",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "escape_velocity",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "escape_velocity",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "escape_velocity",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "escape_velocity",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "escape_velocity",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hagen",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hagen",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hagen",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hagen",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        6
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        7
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        8
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "hall",
+      "removed_indices": [
+        9
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        6
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        7
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        8
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "inelastic_relativistic_collision",
+      "removed_indices": [
+        9
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "kepler",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "kepler",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "kepler",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "kepler",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "kepler",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "light",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "light",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "light",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "light",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "light",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        6
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "photoHall",
+      "removed_indices": [
+        7
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        6
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "relativistic_laws",
+      "removed_indices": [
+        7
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "removed_indices": [
+        6
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "time_dilation",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "time_dilation",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "time_dilation",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "time_dilation",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "time_dilation",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        1
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        2
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        3
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        4
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        5
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        6
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        7
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        8
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        9
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    },
+    {
+      "problem": "compton",
+      "removed_indices": [
+        10
+      ],
+      "status": "ok",
+      "num_accepted": 0,
+      "success": false,
+      "strong_success": false,
+      "runtime_seconds": 0.0
+    }
+  ]
+}
