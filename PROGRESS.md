@@ -25,14 +25,15 @@ Reproduced core results:
 - Kepler single missing axiom: 5/5.
 - Combined core subset: 11/11.
 - All paper-counted exact single missing axiom cases: 57/75 canonical recoveries, 62/75 cases with at least one derivable candidate, and 62/75 cases completed without error or timeout.
+- Kepler pair missing axioms: 1/10 strongly derivable coupled recoveries after filtering target-tautology candidates.
+- Kepler triple missing axioms: 0/10 strongly derivable coupled recoveries after filtering target-tautology candidates.
 
 ## What Remains
 
-- A first CPU job ran Kepler pair/triple missing-axiom cases. It exposed a scoring/selection issue: target-equivalent decomposition generators were being accepted as candidate axioms, making `derivable_candidate_rate` meaningless for multi-axiom cases.
-- The runner now filters generators that are already implied by the remaining axioms plus target before candidate enumeration. The evaluator scores multi-axiom success by strong derivability of these non-tautological candidates, matching the paper's coupled-axiom recovery setting better than requiring each original missing axiom to be separately derivable.
-- A follow-up CPU job is queued to rerun Kepler pair/triple missing-axiom cases with the corrected filter and merge the result with existing single-axiom scores.
+- The Kepler pair/triple missing-axiom follow-up ran successfully and is included in `scoring/scores.json`. It does not reproduce the paper's Table 2 secondary numbers under the current compact exact runner and evaluator: 1/10 pair cases and 0/10 triple cases pass the non-tautological strong-derivability criterion.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the one-hour CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
+- Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
 - Add additional pair/triple missing-axiom systems beyond Kepler if future compute budget allows.
 
 ## Issues Encountered
@@ -47,8 +48,10 @@ The continuation audit found the method implementation to be a real exact AI-Noe
 
 Job `9543f132-504` completed all 20 Kepler pair/triple cases in about one minute, but produced 0 canonical recoveries for both pair and triple settings. Inspection showed this was not a method crash; multi-axiom cases often recover coupled relations rather than individual canonical axioms. The job also revealed target-tautology candidates in the accepted sets, which have now been filtered.
 
+Job `71a51b0b-a58` reran all 20 Kepler pair/triple cases after the non-tautology filter and completed successfully. The evaluator merged the new multi-axiom output with the existing single-axiom sweep and validated the score file. The resulting secondary scores are below the paper's Table 2: 1/10 Kepler pair cases and 0/10 Kepler triple cases under the current strong coupled-derivability scoring.
+
 ## Deviations from Paper
 
 The first completed job scaled the experiment to two exact single-axiom benchmark systems rather than all reported systems. The later completed job expands to the paper-counted 75 single-axiom cases, using the same algorithmic procedure: polynomial encoding, primary decomposition, candidate extraction, and symbolic derivability verification. The compact reproduction imposes a per-case timeout so the reusable environment finishes reliably under the available CPU wall-time limit.
 
-The next job adds the Kepler pair/triple exact missing-axiom setting from Table 2. It preserves the same procedure and scales only the number of removed axioms and candidate-set size.
+The Kepler pair/triple exact missing-axiom setting from Table 2 was run with the same encode, decompose, enumerate, and verify procedure, scaling only the number of removed axioms and candidate-set size. The compact reproduction does not yet include the full projection-selection heuristics needed to match the paper's multi-axiom table, so these secondary results are recorded as partial rather than milestone-raising.

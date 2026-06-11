@@ -19,5 +19,10 @@
 - Fixed target-tautology candidate selection by filtering generators already implied by remaining axioms plus targets.
 - Updated multi-axiom evaluation semantics to count strong coupled derivability rather than canonical recovery of every removed axiom.
 
+### [2026-06-11 13:02] - core_claim_plus
+- Reviewed completed Kepler multi-axiom rerun `71a51b0b-a58`.
+- The rerun completed all 20 Kepler pair/triple cases and `python validate.py --compare` passed.
+- Secondary Kepler Table 2 reproduction remains partial: 1/10 pair cases and 0/10 triple cases under the non-tautological strong-derivability criterion, so the milestone stays at `core_claim_plus`.
+
 ## Stop Justification
-- Not stopped: rerunning Kepler multi-axiom secondary experiment after filtering target-tautology candidates.
+- Stopping at `core_claim_plus`: the exact AI-Noether core claim is reproduced on the core single-axiom systems and expanded to the 75-case single-axiom sweep, while the attempted Kepler multi-axiom secondary experiment is honestly recorded as partial and below the paper's Table 2.

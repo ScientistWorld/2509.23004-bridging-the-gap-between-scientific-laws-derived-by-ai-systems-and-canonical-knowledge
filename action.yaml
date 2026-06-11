@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Rerun Kepler pair/triple exact missing-axiom recovery after filtering target-tautology candidates and scoring coupled multi-axiom recovery by strong derivability."
+notes: "Validated core AI-Noether reproduction and expanded to the 75-case single-axiom sweep. Kepler multi-axiom secondary sweep ran and is recorded as partial, so stopping honestly at core_claim_plus."
