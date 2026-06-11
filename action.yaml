@@ -29,6 +29,6 @@
 
 action: submit
 gpus: 0
-test: true
-milestone: none
-notes: "CPU smoke test for exact AI-Noether single-axiom recovery on simple_harmonic_oscillator and kepler; expected to write scoring/scores.json."
+test: false
+milestone: core_claim
+notes: "Run the paper-counted 75-case exact single-axiom sweep across all benchmark systems; expected to add exact_single_axiom_all_paper to scoring/scores.json."
