@@ -14,6 +14,7 @@ import itertools
 import json
 import os
 import re
+import signal
 import subprocess
 import tempfile
 import time
@@ -22,6 +23,14 @@ from pathlib import Path
 from typing import Iterable
 
 import sympy as sp
+
+
+class CaseTimeoutError(TimeoutError):
+    """Raised when a whole abduction case exceeds the configured time budget."""
+
+
+def _case_timeout_handler(signum, frame):  # noqa: ANN001 - signal handler signature is fixed
+    raise CaseTimeoutError("case timeout")
 
 
 @dataclass
@@ -207,6 +216,10 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
     case_name = "combo_" + "_".join(str(i + 1) for i in removed_indices)
     case_dir = output_dir / problem.name / f"{len(removed_indices)}_removed" / case_name
     start = time.time()
+    previous_handler = None
+    if args.timeout_case > 0:
+        previous_handler = signal.signal(signal.SIGALRM, _case_timeout_handler)
+        signal.alarm(args.timeout_case)
     try:
         components, raw = run_singular(
             problem.variables,
@@ -259,7 +272,7 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             "problem": problem.name,
             "removed_indices": [i + 1 for i in removed_indices],
             "removed_axioms": removed,
-            "status": "error",
+            "status": "timeout" if isinstance(exc, CaseTimeoutError) else "error",
             "error": str(exc),
             "num_components": 0,
             "num_accepted": 0,
@@ -268,6 +281,10 @@ def run_case(problem: Problem, removed_indices: tuple[int, ...], args: argparse.
             "strong_success": False,
             "runtime_seconds": round(time.time() - start, 3),
         }
+    finally:
+        if args.timeout_case > 0:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, previous_handler)
 
 
 def parse_sizes(spec: str) -> list[int]:
@@ -297,6 +314,27 @@ def parse_axiom_limits(spec: str) -> dict[str, int]:
     return limits
 
 
+def write_payload(
+    output_path: Path,
+    args: argparse.Namespace,
+    sizes: list[int],
+    axiom_limits: dict[str, int],
+    results: list[dict],
+) -> None:
+    payload = {
+        "method": "ai_noether_exact",
+        "algorithm": "encode_primary_decompose_reason",
+        "problems": args.problems,
+        "sizes": sizes,
+        "axiom_limits": axiom_limits,
+        "cases": results,
+    }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = output_path.with_suffix(output_path.suffix + ".tmp")
+    tmp_path.write_text(json.dumps(payload, indent=2, sort_keys=True))
+    tmp_path.replace(output_path)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--systems-dir", default="method/AI-Noether/systems_and_phenomena")
@@ -304,6 +342,12 @@ def main() -> None:
     parser.add_argument("--sizes", default="1")
     parser.add_argument("--singular", default=os.environ.get("SINGULAR_BIN", "Singular"))
     parser.add_argument("--timeout-decomposition", type=int, default=900)
+    parser.add_argument(
+        "--timeout-case",
+        type=int,
+        default=0,
+        help="Whole-case timeout in seconds, including decomposition and reasoning. 0 disables it.",
+    )
     parser.add_argument("--max-candidate-size", type=int, default=-1)
     parser.add_argument(
         "--axiom-limits",
@@ -319,22 +363,27 @@ def main() -> None:
     sizes = parse_sizes(args.sizes)
     axiom_limits = parse_axiom_limits(args.axiom_limits)
     results = []
+    scheduled = []
     for name in args.problems:
         problem = read_problem(systems_dir / name / "system.txt", name)
         removal_count = min(len(problem.equations), axiom_limits.get(name, len(problem.equations)))
         for size in sizes:
             for combo in itertools.combinations(range(removal_count), size):
-                results.append(run_case(problem, combo, args, run_dir))
-    payload = {
-        "method": "ai_noether_exact",
-        "algorithm": "encode_primary_decompose_reason",
-        "problems": args.problems,
-        "sizes": sizes,
-        "axiom_limits": axiom_limits,
-        "cases": results,
-    }
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(payload, indent=2, sort_keys=True))
+                scheduled.append((problem, combo))
+
+    for idx, (problem, combo) in enumerate(scheduled, start=1):
+        removed = ",".join(str(i + 1) for i in combo)
+        print(f"[{idx}/{len(scheduled)}] {problem.name}: removing axiom(s) {removed}", flush=True)
+        case = run_case(problem, combo, args, run_dir)
+        results.append(case)
+        print(
+            f"[{idx}/{len(scheduled)}] {problem.name}: status={case['status']} "
+            f"success={case['success']} accepted={case['num_accepted']} "
+            f"runtime={case['runtime_seconds']}s",
+            flush=True,
+        )
+        write_payload(output_path, args, sizes, axiom_limits, results)
+
     print(f"Wrote {output_path} with {len(results)} cases")
 
 

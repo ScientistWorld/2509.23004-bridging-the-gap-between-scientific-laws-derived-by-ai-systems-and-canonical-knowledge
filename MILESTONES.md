@@ -14,3 +14,8 @@
 - Compute-node CPU smoke job completed successfully.
 - Reproduced the core exact single-axiom claim on simple harmonic oscillator and Kepler: 11/11 canonical missing axioms recovered, with all 11 cases completed.
 - Prepared a broader 75-case paper-counted single-axiom sweep for the next job.
+
+### [2026-06-11 12:20] - core_claim
+- Canceled the first broad 75-case sweep because it stalled silently in the initial Compton case and did not produce a completed score file.
+- Added per-case progress logs, incremental output writes, and a whole-case timeout so expensive cases cannot block all results.
+- Prepared a retry that runs Compton last while keeping the same exact encode-decompose-reason method.

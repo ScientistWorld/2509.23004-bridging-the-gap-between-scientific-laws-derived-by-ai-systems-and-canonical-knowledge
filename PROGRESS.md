@@ -24,12 +24,14 @@ Reproduced core results:
 
 ## What Remains
 
-- Run the 75-case all-paper exact single-axiom sweep across the checked-in official benchmark tree.
+- Retry the 75-case all-paper exact single-axiom sweep across the checked-in official benchmark tree with per-case timeouts and incremental result writes.
 - If time remains, add pair/triple missing-axiom cases.
 
 ## Issues Encountered
 
 The official repository contains broader noisy and theorem-prover workflows, but the initial reproduction focuses on the exact symbolic branch because it directly supports the paper's main data-free abductive inference claim and can run without external datasets.
+
+A first broad all-paper sweep attempt was canceled after the Compton first-axiom case produced no method-level progress output and no final JSON. The runner now logs every case, writes `scoring/ai_noether_exact_outputs.json` incrementally after each completed case, and enforces a whole-case timeout in addition to the Singular decomposition timeout. The retry also schedules Compton last so other paper systems can finish first.
 
 ## Deviations from Paper
 

@@ -70,6 +70,8 @@ trajectory/
 .empty_*/
 outputs/
 logs/
+jobs/
+scoring/ai_noether_exact_outputs/
 .venv/
 venv/
 env/

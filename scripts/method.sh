@@ -12,7 +12,6 @@ cd /home/user
 
 python method/exact_abduction_runner.py \
   --problems \
-    compton \
     decay \
     escape_velocity \
     hagen \
@@ -24,10 +23,12 @@ python method/exact_abduction_runner.py \
     relativistic_laws \
     simple_harmonic_oscillator \
     time_dilation \
+    compton \
   --sizes 1 \
   --max-candidate-size 1 \
   --axiom-limits hall=7 \
-  --timeout-decomposition 900 \
+  --timeout-decomposition 120 \
+  --timeout-case 120 \
   --output scoring/ai_noether_exact_outputs.json
 
 bash scripts/evaluate.sh scoring/ai_noether_exact_outputs.json
