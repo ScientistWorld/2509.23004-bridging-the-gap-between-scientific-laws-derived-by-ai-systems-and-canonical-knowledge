@@ -29,10 +29,10 @@
         "ai_noether_exact": {
           "cases_completed": 10,
           "cases_total": 10,
-          "derivable_candidate_count": 10,
-          "derivable_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0
+          "derivable_candidate_count": 1,
+          "derivable_candidate_rate": 0.1,
+          "success_count": 1,
+          "success_rate": 0.1
         }
       }
     },
@@ -53,8 +53,8 @@
         "ai_noether_exact": {
           "cases_completed": 10,
           "cases_total": 10,
-          "derivable_candidate_count": 10,
-          "derivable_candidate_rate": 1.0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
           "success_count": 0,
           "success_rate": 0.0
         }
