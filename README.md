@@ -99,4 +99,7 @@ The paper reports 6/6 and 5/5 success for these two single-axiom systems, so the
 
 # Reproduction Milestones
 
-**Current: core_claim_plus**
+**Current: core_claim**
+
+## Stop Justification
+- Completed at milestone `core_claim`.
