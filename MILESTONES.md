@@ -26,4 +26,4 @@
 - Prepared a targeted rational-coefficient smoke job before attempting another full all-paper rerun.
 
 ## Stop Justification
-- Active reproduction has reached `core_claim_plus`; the next submitted CPU job reruns the full exact sweep with rational-denominator normalization and longer CPU timeouts to try to improve the all-paper result.
+- Completed at milestone `core_claim_plus`.
