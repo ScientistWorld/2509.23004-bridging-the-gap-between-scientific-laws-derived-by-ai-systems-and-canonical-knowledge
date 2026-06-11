@@ -14,14 +14,7 @@ set -e
 cd /home/user
 
 bash scripts/baseline.sh
-
-python method/exact_abduction_runner.py \
-  --problems kepler \
-  --sizes 2,3 \
-  --filter-degenerate \
-  --timeout-decomposition 120 \
-  --timeout-case 120 \
-  --output scoring/ai_noether_kepler_multi_outputs.json
+bash scripts/method.sh
 
 bash scripts/evaluate.sh --include-multi \
   scoring/baseline_outputs.json \

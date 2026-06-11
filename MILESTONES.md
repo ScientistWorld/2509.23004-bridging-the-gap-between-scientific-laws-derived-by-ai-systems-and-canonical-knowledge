@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 ## Progress Log
 
@@ -14,5 +14,11 @@
 - Split Kepler nondegeneracy handling into post-decomposition candidate filtering so multi-axiom cases can still expose coupled explanations while rejecting zero-factor branches.
 - Fixed the no-abduction baseline to use the same 75 paper-counted single-axiom cases as the method run.
 
+### [2026-06-11 13:29] - core_claim_plus
+- Reviewed job `7227dc15-43e`: corrected Kepler pair/triple filtering completed all 20 cases and restored nonzero multi-axiom recovery.
+- Reproduced Kepler pair recovery at 5/10 coupled successes and 7/10 derivability-certified cases; reproduced Kepler triple recovery at 1/10 coupled successes and 4/10 derivability-certified cases.
+- Confirmed the no-abduction baseline now appears in the 75-case all-paper score with 75/75 completed and zero recoveries, preserving the evaluation constraint.
+- Added rational-denominator clearing for benchmark equations so two known rational-coefficient validation errors can be rerun without changing the underlying ideal.
+
 ## Stop Justification
-- Active reproduction has reached `core_claim`; the next submitted CPU job tests whether corrected Kepler multi-axiom filtering supports a higher milestone.
+- Active reproduction has reached `core_claim_plus`; the next submitted CPU job reruns the full exact sweep with rational-denominator normalization and longer CPU timeouts to try to improve the all-paper result.

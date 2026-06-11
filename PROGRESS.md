@@ -19,18 +19,20 @@ Reference paper targets recorded in `scoring/reference.json`:
 - Kepler pair missing axioms: 7/10.
 - Kepler triple missing axioms: 2/10.
 
-Reproduced results before the next rerun:
+Reproduced results after job `7227dc15-43e`:
 
 - Simple harmonic oscillator single missing axiom: 6/6.
 - Kepler single missing axiom: 5/5.
 - Combined core subset: 11/11.
 - All paper-counted exact single missing axiom cases: 57/75 canonical recoveries, 62/75 cases with at least one derivable candidate, and 62/75 cases completed without error or timeout.
-- Kepler pair/triple missing axioms were run as a secondary sweep. Earlier strict canonical scoring produced poor values because Table 2 credits coupled explanations rather than only literal recovery of every removed axiom. A patched evaluator now separates weak derivability from coupled recovery. Job `04eec4cc-06f` showed that ideal saturation by all nonzero physical factors was too aggressive for this compact Singular workflow and removed every accepted candidate; the next CPU job uses post-decomposition degeneracy filtering instead.
+- No-abduction baseline: 0/75 all-paper recoveries with all 75 cases completed; 0/11 core recoveries with all 11 core cases completed.
+- Kepler pair missing axioms: 5/10 coupled-success cases and 7/10 derivability-certified cases after post-decomposition degeneracy filtering.
+- Kepler triple missing axioms: 1/10 coupled-success cases and 4/10 derivability-certified cases after post-decomposition degeneracy filtering.
 
 ## What Remains
 
-- Rerun the Kepler pair/triple missing-axiom sweep with coupled-recovery scoring and post-decomposition Kepler degeneracy filtering. This is the next submitted CPU job and will decide whether the Table 2 secondary claim can be promoted beyond partial reproduction.
-- Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the one-hour CPU job limit.
+- Rerun the full exact single-axiom sweep after rational-denominator normalization. This should address the two known rational-coefficient validation errors without changing the algebraic ideal.
+- Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
 - Add additional pair/triple missing-axiom systems beyond Kepler if future compute budget allows.
@@ -52,6 +54,10 @@ Job `71a51b0b-a58` reran all 20 Kepler pair/triple cases after the non-tautology
 Job `04eec4cc-06f` completed with exit code 0 and validated the combined score file, but the Kepler pair/triple sweep used ideal saturation by the nonzero physical factors before primary decomposition. That removed all 20 Kepler multi-axiom candidate sets. This is not a method crash, but it is too restrictive compared with the intended nondegenerate-branch filtering. The runner now separates algebraic saturation from post-decomposition filtering, and the checked-in scripts use the latter for Kepler multi-axiom reruns.
 
 The no-abduction baseline initially enumerated all 77 parsed single-axiom removals, including two Hall axioms outside the paper-counted 75-case table used by the method run. The baseline script now applies the same `hall=7` cap as the method run so all-paper baseline and method scores are comparable.
+
+Job `7227dc15-43e` completed successfully and confirmed the corrected Kepler multi-axiom setup. The pair setting now reaches the paper's 7/10 count on derivability-certified candidates and 5/10 on the stricter coupled-success metric. The triple setting reaches 4/10 on derivability-certified candidates and 1/10 on coupled success. This supports `core_claim_plus` but remains a partial reproduction of the paper's secondary multi-axiom result.
+
+Two all-paper single-axiom failures are rational-coefficient representation errors (`1/2` in escape velocity and `4/5` in inelastic relativistic collision). The method runner now clears rational denominators when loading benchmark equations and targets; multiplying a polynomial generator by a nonzero rational scalar preserves the ideal over characteristic zero.
 
 ## Deviations from Paper
 

@@ -27,8 +27,8 @@ python method/exact_abduction_runner.py \
   --sizes 1 \
   --max-candidate-size 1 \
   --axiom-limits hall=7 \
-  --timeout-decomposition 120 \
-  --timeout-case 120 \
+  --timeout-decomposition 300 \
+  --timeout-case 600 \
   --output scoring/ai_noether_exact_outputs.json
 
 python method/exact_abduction_runner.py \

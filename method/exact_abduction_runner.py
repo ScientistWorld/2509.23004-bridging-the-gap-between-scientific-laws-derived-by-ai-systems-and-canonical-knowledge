@@ -50,6 +50,23 @@ NONZERO_FACTORS = {
 }
 
 
+def clear_rational_denominators(poly: str, variables: list[str]) -> str:
+    """Return an integer-coefficient generator for the same rational ideal.
+
+    Several official benchmark systems write physical laws with rational
+    factors such as ``1/2`` or ``4/5``. Over the characteristic-zero polynomial
+    ring used by AI-Noether, multiplying a generator by a nonzero rational
+    scalar is equivalent. Clearing denominators before sending expressions to
+    Singular and SymPy avoids backend failures on those fractions.
+    """
+    symbols = {name: sp.Symbol(name) for name in variables}
+    order = [symbols[v] for v in variables]
+    expr = sp.sympify(poly.replace("^", "**"), locals=symbols)
+    poly_obj = sp.Poly(sp.expand(expr), *order, domain=sp.QQ)
+    _, cleared = poly_obj.clear_denoms(convert=True)
+    return str(sp.expand(cleared.as_expr())).replace("**", "^")
+
+
 def read_problem(path: Path, name: str) -> Problem:
     text = path.read_text()
     vars_match = re.search(r"Variables:\s*\[(.*?)\]", text, re.S)
@@ -59,9 +76,17 @@ def read_problem(path: Path, name: str) -> Problem:
     if not (vars_match and eqs_match and measured_match and target_match):
         raise ValueError(f"Could not parse problem file {path}")
     variables = [v.strip().strip('"').strip("'") for v in vars_match.group(1).split(",") if v.strip()]
-    equations = [ln.strip() for ln in eqs_match.group(1).splitlines() if ln.strip()]
+    equations = [
+        clear_rational_denominators(ln.strip(), variables)
+        for ln in eqs_match.group(1).splitlines()
+        if ln.strip()
+    ]
     measured = [v.strip().strip('"').strip("'") for v in measured_match.group(1).split(",") if v.strip()]
-    targets = [ln.strip() for ln in target_match.group(1).splitlines() if ln.strip()]
+    targets = [
+        clear_rational_denominators(ln.strip(), variables)
+        for ln in target_match.group(1).splitlines()
+        if ln.strip()
+    ]
     return Problem(name=name, variables=variables, equations=equations, measured_vars=measured, targets=targets)
 
 

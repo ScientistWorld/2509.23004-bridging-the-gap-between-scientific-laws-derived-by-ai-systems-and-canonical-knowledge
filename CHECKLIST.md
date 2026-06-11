@@ -13,4 +13,6 @@
 - [x] Add independent symbolic recomputation path to evaluator for new outputs.
 - [x] Run Kepler pair/triple missing-axiom secondary experiment.
 - [x] Test Kepler pair/triple with coupled-recovery scoring and nondegenerate saturation.
-- [ ] Rerun Kepler pair/triple with post-decomposition degeneracy filtering.
+- [x] Rerun Kepler pair/triple with post-decomposition degeneracy filtering.
+- [x] Fix rational-coefficient handling for exact symbolic validation.
+- [ ] Rerun full exact method after rational-denominator normalization.
