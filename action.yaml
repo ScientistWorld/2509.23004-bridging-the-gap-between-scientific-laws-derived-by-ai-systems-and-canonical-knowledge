@@ -4,5 +4,5 @@
 action: submit
 gpus: 0
 test: true
-milestone: core_claim
-notes: "CPU test job reruns corrected Kepler pair/triple exact abduction with post-decomposition degeneracy filtering and regenerates combined baseline-plus-method scores over the corrected 75-case baseline."
+milestone: core_claim_plus
+notes: "CPU smoke job tests rational candidate-generator handling on affected exact symbolic systems and fails if any integer-domain coefficient errors remain."
