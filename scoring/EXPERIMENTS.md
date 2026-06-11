@@ -24,6 +24,6 @@ This experiment evaluates all 10 two-missing-axiom cases from the Kepler system.
 
 This experiment evaluates all 10 three-missing-axiom cases from the Kepler system. It is a harder multi-axiom recovery setting where the paper reports only partial recovery.
 
-## no_abduction_baseline
+## Baseline Method
 
-The baseline emits no candidate axioms. It should score zero on recovery metrics while completing all cases, which helps confirm that the evaluator rewards explanatory candidates rather than file presence or case enumeration.
+`no_abduction_baseline` is a method result within the single-axiom experiments, not a separate experiment. It emits no candidate axioms and should score zero on recovery metrics while completing all cases, which helps confirm that the evaluator rewards explanatory candidates rather than file presence or case enumeration.

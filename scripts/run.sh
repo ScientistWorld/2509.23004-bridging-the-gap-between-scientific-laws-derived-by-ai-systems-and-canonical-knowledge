@@ -13,6 +13,8 @@ set -e
 
 cd /home/user
 
+bash scripts/baseline.sh
+
 python method/exact_abduction_runner.py \
   --problems kepler \
   --sizes 2,3 \
@@ -22,6 +24,7 @@ python method/exact_abduction_runner.py \
   --output scoring/ai_noether_kepler_multi_outputs.json
 
 bash scripts/evaluate.sh --include-multi \
+  scoring/baseline_outputs.json \
   scoring/ai_noether_exact_outputs.json \
   scoring/ai_noether_kepler_multi_outputs.json
 python validate.py --compare

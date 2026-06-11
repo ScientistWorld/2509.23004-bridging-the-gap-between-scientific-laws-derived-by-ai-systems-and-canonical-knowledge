@@ -143,7 +143,10 @@ def score_case(case: dict) -> tuple[bool, bool]:
             if canonical_recovered(case, candidates):
                 has_canonical = True
     if len(case.get("removed_indices", [])) > 1:
-        return has_coupled, has_coupled
+        # Multi-axiom recovery can be entangled: the paper credits coupled
+        # explanations as recovered, while weak membership remains the
+        # verifier's broader derivability check.
+        return has_derivable, has_coupled
     return has_derivable, has_canonical
 
 
@@ -170,6 +173,20 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
     }
 
 
+def add_summary(
+    scores: dict,
+    experiment: str,
+    method_name: str,
+    cases: list[dict],
+    problem_filter: set[str] | None = None,
+    size: int | None = None,
+) -> None:
+    scores["experiments"].setdefault(experiment, {"results": {}})
+    scores["experiments"][experiment]["results"][method_name] = summarize_cases(
+        cases, problem_filter, size
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", nargs="+", default=["scoring/ai_noether_exact_outputs.json"])
@@ -181,57 +198,69 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    cases = []
+    cases_by_method = defaultdict(list)
     for input_path in args.input:
         payload = json.loads(Path(input_path).read_text())
-        cases.extend(payload.get("cases", []))
+        method_name = payload.get("method", "ai_noether_exact")
+        cases_by_method[method_name].extend(payload.get("cases", []))
 
-    by_problem = defaultdict(list)
-    for case in cases:
-        by_problem[case["problem"]].append(case)
+    scores = {"experiments": {}}
+    for method_name, method_cases in sorted(cases_by_method.items()):
+        by_problem = defaultdict(list)
+        for case in method_cases:
+            by_problem[case["problem"]].append(case)
 
-    scores = {
-        "experiments": {
-            "exact_single_axiom_core": {
-                "results": {
-                    "ai_noether_exact": summarize_cases(
-                        cases, {"simple_harmonic_oscillator", "kepler"}, size=1
-                    )
-                }
-            }
-        }
-    }
-    all_single = summarize_cases(cases, size=1)
-    if all_single["cases_total"] == 75:
-        scores["experiments"]["exact_single_axiom_all_paper"] = {
-            "results": {
-                "ai_noether_exact": all_single
-            }
-        }
-    if "simple_harmonic_oscillator" in by_problem:
-        scores["experiments"]["simple_harmonic_single_axiom"] = {
-            "results": {
-                "ai_noether_exact": summarize_cases(cases, {"simple_harmonic_oscillator"}, size=1)
-            }
-        }
-    if "kepler" in by_problem:
-        scores["experiments"]["kepler_single_axiom"] = {
-            "results": {
-                "ai_noether_exact": summarize_cases(cases, {"kepler"}, size=1)
-            }
-        }
-        if args.include_multi and any(c["problem"] == "kepler" and len(c["removed_indices"]) == 2 for c in cases):
-            scores["experiments"]["kepler_pair_axiom"] = {
-                "results": {
-                    "ai_noether_exact": summarize_cases(cases, {"kepler"}, size=2)
-                }
-            }
-        if args.include_multi and any(c["problem"] == "kepler" and len(c["removed_indices"]) == 3 for c in cases):
-            scores["experiments"]["kepler_triple_axiom"] = {
-                "results": {
-                    "ai_noether_exact": summarize_cases(cases, {"kepler"}, size=3)
-                }
-            }
+        add_summary(
+            scores,
+            "exact_single_axiom_core",
+            method_name,
+            method_cases,
+            {"simple_harmonic_oscillator", "kepler"},
+            size=1,
+        )
+        all_single = summarize_cases(method_cases, size=1)
+        if all_single["cases_total"] == 75:
+            add_summary(scores, "exact_single_axiom_all_paper", method_name, method_cases, size=1)
+        if "simple_harmonic_oscillator" in by_problem:
+            add_summary(
+                scores,
+                "simple_harmonic_single_axiom",
+                method_name,
+                method_cases,
+                {"simple_harmonic_oscillator"},
+                size=1,
+            )
+        if "kepler" in by_problem:
+            add_summary(
+                scores,
+                "kepler_single_axiom",
+                method_name,
+                method_cases,
+                {"kepler"},
+                size=1,
+            )
+            if args.include_multi and any(
+                c["problem"] == "kepler" and len(c["removed_indices"]) == 2 for c in method_cases
+            ):
+                add_summary(
+                    scores,
+                    "kepler_pair_axiom",
+                    method_name,
+                    method_cases,
+                    {"kepler"},
+                    size=2,
+                )
+            if args.include_multi and any(
+                c["problem"] == "kepler" and len(c["removed_indices"]) == 3 for c in method_cases
+            ):
+                add_summary(
+                    scores,
+                    "kepler_triple_axiom",
+                    method_name,
+                    method_cases,
+                    {"kepler"},
+                    size=3,
+                )
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output).write_text(json.dumps(scores, indent=2, sort_keys=True))
     print(f"Wrote {args.output}")

@@ -20,25 +20,49 @@ cd /home/user
 mkdir -p scoring
 python - <<'PY'
 import json
+import re
 from pathlib import Path
+
+systems = [
+    "decay",
+    "escape_velocity",
+    "hagen",
+    "hall",
+    "inelastic_relativistic_collision",
+    "kepler",
+    "light",
+    "photoHall",
+    "relativistic_laws",
+    "simple_harmonic_oscillator",
+    "time_dilation",
+    "compton",
+]
+system_dir = Path("method/AI-Noether/systems_and_phenomena")
+cases = []
+for problem in systems:
+    text = (system_dir / problem / "system.txt").read_text()
+    eqs_match = re.search(r"Equations?:\s*(.*?)(?=\n\s*\n\s*Measured)", text, re.S | re.I)
+    if not eqs_match:
+        raise RuntimeError(f"Could not parse equations for {problem}")
+    equations = [ln.strip() for ln in eqs_match.group(1).splitlines() if ln.strip()]
+    for index in range(1, len(equations) + 1):
+        cases.append(
+            {
+                "problem": problem,
+                "removed_indices": [index],
+                "status": "ok",
+                "num_accepted": 0,
+                "success": False,
+                "strong_success": False,
+                "runtime_seconds": 0.0,
+            }
+        )
 
 payload = {
     "method": "no_abduction_baseline",
     "algorithm": "remaining_axioms_only",
-    "cases": [
-        {
-            "problem": p,
-            "removed_indices": [i],
-            "status": "ok",
-            "num_accepted": 0,
-            "success": False,
-            "strong_success": False,
-            "runtime_seconds": 0.0,
-        }
-        for p, n in [("simple_harmonic_oscillator", 6), ("kepler", 5)]
-        for i in range(1, n + 1)
-    ],
+    "cases": cases,
 }
 Path("scoring/baseline_outputs.json").write_text(json.dumps(payload, indent=2))
 PY
-python eval/evaluate_exact.py --input scoring/baseline_outputs.json --output scoring/baseline_scores.json
+bash scripts/evaluate.sh scoring/baseline_outputs.json

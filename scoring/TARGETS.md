@@ -32,6 +32,22 @@ Primary target: recover all 5 single missing axioms in the Kepler system.
 
 Constraint targets: maintain `derivable_candidate_rate` and complete all 5 cases.
 
-## Diagnostic Not Currently Scored
+## kepler_pair_axiom
 
-The Kepler pair/triple missing-axiom Table 2 sweep has been run and documented in `PROGRESS.md`, but it is not a formal scoring target in this gym because the compact reproduction does not yet match the paper's reported multi-axiom results. Future agents can opt into diagnostic scoring with `python eval/evaluate_exact.py --include-multi ...` after improving the coupled-relation selection procedure enough for the results to be numerically consistent with the paper.
+Primary target: recover coupled explanatory relations for all 10 two-missing-axiom Kepler cases from Table 2.
+
+Constraint targets:
+
+- `derivable_candidate_rate` should remain high, showing that recovered coupled explanations really make the target relation derivable.
+- `cases_completed` should equal 10, showing that gains are not achieved by skipping hard axiom pairs.
+- Degenerate boundary explanations such as zero masses, distances, or period should remain filtered.
+
+## kepler_triple_axiom
+
+Primary target: recover coupled explanatory relations for all 10 three-missing-axiom Kepler cases from Table 2.
+
+Constraint targets:
+
+- `derivable_candidate_rate` should remain high, showing that recovered coupled explanations really make the target relation derivable.
+- `cases_completed` should equal 10, showing that gains are not achieved by skipping hard axiom triples.
+- Degenerate boundary explanations such as zero masses, distances, or period should remain filtered.

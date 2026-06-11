@@ -20,3 +20,7 @@ cd /home/user
 
 bash scripts/baseline.sh
 bash scripts/method.sh
+bash scripts/evaluate.sh --include-multi \
+  scoring/baseline_outputs.json \
+  scoring/ai_noether_exact_outputs.json \
+  scoring/ai_noether_kepler_multi_outputs.json

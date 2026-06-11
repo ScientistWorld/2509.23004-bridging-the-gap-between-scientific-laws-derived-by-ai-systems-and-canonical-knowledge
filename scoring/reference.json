@@ -79,6 +79,15 @@
         "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
       },
       "results": {
+        "no_abduction_baseline": {
+          "type": "baseline",
+          "cases_total": 6,
+          "cases_completed": 6,
+          "success_count": 0,
+          "success_rate": 0.0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0
+        },
         "ai_noether_exact": {
           "type": "proposed",
           "cases_total": 6,
@@ -103,6 +112,15 @@
         "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
       },
       "results": {
+        "no_abduction_baseline": {
+          "type": "baseline",
+          "cases_total": 5,
+          "cases_completed": 5,
+          "success_count": 0,
+          "success_rate": 0.0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0
+        },
         "ai_noether_exact": {
           "type": "proposed",
           "cases_total": 5,
