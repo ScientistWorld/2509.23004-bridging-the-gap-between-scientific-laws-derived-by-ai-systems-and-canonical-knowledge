@@ -27,8 +27,8 @@
 #   milestone: core_claim
 #   notes: "Reproduced the core claim. Environment packaged."
 
-action: pending
-gpus: 1
-test: false
+action: submit
+gpus: 0
+test: true
 milestone: none
-notes: ""
+notes: "CPU smoke test for exact AI-Noether single-axiom recovery on simple_harmonic_oscillator and kepler; expected to write scoring/scores.json."
