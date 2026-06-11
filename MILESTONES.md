@@ -20,5 +20,10 @@
 - Confirmed the no-abduction baseline now appears in the 75-case all-paper score with 75/75 completed and zero recoveries, preserving the evaluation constraint.
 - Added rational-denominator clearing for benchmark equations so two known rational-coefficient validation errors can be rerun without changing the underlying ideal.
 
+### [2026-06-11 13:53] - core_claim_plus
+- Cancelled job `7970b925-534` after it exposed new integer-domain failures on rational candidate generators emitted by Singular.
+- Patched the method and evaluator to run SymPy Groebner and polynomial comparisons over `QQ`, and normalized decomposed candidate generators before symbolic checks.
+- Prepared a targeted rational-coefficient smoke job before attempting another full all-paper rerun.
+
 ## Stop Justification
 - Active reproduction has reached `core_claim_plus`; the next submitted CPU job reruns the full exact sweep with rational-denominator normalization and longer CPU timeouts to try to improve the all-paper result.

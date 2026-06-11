@@ -180,13 +180,13 @@ def sympify_poly(poly: str, symbols: dict[str, sp.Symbol]) -> sp.Expr:
 
 
 def normalize_expr(expr: sp.Expr) -> str:
-    expr = sp.Poly(sp.expand(expr)).as_expr()
+    expr = sp.Poly(sp.expand(expr), domain=sp.QQ).as_expr()
     return str(expr)
 
 
 def poly_equal_up_to_scalar(a: sp.Expr, b: sp.Expr, variables: list[sp.Symbol]) -> bool:
-    pa = sp.Poly(sp.expand(a), *variables)
-    pb = sp.Poly(sp.expand(b), *variables)
+    pa = sp.Poly(sp.expand(a), *variables, domain=sp.QQ)
+    pb = sp.Poly(sp.expand(b), *variables, domain=sp.QQ)
     if pa.is_zero and pb.is_zero:
         return True
     da = pa.as_dict()
@@ -229,7 +229,7 @@ def implied_by_ideal(poly: str, generators: list[str], variables: list[str]) -> 
         return False
     symbols = symbol_table(variables)
     order = [symbols[v] for v in variables]
-    gb = sp.groebner([sympify_poly(p, symbols) for p in generators], *order, order="lex")
+    gb = sp.groebner([sympify_poly(p, symbols) for p in generators], *order, order="lex", domain=sp.QQ)
     return sp.expand(gb.reduce(sympify_poly(poly, symbols))[1]) == 0
 
 
@@ -243,9 +243,10 @@ def candidate_sets(
     seen: set[tuple[str, ...]] = set()
     known_generators = remaining_axioms + targets
     for component in components:
+        normalized_component = [clear_rational_denominators(g, variables) for g in component]
         usable = [
             g
-            for g in component
+            for g in normalized_component
             if g not in {"0", "1", "-1"} and not implied_by_ideal(g, known_generators, variables)
         ]
         for size in range(1, min(max_size, len(usable)) + 1):
@@ -271,12 +272,12 @@ def groebner_derives(
     target_expr = sympify_poly(target, symbols)
     if not polynomials:
         return False, False
-    gb = sp.groebner(polynomials, *order, order="lex")
+    gb = sp.groebner(polynomials, *order, order="lex", domain=sp.QQ)
     elim = [g for g in gb.polys if set(g.as_expr().free_symbols).issubset(set(measured))]
     if not elim:
         return False, False
     elim_exprs = [g.as_expr() for g in elim]
-    gb_elim = sp.groebner(elim_exprs, *measured, order="lex")
+    gb_elim = sp.groebner(elim_exprs, *measured, order="lex", domain=sp.QQ)
     weak = sp.expand(gb_elim.reduce(target_expr)[1]) == 0
     strong = any(poly_equal_up_to_scalar(g, target_expr, measured) for g in elim_exprs)
     return bool(weak), bool(strong)
@@ -294,7 +295,7 @@ def canonical_recovered(
     missing = sympify_poly(missing_axiom, symbols)
     if not polynomials:
         return False
-    gb = sp.groebner(polynomials, *order, order="lex")
+    gb = sp.groebner(polynomials, *order, order="lex", domain=sp.QQ)
     return sp.expand(gb.reduce(missing)[1]) == 0
 
 

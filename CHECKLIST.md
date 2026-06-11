@@ -15,4 +15,6 @@
 - [x] Test Kepler pair/triple with coupled-recovery scoring and nondegenerate saturation.
 - [x] Rerun Kepler pair/triple with post-decomposition degeneracy filtering.
 - [x] Fix rational-coefficient handling for exact symbolic validation.
+- [x] Cancel full rerun after detecting rational candidate-generator failures.
+- [ ] Smoke-test rational candidate-generator handling on affected systems.
 - [ ] Rerun full exact method after rational-denominator normalization.

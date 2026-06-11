@@ -26,8 +26,8 @@ def sympify_poly(poly: str, symbols: dict[str, sp.Symbol]) -> sp.Expr:
 
 
 def poly_equal_up_to_scalar(a: sp.Expr, b: sp.Expr, variables: list[sp.Symbol]) -> bool:
-    pa = sp.Poly(sp.expand(a), *variables)
-    pb = sp.Poly(sp.expand(b), *variables)
+    pa = sp.Poly(sp.expand(a), *variables, domain=sp.QQ)
+    pb = sp.Poly(sp.expand(b), *variables, domain=sp.QQ)
     if pa.is_zero and pb.is_zero:
         return True
     da = pa.as_dict()
@@ -72,11 +72,11 @@ def groebner_derives(
     target_expr = sympify_poly(target, symbols)
     if not polynomials or not measured:
         return False, False
-    gb = sp.groebner(polynomials, *order, order="lex")
+    gb = sp.groebner(polynomials, *order, order="lex", domain=sp.QQ)
     elim = [g.as_expr() for g in gb.polys if set(g.as_expr().free_symbols).issubset(set(measured))]
     if not elim:
         return False, False
-    gb_elim = sp.groebner(elim, *measured, order="lex")
+    gb_elim = sp.groebner(elim, *measured, order="lex", domain=sp.QQ)
     weak = sp.expand(gb_elim.reduce(target_expr)[1]) == 0
     strong = any(poly_equal_up_to_scalar(g, target_expr, measured) for g in elim)
     return bool(weak), bool(strong)
@@ -89,7 +89,7 @@ def canonical_recovered(case: dict, candidates: list[str]) -> bool:
     polynomials = [sympify_poly(p, symbols) for p in case["remaining_axioms"] + candidates]
     if not polynomials:
         return False
-    gb = sp.groebner(polynomials, *order, order="lex")
+    gb = sp.groebner(polynomials, *order, order="lex", domain=sp.QQ)
     for missing_axiom in case["removed_axioms"]:
         missing = sympify_poly(missing_axiom, symbols)
         if sp.expand(gb.reduce(missing)[1]) != 0:

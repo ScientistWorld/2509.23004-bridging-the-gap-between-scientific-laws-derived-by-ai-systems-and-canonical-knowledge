@@ -59,6 +59,8 @@ Job `7227dc15-43e` completed successfully and confirmed the corrected Kepler mul
 
 Two all-paper single-axiom failures are rational-coefficient representation errors (`1/2` in escape velocity and `4/5` in inelastic relativistic collision). The method runner now clears rational denominators when loading benchmark equations and targets; multiplying a polynomial generator by a nonzero rational scalar preserves the ideal over characteristic zero.
 
+Job `7970b925-534` was cancelled during the full rerun because the rational-denominator patch fixed the original escape-velocity case but exposed the same integer-domain error on rational candidate generators emitted by Singular. The runner now normalizes candidate generators before checking them, and both the method and evaluator use SymPy Groebner bases over `QQ` instead of the default integer domain. The next submitted job is a targeted smoke test over the affected systems and writes separate `scoring/rational_smoke_*` artifacts rather than overwriting the main scores.
+
 ## Deviations from Paper
 
 The first completed job scaled the experiment to two exact single-axiom benchmark systems rather than all reported systems. The later completed job expands to the paper-counted 75 single-axiom cases, using the same algorithmic procedure: polynomial encoding, primary decomposition, candidate extraction, and symbolic derivability verification. The compact reproduction imposes a per-case timeout so the reusable environment finishes reliably under the available CPU wall-time limit.
