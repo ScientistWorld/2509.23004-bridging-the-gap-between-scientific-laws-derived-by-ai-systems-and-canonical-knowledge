@@ -6,6 +6,6 @@
 - [x] Implement method-independent evaluator.
 - [x] Define reference scores and scoring targets.
 - [x] Write environment and shell scripts.
-- [ ] Run compute-node smoke test.
-- [ ] Analyze scores and update milestone.
-- [ ] Expand beyond the initial core subset if budget allows.
+- [x] Run compute-node smoke test.
+- [x] Analyze scores and update milestone.
+- [ ] Run all-available-system exact single-axiom sweep.

@@ -284,6 +284,19 @@ def parse_sizes(spec: str) -> list[int]:
     return sorted(set(out))
 
 
+def parse_axiom_limits(spec: str) -> dict[str, int]:
+    limits: dict[str, int] = {}
+    if not spec:
+        return limits
+    for part in spec.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        name, value = part.split("=", 1)
+        limits[name.strip()] = int(value)
+    return limits
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--systems-dir", default="method/AI-Noether/systems_and_phenomena")
@@ -292,6 +305,11 @@ def main() -> None:
     parser.add_argument("--singular", default=os.environ.get("SINGULAR_BIN", "Singular"))
     parser.add_argument("--timeout-decomposition", type=int, default=900)
     parser.add_argument("--max-candidate-size", type=int, default=-1)
+    parser.add_argument(
+        "--axiom-limits",
+        default="",
+        help="Optional comma-separated problem=count limits for removal combinations, e.g. hall=7.",
+    )
     parser.add_argument("--output", default="scoring/ai_noether_exact_outputs.json")
     args = parser.parse_args()
 
@@ -299,17 +317,20 @@ def main() -> None:
     output_path = Path(args.output)
     run_dir = output_path.with_suffix("")
     sizes = parse_sizes(args.sizes)
+    axiom_limits = parse_axiom_limits(args.axiom_limits)
     results = []
     for name in args.problems:
         problem = read_problem(systems_dir / name / "system.txt", name)
+        removal_count = min(len(problem.equations), axiom_limits.get(name, len(problem.equations)))
         for size in sizes:
-            for combo in itertools.combinations(range(len(problem.equations)), size):
+            for combo in itertools.combinations(range(removal_count), size):
                 results.append(run_case(problem, combo, args, run_dir))
     payload = {
         "method": "ai_noether_exact",
         "algorithm": "encode_primary_decompose_reason",
         "problems": args.problems,
         "sizes": sizes,
+        "axiom_limits": axiom_limits,
         "cases": results,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)

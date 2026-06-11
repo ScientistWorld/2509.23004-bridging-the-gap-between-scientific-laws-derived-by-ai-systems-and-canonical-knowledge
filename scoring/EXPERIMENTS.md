@@ -8,6 +8,10 @@ This experiment asks whether a method can solve all single-missing-axiom cases i
 
 This experiment isolates the 6 single-missing-axiom cases from the simple harmonic oscillator system. It provides a compact sanity check for exact symbolic recovery.
 
+## exact_single_axiom_all_paper
+
+This experiment sweeps the 75 single-missing-axiom cases reported in the paper's detailed appendix table. It is the broader single-axiom reproduction target beyond the two-system core subset.
+
 ## kepler_single_axiom
 
 This experiment isolates the 5 single-missing-axiom cases from the Kepler system. It is a second exact symbolic benchmark with a different physical domain.

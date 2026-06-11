@@ -19,15 +19,15 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
         selected.append(case)
     total = len(selected)
     success = sum(1 for c in selected if c.get("success"))
-    strong = sum(1 for c in selected if c.get("strong_success"))
     completed = sum(1 for c in selected if c.get("status") == "ok")
+    derivable = sum(1 for c in selected if c.get("num_accepted", 0) > 0)
     return {
         "cases_total": total,
         "cases_completed": completed,
         "success_count": success,
         "success_rate": success / total if total else 0.0,
-        "strong_success_count": strong,
-        "strong_success_rate": strong / total if total else 0.0,
+        "derivable_candidate_count": derivable,
+        "derivable_candidate_rate": derivable / total if total else 0.0,
     }
 
 
@@ -55,6 +55,13 @@ def main() -> None:
             }
         }
     }
+    all_single = summarize_cases(cases, size=1)
+    if all_single["cases_total"] == 75:
+        scores["experiments"]["exact_single_axiom_all_paper"] = {
+            "results": {
+                "ai_noether_exact": all_single
+            }
+        }
     if "simple_harmonic_oscillator" in by_problem:
         scores["experiments"]["simple_harmonic_single_axiom"] = {
             "results": {

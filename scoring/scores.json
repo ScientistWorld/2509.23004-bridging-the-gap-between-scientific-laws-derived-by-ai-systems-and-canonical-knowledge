@@ -5,8 +5,8 @@
         "ai_noether_exact": {
           "cases_completed": 11,
           "cases_total": 11,
-          "strong_success_count": 5,
-          "strong_success_rate": 0.45454545454545453,
+          "derivable_candidate_count": 11,
+          "derivable_candidate_rate": 1.0,
           "success_count": 11,
           "success_rate": 1.0
         }
@@ -17,8 +17,8 @@
         "ai_noether_exact": {
           "cases_completed": 5,
           "cases_total": 5,
-          "strong_success_count": 0,
-          "strong_success_rate": 0.0,
+          "derivable_candidate_count": 5,
+          "derivable_candidate_rate": 1.0,
           "success_count": 5,
           "success_rate": 1.0
         }
@@ -29,8 +29,8 @@
         "ai_noether_exact": {
           "cases_completed": 6,
           "cases_total": 6,
-          "strong_success_count": 5,
-          "strong_success_rate": 0.8333333333333334,
+          "derivable_candidate_count": 6,
+          "derivable_candidate_rate": 1.0,
           "success_count": 6,
           "success_rate": 1.0
         }

@@ -8,7 +8,7 @@ The evaluator is independent from `method/` and scores saved method outputs only
 
 ## Results Achieved
 
-No compute-node results have been recorded yet in this iteration. The next submitted job will run the core exact single-axiom reproduction and write `scoring/scores.json`.
+The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
 
 Reference paper targets recorded in `scoring/reference.json`:
 
@@ -16,12 +16,16 @@ Reference paper targets recorded in `scoring/reference.json`:
 - Kepler single missing axiom: 5/5.
 - Combined core subset: 11/11.
 
+Reproduced core results:
+
+- Simple harmonic oscillator single missing axiom: 6/6.
+- Kepler single missing axiom: 5/5.
+- Combined core subset: 11/11.
+
 ## What Remains
 
-- Run the CPU smoke job in the target container.
-- Inspect `scoring/scores.json` and compare against `reference.json`.
-- If the exact core succeeds, update the milestone to `core_claim`.
-- If time remains, add additional systems or pair/triple missing-axiom cases.
+- Run the 75-case all-paper exact single-axiom sweep across the checked-in official benchmark tree.
+- If time remains, add pair/triple missing-axiom cases.
 
 ## Issues Encountered
 
@@ -29,4 +33,4 @@ The official repository contains broader noisy and theorem-prover workflows, but
 
 ## Deviations from Paper
 
-This first job scales the experiment to two exact single-axiom benchmark systems rather than all reported systems. The algorithmic procedure is preserved: polynomial encoding, primary decomposition, candidate extraction, and symbolic derivability verification.
+The first completed job scaled the experiment to two exact single-axiom benchmark systems rather than all reported systems. The next job expands to the paper-counted 75 single-axiom cases, using the same algorithmic procedure: polynomial encoding, primary decomposition, candidate extraction, and symbolic derivability verification.
