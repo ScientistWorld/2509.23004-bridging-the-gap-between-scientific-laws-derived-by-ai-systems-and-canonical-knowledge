@@ -8,4 +8,4 @@
 - [x] Write environment and shell scripts.
 - [x] Run compute-node smoke test.
 - [x] Analyze scores and update milestone.
-- [ ] Run all-available-system exact single-axiom sweep.
+- [x] Run all-available-system exact single-axiom sweep.
