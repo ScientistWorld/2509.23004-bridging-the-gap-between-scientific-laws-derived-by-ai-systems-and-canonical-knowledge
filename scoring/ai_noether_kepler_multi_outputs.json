@@ -36,7 +36,7 @@
         1,
         2
       ],
-      "runtime_seconds": 0.325,
+      "runtime_seconds": 0.448,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -88,7 +88,7 @@
         1,
         3
       ],
-      "runtime_seconds": 0.038,
+      "runtime_seconds": 0.134,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -140,7 +140,7 @@
         1,
         4
       ],
-      "runtime_seconds": 0.049,
+      "runtime_seconds": 0.185,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -159,8 +159,17 @@
       ]
     },
     {
-      "accepted": [],
-      "coupled_success": false,
+      "accepted": [
+        {
+          "candidates": [
+            "w^2*d1^2*m2*p^2+2*Fg*d1*p^2+Fg*d2*p^2-d1^2*m2-m1*d1*d2-2*d1*m2*d2"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": true
+        }
+      ],
+      "coupled_success": true,
       "measured_vars": [
         "m1",
         "d1",
@@ -176,8 +185,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 1,
+      "num_components": 5,
       "problem": "kepler",
       "remaining_axioms": [
         "Fg*(d1+d2)^2 - m1*m2",
@@ -192,7 +201,7 @@
         1,
         5
       ],
-      "runtime_seconds": 0.037,
+      "runtime_seconds": 1.092,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -211,7 +220,25 @@
       ]
     },
     {
-      "accepted": [],
+      "accepted": [
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
       "coupled_success": false,
       "measured_vars": [
         "m1",
@@ -228,8 +255,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 2,
+      "num_components": 4,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -244,7 +271,7 @@
         2,
         3
       ],
-      "runtime_seconds": 0.033,
+      "runtime_seconds": 0.676,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -263,8 +290,35 @@
       ]
     },
     {
-      "accepted": [],
-      "coupled_success": false,
+      "accepted": [
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "w*m1*d2^3+Fc*d1*d2*p+2*Fc*d2^2*p-m1^2*p"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": false
+        }
+      ],
+      "coupled_success": true,
       "measured_vars": [
         "m1",
         "d1",
@@ -280,8 +334,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 3,
+      "num_components": 4,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -296,7 +350,7 @@
         2,
         4
       ],
-      "runtime_seconds": 0.039,
+      "runtime_seconds": 1.244,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -315,7 +369,16 @@
       ]
     },
     {
-      "accepted": [],
+      "accepted": [
+        {
+          "candidates": [
+            "d1^3+2*d1^2*d2+d1*d2^2-m2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
       "coupled_success": false,
       "measured_vars": [
         "m1",
@@ -332,8 +395,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 1,
+      "num_components": 4,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -348,7 +411,7 @@
         2,
         5
       ],
-      "runtime_seconds": 0.034,
+      "runtime_seconds": 0.293,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -367,8 +430,42 @@
       ]
     },
     {
-      "accepted": [],
-      "coupled_success": false,
+      "accepted": [
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "w*m2*d2-Fg*p"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
+      "coupled_success": true,
       "measured_vars": [
         "m1",
         "d1",
@@ -384,8 +481,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 4,
+      "num_components": 7,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -400,7 +497,7 @@
         3,
         4
       ],
-      "runtime_seconds": 0.042,
+      "runtime_seconds": 8.601,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -419,8 +516,34 @@
       ]
     },
     {
-      "accepted": [],
-      "coupled_success": false,
+      "accepted": [
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
+      "coupled_success": true,
       "measured_vars": [
         "m1",
         "d1",
@@ -436,8 +559,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 3,
+      "num_components": 7,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -452,7 +575,7 @@
         3,
         5
       ],
-      "runtime_seconds": 0.037,
+      "runtime_seconds": 1.541,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -471,8 +594,34 @@
       ]
     },
     {
-      "accepted": [],
-      "coupled_success": false,
+      "accepted": [
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
+      "coupled_success": true,
       "measured_vars": [
         "m1",
         "d1",
@@ -488,8 +637,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 3,
+      "num_components": 7,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -504,7 +653,7 @@
         4,
         5
       ],
-      "runtime_seconds": 0.041,
+      "runtime_seconds": 2.229,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -557,7 +706,7 @@
         2,
         3
       ],
-      "runtime_seconds": 0.034,
+      "runtime_seconds": 0.065,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -610,7 +759,7 @@
         2,
         4
       ],
-      "runtime_seconds": 0.037,
+      "runtime_seconds": 0.086,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -663,7 +812,7 @@
         2,
         5
       ],
-      "runtime_seconds": 0.032,
+      "runtime_seconds": 0.133,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -716,7 +865,7 @@
         3,
         4
       ],
-      "runtime_seconds": 0.039,
+      "runtime_seconds": 0.265,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -769,7 +918,7 @@
         3,
         5
       ],
-      "runtime_seconds": 0.032,
+      "runtime_seconds": 0.138,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -822,7 +971,7 @@
         4,
         5
       ],
-      "runtime_seconds": 0.042,
+      "runtime_seconds": 0.117,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -841,7 +990,25 @@
       ]
     },
     {
-      "accepted": [],
+      "accepted": [
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
       "coupled_success": false,
       "measured_vars": [
         "m1",
@@ -858,8 +1025,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 2,
+      "num_components": 4,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -875,7 +1042,7 @@
         3,
         4
       ],
-      "runtime_seconds": 0.039,
+      "runtime_seconds": 0.642,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -894,7 +1061,25 @@
       ]
     },
     {
-      "accepted": [],
+      "accepted": [
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
       "coupled_success": false,
       "measured_vars": [
         "m1",
@@ -911,8 +1096,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 2,
+      "num_components": 4,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -928,7 +1113,7 @@
         3,
         5
       ],
-      "runtime_seconds": 0.032,
+      "runtime_seconds": 0.577,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -947,7 +1132,25 @@
       ]
     },
     {
-      "accepted": [],
+      "accepted": [
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
       "coupled_success": false,
       "measured_vars": [
         "m1",
@@ -964,8 +1167,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 2,
+      "num_components": 4,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -981,7 +1184,7 @@
         4,
         5
       ],
-      "runtime_seconds": 0.039,
+      "runtime_seconds": 0.936,
       "status": "ok",
       "strong_success": false,
       "success": false,
@@ -1000,8 +1203,34 @@
       ]
     },
     {
-      "accepted": [],
-      "coupled_success": false,
+      "accepted": [
+        {
+          "candidates": [
+            "Fg*p^2-m2*d2"
+          ],
+          "canonical_recovered": false,
+          "coupled": true,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^2*d2+2*d1*d2^2+d2^3-m1*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        },
+        {
+          "candidates": [
+            "d1^3-3*d1*d2^2-2*d2^3+2*m1*p^2-m2*p^2",
+            "d1*m2*d2^2+m1*d2^3+2*m2*d2^3-m1^2*p^2"
+          ],
+          "canonical_recovered": false,
+          "coupled": false,
+          "strong": false
+        }
+      ],
+      "coupled_success": true,
       "measured_vars": [
         "m1",
         "d1",
@@ -1017,8 +1246,8 @@
         "p",
         "d1+d2"
       ],
-      "num_accepted": 0,
-      "num_components": 1,
+      "num_accepted": 3,
+      "num_components": 7,
       "problem": "kepler",
       "remaining_axioms": [
         "m1*d1-m2*d2",
@@ -1034,7 +1263,7 @@
         4,
         5
       ],
-      "runtime_seconds": 0.039,
+      "runtime_seconds": 1.471,
       "status": "ok",
       "strong_success": false,
       "success": false,

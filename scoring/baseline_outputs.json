@@ -234,28 +234,6 @@
       "runtime_seconds": 0.0
     },
     {
-      "problem": "hall",
-      "removed_indices": [
-        8
-      ],
-      "status": "ok",
-      "num_accepted": 0,
-      "success": false,
-      "strong_success": false,
-      "runtime_seconds": 0.0
-    },
-    {
-      "problem": "hall",
-      "removed_indices": [
-        9
-      ],
-      "status": "ok",
-      "num_accepted": 0,
-      "success": false,
-      "strong_success": false,
-      "runtime_seconds": 0.0
-    },
-    {
       "problem": "inelastic_relativistic_collision",
       "removed_indices": [
         1

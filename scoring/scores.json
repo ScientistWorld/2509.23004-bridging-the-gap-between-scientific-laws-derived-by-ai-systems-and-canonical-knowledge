@@ -9,6 +9,14 @@
           "derivable_candidate_rate": 0.8266666666666667,
           "success_count": 57,
           "success_rate": 0.76
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 75,
+          "cases_total": 75,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "success_count": 0,
+          "success_rate": 0.0
         }
       }
     },
@@ -37,10 +45,10 @@
         "ai_noether_exact": {
           "cases_completed": 10,
           "cases_total": 10,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "success_count": 0,
-          "success_rate": 0.0
+          "derivable_candidate_count": 7,
+          "derivable_candidate_rate": 0.7,
+          "success_count": 5,
+          "success_rate": 0.5
         }
       }
     },
@@ -69,10 +77,10 @@
         "ai_noether_exact": {
           "cases_completed": 10,
           "cases_total": 10,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "success_count": 0,
-          "success_rate": 0.0
+          "derivable_candidate_count": 4,
+          "derivable_candidate_rate": 0.4,
+          "success_count": 1,
+          "success_rate": 0.1
         }
       }
     },

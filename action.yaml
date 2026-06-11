@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "CPU test job reruns Kepler pair/triple exact abduction with coupled-recovery scoring and nondegenerate saturation, then writes combined baseline-plus-method scores."
+notes: "CPU test job reruns corrected Kepler pair/triple exact abduction with post-decomposition degeneracy filtering and regenerates combined baseline-plus-method scores over the corrected 75-case baseline."
