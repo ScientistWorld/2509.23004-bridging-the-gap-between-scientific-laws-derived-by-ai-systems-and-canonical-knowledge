@@ -6,6 +6,8 @@ The workspace now contains a runnable exact symbolic reproduction path for AI-No
 
 The evaluator is independent from `method/` and scores saved method outputs only. For newly generated outputs, it recomputes derivability and canonical recovery from the saved symbolic candidates rather than trusting method-provided success flags. A no-abduction baseline is available for evaluator sanity checks.
 
+Continuation audit on 2026-06-20 found that the current checked-in `scoring/scores.json` is stale and only contains the no-abduction baseline. This does not invalidate the method implementation, but it means the visible score artifact must be regenerated before restoring a milestone above `core_claim`. The prepared job now runs `scripts/reproduce.sh` and `validate.py --compare` to rebuild baseline, method, multi-axiom, and score artifacts together.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
@@ -31,7 +33,7 @@ Reproduced results after job `7227dc15-43e`:
 
 ## What Remains
 
-- Rerun the full exact single-axiom sweep after rational-denominator normalization. This should address the two known rational-coefficient validation errors without changing the algebraic ideal.
+- Rerun the full exact single-axiom sweep after rational-denominator normalization and regenerate `scoring/scores.json` from the fresh method outputs.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.

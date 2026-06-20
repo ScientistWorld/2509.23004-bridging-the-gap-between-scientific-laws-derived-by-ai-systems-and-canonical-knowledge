@@ -1,8 +1,13 @@
 # Reproduction Milestones
 
-**Current: core_claim_plus**
+**Current: core_claim**
 
 ## Progress Log
+
+### [2026-06-20 07:45] - core_claim
+- Continuation audit reset the active milestone to `core_claim` as instructed.
+- Confirmed the method implementation is a real exact AI-Noether encode, primary-decompose, and Groebner-reason pipeline, and the evaluator remains method-independent.
+- Found current `scoring/scores.json` only contains the no-abduction baseline because a previous full rerun was cancelled; prepared a full CPU reproduction job to regenerate method scores from fresh outputs before restoring `core_claim_plus`.
 
 ### [2026-06-11 13:15] - core_claim
 - Audited the inherited exact AI-Noether implementation and confirmed it implements the paper's encode, primary-decompose, and symbolic-reason workflow rather than a surrogate.
@@ -24,6 +29,3 @@
 - Cancelled job `7970b925-534` after it exposed new integer-domain failures on rational candidate generators emitted by Singular.
 - Patched the method and evaluator to run SymPy Groebner and polynomial comparisons over `QQ`, and normalized decomposed candidate generators before symbolic checks.
 - Prepared a targeted rational-coefficient smoke job before attempting another full all-paper rerun.
-
-## Stop Justification
-- Completed at milestone `core_claim_plus`.
