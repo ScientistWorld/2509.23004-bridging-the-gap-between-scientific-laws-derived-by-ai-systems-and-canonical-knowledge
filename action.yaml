@@ -1,9 +1,9 @@
-# This iteration writes files only — do NOT submit compute jobs.
-# Once you set action to 'done', STOP immediately.
+# This iteration runs compute jobs through scripts/run.sh.
+# Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Improvements: fixed skip-hard-cases denominators, always enumerated split experiments, enabled Kepler pair/triple split scoring by default, and completed metric descriptions. Notes: see DESIGN_NOTES.md."
+notes: "Run evaluate_train.sh and evaluate_test.sh over all saved method-output artifacts to populate split scores."
