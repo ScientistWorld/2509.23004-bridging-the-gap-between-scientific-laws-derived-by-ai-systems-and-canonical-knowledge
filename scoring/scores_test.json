@@ -1,0 +1,150 @@
+{
+  "experiments": {
+    "exact_single_axiom_all_paper": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 31,
+          "cases_total": 38,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 26,
+          "derivable_candidate_rate": 0.6842105263157895,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 24,
+          "success_rate": 0.631578947368421
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 38,
+          "cases_total": 38,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0
+        }
+      }
+    },
+    "exact_single_axiom_core": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 5,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 5,
+          "success_rate": 1.0
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0
+        }
+      }
+    },
+    "kepler_pair_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 4,
+          "derivable_candidate_rate": 0.8,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 4,
+          "success_rate": 0.8
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 0,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0
+        }
+      }
+    },
+    "kepler_single_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 2,
+          "cases_total": 2,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 2,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 2,
+          "success_rate": 1.0
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 2,
+          "cases_total": 2,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0
+        }
+      }
+    },
+    "kepler_triple_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 2,
+          "derivable_candidate_rate": 0.4,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 1,
+          "success_rate": 0.2
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 0,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0
+        }
+      }
+    },
+    "simple_harmonic_single_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 3,
+          "cases_total": 3,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 3,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 3,
+          "success_rate": 1.0
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 3,
+          "cases_total": 3,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0
+        }
+      }
+    }
+  },
+  "slice": "test",
+  "split": "grouped_alternating_v1"
+}
