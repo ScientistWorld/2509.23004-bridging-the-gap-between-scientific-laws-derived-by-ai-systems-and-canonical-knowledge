@@ -7,35 +7,43 @@
       "metrics": {
         "cases_total": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases in this experiment slice denominator."
         },
         "success_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion."
         },
         "derivable_candidate_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation."
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2
+          "coefficient": -0.2,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
         },
         "success_rate": {
           "higher_is_better": true,
-          "coefficient": 1.0
+          "coefficient": 1.0,
+          "description": "Fraction of cases in the slice that satisfy the experiment success criterion."
         },
         "derivable_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.4
+          "coefficient": 0.4,
+          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate."
         },
         "nondegenerate_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.2
+          "coefficient": 0.2,
+          "description": "Fraction of cases not solved through degenerate boundary explanations."
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1
+          "coefficient": 0.1,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
         }
       },
       "results": {
@@ -70,35 +78,43 @@
       "metrics": {
         "cases_total": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases in this experiment slice denominator."
         },
         "success_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion."
         },
         "derivable_candidate_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation."
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2
+          "coefficient": -0.2,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
         },
         "success_rate": {
           "higher_is_better": true,
-          "coefficient": 1.0
+          "coefficient": 1.0,
+          "description": "Fraction of cases in the slice that satisfy the experiment success criterion."
         },
         "derivable_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.4
+          "coefficient": 0.4,
+          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate."
         },
         "nondegenerate_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.2
+          "coefficient": 0.2,
+          "description": "Fraction of cases not solved through degenerate boundary explanations."
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1
+          "coefficient": 0.1,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
         }
       },
       "results": {
@@ -133,35 +149,43 @@
       "metrics": {
         "cases_total": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases in this experiment slice denominator."
         },
         "success_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion."
         },
         "derivable_candidate_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation."
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2
+          "coefficient": -0.2,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
         },
         "success_rate": {
           "higher_is_better": true,
-          "coefficient": 1.0
+          "coefficient": 1.0,
+          "description": "Fraction of cases in the slice that satisfy the experiment success criterion."
         },
         "derivable_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.4
+          "coefficient": 0.4,
+          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate."
         },
         "nondegenerate_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.2
+          "coefficient": 0.2,
+          "description": "Fraction of cases not solved through degenerate boundary explanations."
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1
+          "coefficient": 0.1,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
         }
       },
       "results": {
@@ -196,35 +220,43 @@
       "metrics": {
         "cases_total": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases in this experiment slice denominator."
         },
         "success_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion."
         },
         "derivable_candidate_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation."
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2
+          "coefficient": -0.2,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
         },
         "success_rate": {
           "higher_is_better": true,
-          "coefficient": 1.0
+          "coefficient": 1.0,
+          "description": "Fraction of cases in the slice that satisfy the experiment success criterion."
         },
         "derivable_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.4
+          "coefficient": 0.4,
+          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate."
         },
         "nondegenerate_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.2
+          "coefficient": 0.2,
+          "description": "Fraction of cases not solved through degenerate boundary explanations."
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1
+          "coefficient": 0.1,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
         }
       },
       "results": {
@@ -259,35 +291,43 @@
       "metrics": {
         "cases_total": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases in this experiment slice denominator."
         },
         "success_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion."
         },
         "derivable_candidate_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation."
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2
+          "coefficient": -0.2,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
         },
         "success_rate": {
           "higher_is_better": true,
-          "coefficient": 1.0
+          "coefficient": 1.0,
+          "description": "Fraction of cases in the slice that satisfy the experiment success criterion."
         },
         "derivable_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.4
+          "coefficient": 0.4,
+          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate."
         },
         "nondegenerate_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.2
+          "coefficient": 0.2,
+          "description": "Fraction of cases not solved through degenerate boundary explanations."
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1
+          "coefficient": 0.1,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
         }
       },
       "results": {
@@ -311,35 +351,43 @@
       "metrics": {
         "cases_total": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases in this experiment slice denominator."
         },
         "success_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion."
         },
         "derivable_candidate_count": {
           "higher_is_better": true,
-          "coefficient": 0.0
+          "coefficient": 0.0,
+          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation."
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2
+          "coefficient": -0.2,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
         },
         "success_rate": {
           "higher_is_better": true,
-          "coefficient": 1.0
+          "coefficient": 1.0,
+          "description": "Fraction of cases in the slice that satisfy the experiment success criterion."
         },
         "derivable_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.4
+          "coefficient": 0.4,
+          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate."
         },
         "nondegenerate_candidate_rate": {
           "higher_is_better": true,
-          "coefficient": 0.2
+          "coefficient": 0.2,
+          "description": "Fraction of cases not solved through degenerate boundary explanations."
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1
+          "coefficient": 0.1,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
         }
       },
       "results": {

@@ -11,8 +11,8 @@ cd /home/user
 
 mkdir -p scoring
 
-include_multi=0
-include_triples=0
+include_multi=1
+include_triples=1
 while [ "$#" -gt 0 ]; do
   case "${1:-}" in
     --include-multi)

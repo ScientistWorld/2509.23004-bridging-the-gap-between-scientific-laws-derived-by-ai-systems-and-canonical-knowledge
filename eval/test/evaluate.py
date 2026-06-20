@@ -18,6 +18,24 @@ except ModuleNotFoundError:  # pragma: no cover - login-node compatibility path
 
 SLICE_NAME = "test"
 SPLIT_NAME = "grouped_alternating_v1"
+EXPECTED_TOTALS_BY_SLICE = {
+    "train": {
+        "exact_single_axiom_all_paper": 37,
+        "exact_single_axiom_core": 6,
+        "simple_harmonic_single_axiom": 3,
+        "kepler_single_axiom": 3,
+        "kepler_pair_axiom": 5,
+        "kepler_triple_axiom": 5,
+    },
+    "test": {
+        "exact_single_axiom_all_paper": 38,
+        "exact_single_axiom_core": 5,
+        "simple_harmonic_single_axiom": 3,
+        "kepler_single_axiom": 2,
+        "kepler_pair_axiom": 5,
+        "kepler_triple_axiom": 5,
+    },
+}
 
 
 def symbol_table(variables: list[str]) -> dict[str, sp.Symbol]:
@@ -208,7 +226,12 @@ def slice_cases(cases: list[dict]) -> list[dict]:
     return sorted(selected, key=case_sort_key)
 
 
-def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, size: int | None = None) -> dict:
+def summarize_cases(
+    cases: list[dict],
+    problem_filter: set[str] | None = None,
+    size: int | None = None,
+    expected_total: int | None = None,
+) -> dict:
     selected = []
     for case in cases:
         if problem_filter is not None and case["problem"] not in problem_filter:
@@ -216,7 +239,7 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
         if size is not None and len(case["removed_indices"]) != size:
             continue
         selected.append(case)
-    total = len(selected)
+    total = max(len(selected), expected_total or 0)
     completed = sum(1 for c in selected if c.get("status") == "ok")
     scored = [score_case(c) for c in selected]
     derivable = sum(1 for has_derivable, _, _ in scored if has_derivable)
@@ -243,8 +266,9 @@ def add_summary(
     size: int | None = None,
 ) -> None:
     scores["experiments"].setdefault(experiment, {"results": {}})
+    expected_total = EXPECTED_TOTALS_BY_SLICE[SLICE_NAME].get(experiment)
     scores["experiments"][experiment]["results"][method_name] = summarize_cases(
-        cases, problem_filter, size
+        cases, problem_filter, size, expected_total
     )
 
 
@@ -274,10 +298,6 @@ def build_scores(
     scores = {"slice": SLICE_NAME, "split": SPLIT_NAME, "experiments": {}}
     for method_name, method_cases in sorted(cases_by_method.items()):
         slice_method_cases = slice_cases(method_cases)
-        by_problem = defaultdict(list)
-        for case in slice_method_cases:
-            by_problem[case["problem"]].append(case)
-
         add_summary(
             scores,
             "exact_single_axiom_core",
@@ -286,54 +306,41 @@ def build_scores(
             {"simple_harmonic_oscillator", "kepler"},
             size=1,
         )
-        all_single = summarize_cases(slice_method_cases, size=1)
-        core_problems = {"simple_harmonic_oscillator", "kepler"}
-        has_broad_single_axiom_cases = any(
-            len(c.get("removed_indices", [])) == 1 and c["problem"] not in core_problems
-            for c in slice_method_cases
+        add_summary(scores, "exact_single_axiom_all_paper", method_name, slice_method_cases, size=1)
+        add_summary(
+            scores,
+            "simple_harmonic_single_axiom",
+            method_name,
+            slice_method_cases,
+            {"simple_harmonic_oscillator"},
+            size=1,
         )
-        if all_single["cases_total"] == 75 or has_broad_single_axiom_cases:
-            add_summary(scores, "exact_single_axiom_all_paper", method_name, slice_method_cases, size=1)
-        if "simple_harmonic_oscillator" in by_problem:
+        add_summary(
+            scores,
+            "kepler_single_axiom",
+            method_name,
+            slice_method_cases,
+            {"kepler"},
+            size=1,
+        )
+        if include_multi:
             add_summary(
                 scores,
-                "simple_harmonic_single_axiom",
-                method_name,
-                slice_method_cases,
-                {"simple_harmonic_oscillator"},
-                size=1,
-            )
-        if "kepler" in by_problem:
-            add_summary(
-                scores,
-                "kepler_single_axiom",
+                "kepler_pair_axiom",
                 method_name,
                 slice_method_cases,
                 {"kepler"},
-                size=1,
+                size=2,
             )
-            if include_multi and any(
-                c["problem"] == "kepler" and len(c["removed_indices"]) == 2 for c in slice_method_cases
-            ):
-                add_summary(
-                    scores,
-                    "kepler_pair_axiom",
-                    method_name,
-                    slice_method_cases,
-                    {"kepler"},
-                    size=2,
-                )
-            if include_triples and any(
-                c["problem"] == "kepler" and len(c["removed_indices"]) == 3 for c in slice_method_cases
-            ):
-                add_summary(
-                    scores,
-                    "kepler_triple_axiom",
-                    method_name,
-                    slice_method_cases,
-                    {"kepler"},
-                    size=3,
-                )
+        if include_triples:
+            add_summary(
+                scores,
+                "kepler_triple_axiom",
+                method_name,
+                slice_method_cases,
+                {"kepler"},
+                size=3,
+            )
     return scores
 
 
