@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-20 09:24] - core_claim_plus
+- Completed final verification for gym readiness.
+- Confirmed `python validate.py --compare` passes and the milestone remains `core_claim_plus`.
+- Cleaned method-agnostic documentation leaks in evaluation, data, and constraint docs; official scores remain unchanged.
+
 ### [2026-06-20 09:10] - core_claim_plus
 - Revalidated the checked-in official and split score artifacts with `python validate.py --compare`; all structure, scoring, and import-separation checks pass.
 - Updated `scripts/run.sh` to regenerate reproduction outputs from the current method code, run train/test evaluators, and validate the result in one CPU job.

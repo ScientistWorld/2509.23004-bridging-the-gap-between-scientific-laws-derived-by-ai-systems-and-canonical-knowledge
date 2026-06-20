@@ -2,8 +2,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "CPU job regenerates AI-Noether outputs from current method code, runs official and split evaluators, and validates scores."
+notes: "Final verification passed; documentation leaks fixed and gym is ready at core_claim_plus."

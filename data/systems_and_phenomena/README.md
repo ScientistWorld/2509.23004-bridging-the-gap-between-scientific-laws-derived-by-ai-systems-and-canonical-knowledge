@@ -1,6 +1,6 @@
 # Systems and Phenomena: Input Format
 
-This directory contains problem definitions for AI-Noether. Each problem is defined in its own subdirectory with a `system.txt` file (and optional noisy variants).
+This directory contains polynomial scientific-law benchmark definitions. Each problem is defined in its own subdirectory with a `system.txt` file and optional noisy variants.
 
 ## Directory Structure
 
@@ -52,7 +52,7 @@ T*v - 2*Pi*r
 - Use `*` for multiplication: `2*x*y` not `2xy`
 - Use `^` for exponents: `x^2` not `x**2`
 - Coefficients must be integers or rationals in fractional form: `3`, `-1`, `1/2`, `10001/10000`
-- **Important**: Decimal coefficients like `0.023` will cause errors in Macaulay2. Use rational form instead: `23/1000`
+- **Important**: Decimal coefficients like `0.023` are not accepted by the benchmark parsers. Use rational form instead: `23/1000`
 - Each line is one polynomial = 0
 
 ### 3. Measured Variables
@@ -127,9 +127,9 @@ Target Polynomial:
 (10000217/10000000)*m1*m2*p^2 - (9999922/10000000)*m1*d1*d2^2 - (9999853/10000000)*m2*d1^2*d2 - (19989624/10000000)*m2*d1*d2^2
 ```
 
-**Important**: Since AI-Noether interfaces with Macaulay2, all coefficients must be expressed as rational numbers in fractional form. Decimal notation like `1.00234` will cause parsing errors—use `100234/100000` instead.
+**Important**: All coefficients must be expressed as rational numbers in fractional form. Decimal notation like `1.00234` will cause parsing errors; use `100234/100000` instead.
 
-The numerical abduction pipeline will attempt to recover the true (integer) coefficients from the noisy measurements.
+Numerical variants can be used to test whether a candidate solver can recover exact or near-exact relations from noisy measurements.
 
 ## Reserved Variable Names
 
@@ -206,15 +206,14 @@ c^2*L0^2 - c^2*L^2 - v^2*L0^2
 - All variables in equations must be listed in the Variables section
 - Check for typos in variable names
 
-### "Coefficient parsing error" or Macaulay2 errors
+### "Coefficient parsing error"
 - Ensure all coefficients are integers or rationals in fractional form
 - Convert decimals to fractions: `0.99987` → `99987/100000`
 
-### "Decomposition timeout"
+### "Symbolic solver timeout"
 - Reduce number of variables if possible
-- Try using Singular instead of M2 (`decomposition.engine: "singular"`)
 - Simplify polynomial degrees
 
-### Bertini crashes with no output
+### External solver rejects a variable name
 - Check for reserved variable names
 - Try renaming problematic variables (especially `E`, `Pi`, `cos*` prefixes)
