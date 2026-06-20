@@ -52,15 +52,15 @@
       "primary_metric": "success_rate",
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 61,
-          "cases_total": 65,
+          "cases_completed": 75,
+          "cases_total": 75,
           "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 56,
-          "derivable_candidate_rate": 0.8615384615384616,
+          "derivable_candidate_count": 73,
+          "derivable_candidate_rate": 0.9733333333333334,
           "nondegenerate_candidate_rate": 1.0,
-          "success_count": 52,
-          "success_rate": 0.8,
-          "success_signal": 0.8006933333333334,
+          "success_count": 73,
+          "success_rate": 0.9733333333333334,
+          "success_signal": 0.9743066666666668,
           "type": "proposed"
         },
         "no_abduction_baseline": {
@@ -340,6 +340,11 @@
           "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
           "higher_is_better": true
         },
+        "derivable_success_signal": {
+          "coefficient": 1.0,
+          "description": "Derivability rate with a tiny coupled-success coverage tie-breaker used as the primary metric for the saturated Kepler triple split.",
+          "higher_is_better": true
+        },
         "nondegenerate_candidate_rate": {
           "coefficient": 0.2,
           "description": "Fraction of cases not solved through degenerate boundary explanations.",
@@ -358,11 +363,6 @@
         "success_signal": {
           "coefficient": 0.0,
           "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
-        },
-        "derivable_success_signal": {
-          "coefficient": 1.0,
-          "description": "Derivability rate with a tiny coupled-success coverage tie-breaker used as the primary metric for the saturated Kepler triple split.",
           "higher_is_better": true
         }
       },

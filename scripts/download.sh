@@ -12,12 +12,12 @@
 # Estimated total download size: 0 GB
 # Estimated disk usage after extraction: 0 GB
 #
-# No external dataset or model download is required for the exact symbolic
-# benchmark subset reproduced here.
+# No external dataset or model download is required for the symbolic benchmark
+# instances packaged in this workspace.
 
 set -e
 
 cd "$(dirname "$0")/.."
 
 mkdir -p data/downloads
-echo "AI-Noether exact benchmarks are symbolic and require no external datasets."
+echo "Packaged symbolic benchmarks require no external datasets."

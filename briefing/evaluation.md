@@ -1,6 +1,6 @@
 # Evaluation Protocol
 
-Evaluation reads method artifacts from `scoring/ai_noether_exact_outputs.json` or a compatible JSON file. It does not import from `method/` and does not rerun candidate generation.
+Evaluation reads candidate-output artifacts passed to `scripts/evaluate.sh`, or compatible default JSON artifacts in `scoring/`. It does not import from `method/` and does not rerun candidate generation.
 
 Each case is scored from saved candidate axiom sets. For single-missing-axiom cases, success requires recovering the removed canonical axiom while passing symbolic derivability checks for the target. For multi-missing-axiom cases, success follows the paper's coupled-recovery setting: a candidate may be entangled rather than a literal copy of every removed axiom, but it must be nondegenerate and make the target derivable. The main metric is `success_rate`, the fraction of benchmark cases solved. `derivable_candidate_rate` records whether each case produced any derivability-certified candidate, and `cases_completed` records how many cases ran to normal completion rather than timing out or failing.
 

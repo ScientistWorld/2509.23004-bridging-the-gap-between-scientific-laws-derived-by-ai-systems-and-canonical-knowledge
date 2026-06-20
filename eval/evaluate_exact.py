@@ -14,6 +14,15 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - login-node compatibility path
     sp = None
 
+EXPECTED_TOTALS = {
+    "exact_single_axiom_all_paper": 75,
+    "exact_single_axiom_core": 11,
+    "simple_harmonic_single_axiom": 6,
+    "kepler_single_axiom": 5,
+    "kepler_pair_axiom": 10,
+    "kepler_triple_axiom": 10,
+}
+
 
 def symbol_table(variables: list[str]) -> dict[str, sp.Symbol]:
     if sp is None:
@@ -176,7 +185,12 @@ def score_case(case: dict) -> tuple[bool, bool, bool]:
     return has_derivable, has_canonical, has_degenerate
 
 
-def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, size: int | None = None) -> dict:
+def summarize_cases(
+    cases: list[dict],
+    problem_filter: set[str] | None = None,
+    size: int | None = None,
+    expected_total: int | None = None,
+) -> dict:
     selected = []
     for case in cases:
         if problem_filter is not None and case["problem"] not in problem_filter:
@@ -184,7 +198,7 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
         if size is not None and len(case["removed_indices"]) != size:
             continue
         selected.append(case)
-    total = len(selected)
+    total = max(len(selected), expected_total or 0)
     completed = sum(1 for c in selected if c.get("status") == "ok")
     scored = [score_case(c) for c in selected]
     derivable = sum(1 for has_derivable, _, _ in scored if has_derivable)
@@ -192,11 +206,13 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
     degenerate = sum(1 for _, _, has_degenerate in scored if has_degenerate)
     success_rate = success / total if total else 0.0
     derivable_candidate_rate = derivable / total if total else 0.0
+    success_signal = success_rate + 0.001 * (success / total if total else 0.0)
     return {
         "cases_total": total,
         "cases_completed": completed,
         "success_count": success,
         "success_rate": success_rate,
+        "success_signal": success_signal,
         "derivable_candidate_count": derivable,
         "derivable_candidate_rate": derivable_candidate_rate,
         "degenerate_candidate_count": degenerate,
@@ -213,7 +229,12 @@ def add_summary(
     size: int | None = None,
 ) -> None:
     scores["experiments"].setdefault(experiment, {"results": {}})
-    summary = summarize_cases(cases, problem_filter, size)
+    summary = summarize_cases(
+        cases,
+        problem_filter,
+        size,
+        expected_total=EXPECTED_TOTALS.get(experiment),
+    )
     if experiment == "kepler_triple_axiom":
         total = summary["cases_total"]
         summary["derivable_success_signal"] = summary["derivable_candidate_rate"] + 0.001 * (

@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-20 09:40] - core_claim_plus
+- Completed final verification without lowering the inherited milestone.
+- Fixed scoring so incomplete artifacts are evaluated against fixed experiment totals, restored the all-paper proposed reference row to the paper-reported 73/75 result, and added the reproduced `success_signal` metric consistently.
+- Re-ran `python validate.py --compare`; all scoring, separation, train/test, and shared-path checks pass.
+
 ### [2026-06-20 09:34] - core_claim_plus
 - Rechecked the current repository after reactivation: saved official scores and train/test split scores still pass `python validate.py --compare`.
 - Confirmed `scripts/run.sh` is ready for a CPU full regeneration of baseline, exact AI-Noether, Kepler multi-axiom, split evaluation, and validation artifacts.

@@ -2,8 +2,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Fresh CPU rerun of scripts/reproduce.sh, train/test evaluators, and validate.py --compare to regenerate current-code AI-Noether artifacts."
+notes: "Final verification passed after scoring-denominator and documentation fixes; workspace ready for gym use."
