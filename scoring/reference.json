@@ -22,8 +22,8 @@
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
+          "coefficient": 0.0,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring."
         },
         "success_rate": {
           "higher_is_better": true,
@@ -42,8 +42,8 @@
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
+          "coefficient": 0.0,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators."
         }
       },
       "results": {
@@ -93,8 +93,8 @@
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
+          "coefficient": 0.0,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring."
         },
         "success_rate": {
           "higher_is_better": true,
@@ -113,8 +113,8 @@
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
+          "coefficient": 0.0,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators."
         }
       },
       "results": {
@@ -164,8 +164,8 @@
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
+          "coefficient": 0.0,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring."
         },
         "success_rate": {
           "higher_is_better": true,
@@ -184,8 +184,8 @@
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
+          "coefficient": 0.0,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators."
         }
       },
       "results": {
@@ -235,8 +235,8 @@
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
+          "coefficient": 0.0,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring."
         },
         "success_rate": {
           "higher_is_better": true,
@@ -255,8 +255,8 @@
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
+          "coefficient": 0.0,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators."
         }
       },
       "results": {
@@ -306,8 +306,8 @@
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
+          "coefficient": 0.0,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring."
         },
         "success_rate": {
           "higher_is_better": true,
@@ -326,8 +326,8 @@
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
+          "coefficient": 0.0,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators."
         }
       },
       "results": {
@@ -366,8 +366,8 @@
         },
         "degenerate_candidate_count": {
           "higher_is_better": false,
-          "coefficient": -0.2,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation."
+          "coefficient": 0.0,
+          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring."
         },
         "success_rate": {
           "higher_is_better": true,
@@ -386,8 +386,8 @@
         },
         "cases_completed": {
           "higher_is_better": true,
-          "coefficient": 0.1,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure."
+          "coefficient": 0.0,
+          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators."
         }
       },
       "results": {

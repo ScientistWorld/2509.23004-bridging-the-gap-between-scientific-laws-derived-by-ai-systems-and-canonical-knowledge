@@ -22,7 +22,7 @@ except ModuleNotFoundError:  # pragma: no cover - login-node compatibility path
 
 
 SLICE_NAME = "train"
-SPLIT_NAME = "grouped_alternating_v1"
+SPLIT_NAME = "grouped_alternating_v2_kepler_pair_balanced"
 EXPECTED_TOTALS_BY_SLICE = {
     "train": {
         "exact_single_axiom_all_paper": 37,
@@ -40,6 +40,12 @@ EXPECTED_TOTALS_BY_SLICE = {
         "kepler_pair_axiom": 5,
         "kepler_triple_axiom": 5,
     },
+}
+FIXED_SPLITS = {
+    ("kepler", 2): {
+        "train": {(1, 2), (1, 5), (2, 3), (2, 4), (3, 5)},
+        "test": {(1, 3), (1, 4), (2, 5), (3, 4), (4, 5)},
+    }
 }
 
 
@@ -214,6 +220,14 @@ def case_sort_key(case: dict) -> tuple:
 
 
 def selected_for_slice(case: dict, ordinal: int) -> str:
+    fixed_split = FIXED_SPLITS.get((case.get("problem"), len(case.get("removed_indices", []))))
+    if fixed_split is not None:
+        removed = tuple(case.get("removed_indices", []))
+        if removed in fixed_split["train"]:
+            return "train"
+        if removed in fixed_split["test"]:
+            return "test"
+        raise ValueError(f"Case {case.get('problem')} {removed} is missing from fixed split.")
     group_key = f"{case.get('problem')}|{len(case.get('removed_indices', []))}"
     offset = int(hashlib.sha256(group_key.encode("utf-8")).hexdigest()[:8], 16) % 2
     return "train" if (ordinal + offset) % 2 == 0 else "test"

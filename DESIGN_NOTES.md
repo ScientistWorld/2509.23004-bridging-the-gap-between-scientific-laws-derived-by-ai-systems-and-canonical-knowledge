@@ -18,5 +18,11 @@
 ## Runtime Concerns For Next Iteration
 
 - The fixed denominators assume the grouped alternating split over the 75 single-axiom paper cases plus the 10 Kepler pair and 10 Kepler triple cases: train/test counts are 37/38 for all single-axiom cases, 6/5 for the core subset, 3/3 for simple harmonic, 3/2 for Kepler single, and 5/5 for Kepler pair/triple. The runner should confirm these counts still match the actual generated artifacts.
-- `cases_completed` is still a raw count metric, inherited from the first pass. The new fixed denominators make skipping visible through rate metrics, but the next runner should watch that the scoring aggregator does not let raw completion counts dominate rate-based scientific metrics.
+- `cases_completed` remains reported as a diagnostic raw count. Its score coefficient is now 0.0 because fixed denominators already make skipped cases visible through rate metrics.
 - The split evaluators rely on method artifacts carrying enough symbolic fields for independent verification. If a future method emits only minimal success flags, evaluation should fail for non-empty outputs rather than trust those flags.
+
+## Runtime Audit 2026-06-20
+
+- First split job (`64ba51c4-f5d`) completed and wrote both split score files.
+- The initial grouped alternating Kepler pair split was miscalibrated on the final method: `success_rate` was 0.2 on train and 0.8 on test with only five cases per slice. The evaluators now use an explicit fixed Kepler pair split while leaving the larger single-axiom split and the Kepler triple split unchanged.
+- Raw count coefficients for `cases_completed` and `degenerate_candidate_count` were set to 0.0 in `scoring/reference.json`. Missing cases already depress the normalized rate denominators, and `nondegenerate_candidate_rate` is the normalized constraint metric for degenerate explanations.
