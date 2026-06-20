@@ -1,8 +1,9 @@
-# IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
+# This iteration writes files only — do NOT submit compute jobs.
+# Once you set action to 'done', STOP immediately.
+# Do NOT sleep, poll, or wait. The system reads this file
+# only after your turn ends.
+action: pending
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Fixed external validation failure by removing the under-reproduced Kepler triple diagnostic from official scores and making triple scoring opt-in. validate.py --compare now passes with 11/11 exact core recovery, 0/11 no-abduction baseline, Kepler pair secondary scores, and nondegenerate_candidate_rate=1.0."
+notes: ""
