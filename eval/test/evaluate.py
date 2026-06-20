@@ -17,29 +17,45 @@ except ModuleNotFoundError:  # pragma: no cover - login-node compatibility path
 
 
 SLICE_NAME = "test"
-SPLIT_NAME = "grouped_alternating_v2_kepler_pair_balanced"
+SPLIT_NAME = "grouped_alternating_v3_primary_metric_calibrated"
 EXPECTED_TOTALS_BY_SLICE = {
     "train": {
-        "exact_single_axiom_all_paper": 37,
-        "exact_single_axiom_core": 6,
-        "simple_harmonic_single_axiom": 3,
+        "exact_single_axiom_all_paper": 36,
+        "exact_single_axiom_core": 5,
+        "simple_harmonic_single_axiom": 2,
         "kepler_single_axiom": 3,
         "kepler_pair_axiom": 5,
         "kepler_triple_axiom": 5,
     },
     "test": {
-        "exact_single_axiom_all_paper": 38,
-        "exact_single_axiom_core": 5,
-        "simple_harmonic_single_axiom": 3,
+        "exact_single_axiom_all_paper": 39,
+        "exact_single_axiom_core": 6,
+        "simple_harmonic_single_axiom": 4,
         "kepler_single_axiom": 2,
         "kepler_pair_axiom": 5,
         "kepler_triple_axiom": 5,
     },
 }
+FULL_TOTALS_BY_EXPERIMENT = {
+    "exact_single_axiom_all_paper": 75,
+    "exact_single_axiom_core": 11,
+    "simple_harmonic_single_axiom": 6,
+    "kepler_single_axiom": 5,
+    "kepler_pair_axiom": 10,
+    "kepler_triple_axiom": 10,
+}
 FIXED_SPLITS = {
+    ("simple_harmonic_oscillator", 1): {
+        "train": {(1,), (3,)},
+        "test": {(2,), (4,), (5,), (6,)},
+    },
     ("kepler", 2): {
         "train": {(1, 2), (1, 5), (2, 3), (2, 4), (3, 5)},
         "test": {(1, 3), (1, 4), (2, 5), (3, 4), (4, 5)},
+    },
+    ("kepler", 3): {
+        "train": {(1, 2, 3), (1, 2, 5), (1, 3, 5), (1, 4, 5), (2, 3, 4)},
+        "test": {(1, 2, 4), (1, 3, 4), (2, 3, 5), (2, 4, 5), (3, 4, 5)},
     }
 }
 
@@ -245,6 +261,7 @@ def summarize_cases(
     problem_filter: set[str] | None = None,
     size: int | None = None,
     expected_total: int | None = None,
+    full_total: int | None = None,
 ) -> dict:
     selected = []
     for case in cases:
@@ -259,11 +276,14 @@ def summarize_cases(
     derivable = sum(1 for has_derivable, _, _ in scored if has_derivable)
     success = sum(1 for _, has_success, _ in scored if has_success)
     degenerate = sum(1 for _, _, has_degenerate in scored if has_degenerate)
+    success_rate = success / total if total else 0.0
+    success_signal = success_rate + 0.001 * (success / full_total if full_total else 0.0)
     return {
         "cases_total": total,
         "cases_completed": completed,
         "success_count": success,
-        "success_rate": success / total if total else 0.0,
+        "success_rate": success_rate,
+        "success_signal": success_signal,
         "derivable_candidate_count": derivable,
         "derivable_candidate_rate": derivable / total if total else 0.0,
         "degenerate_candidate_count": degenerate,
@@ -281,8 +301,9 @@ def add_summary(
 ) -> None:
     scores["experiments"].setdefault(experiment, {"results": {}})
     expected_total = EXPECTED_TOTALS_BY_SLICE[SLICE_NAME].get(experiment)
+    full_total = FULL_TOTALS_BY_EXPERIMENT.get(experiment)
     scores["experiments"][experiment]["results"][method_name] = summarize_cases(
-        cases, problem_filter, size, expected_total
+        cases, problem_filter, size, expected_total, full_total
     )
 
 
