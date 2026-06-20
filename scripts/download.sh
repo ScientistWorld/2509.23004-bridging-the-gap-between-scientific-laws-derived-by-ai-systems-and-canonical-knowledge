@@ -17,7 +17,7 @@
 
 set -e
 
-cd /home/user
+cd "$(dirname "$0")/.."
 
 mkdir -p data/downloads
 echo "AI-Noether exact benchmarks are symbolic and require no external datasets."
