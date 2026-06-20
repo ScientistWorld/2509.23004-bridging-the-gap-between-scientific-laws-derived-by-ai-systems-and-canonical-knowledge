@@ -2,6 +2,14 @@
   "experiments": {
     "exact_single_axiom_all_paper": {
       "results": {
+        "ai_noether_exact": {
+          "cases_completed": 61,
+          "cases_total": 65,
+          "derivable_candidate_count": 56,
+          "derivable_candidate_rate": 0.8615384615384616,
+          "success_count": 52,
+          "success_rate": 0.8
+        },
         "no_abduction_baseline": {
           "cases_completed": 75,
           "cases_total": 75,
@@ -15,12 +23,12 @@
     "exact_single_axiom_core": {
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 9,
+          "cases_completed": 11,
           "cases_total": 11,
-          "derivable_candidate_count": 9,
-          "derivable_candidate_rate": 0.8181818181818182,
-          "success_count": 9,
-          "success_rate": 0.8181818181818182
+          "derivable_candidate_count": 11,
+          "derivable_candidate_rate": 1.0,
+          "success_count": 11,
+          "success_rate": 1.0
         },
         "no_abduction_baseline": {
           "cases_completed": 11,
@@ -79,12 +87,12 @@
     "simple_harmonic_single_axiom": {
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 4,
+          "cases_completed": 6,
           "cases_total": 6,
-          "derivable_candidate_count": 4,
-          "derivable_candidate_rate": 0.6666666666666666,
-          "success_count": 4,
-          "success_rate": 0.6666666666666666
+          "derivable_candidate_count": 6,
+          "derivable_candidate_rate": 1.0,
+          "success_count": 6,
+          "success_rate": 1.0
         },
         "no_abduction_baseline": {
           "cases_completed": 6,

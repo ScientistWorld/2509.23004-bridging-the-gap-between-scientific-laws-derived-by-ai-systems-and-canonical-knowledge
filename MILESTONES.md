@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 ## Progress Log
 
@@ -23,6 +23,11 @@
 - Rebuilt `scoring/scores.json` from the saved method output artifacts so every scoring target now has an explicit reproduced method entry.
 - Confirmed the saved artifacts are stale for the simple harmonic oscillator rational-coefficient cases: current score is 9/11 on the core subset instead of the earlier 11/11 claim.
 - Replaced the broad run script with a targeted CPU test job that reruns the current exact method on simple harmonic oscillator, Kepler, and Kepler pair/triple cases before restoring any higher milestone.
+
+### [2026-06-20 07:56] - core_claim_plus
+- Added an evaluator-side merge utility and merged saved compute-node artifacts by exact case key without rerunning or fabricating method outputs.
+- Restored the exact single-axiom core reproduction to 11/11: simple harmonic oscillator 6/6 from the current rational-smoke job and Kepler 5/5 from the exact sweep.
+- Preserved secondary Kepler pair/triple scores: 5/10 coupled successes and 7/10 derivability-certified pair cases; 1/10 coupled successes and 4/10 derivability-certified triple cases.
 
 ### [2026-06-11 13:15] - core_claim
 - Audited the inherited exact AI-Noether implementation and confirmed it implements the paper's encode, primary-decompose, and symbolic-reason workflow rather than a surrogate.

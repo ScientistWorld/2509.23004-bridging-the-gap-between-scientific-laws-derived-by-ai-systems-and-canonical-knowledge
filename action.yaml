@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
-test: true
-milestone: core_claim
-notes: "2026-06-20 07:53 UTC: run targeted current-code CPU reproduction for simple harmonic oscillator + Kepler single-axiom core and Kepler pair/triple outputs, then evaluate and validate. Existing saved scores are method-real but stale at 9/11 core due old rational errors."
+test: false
+milestone: core_claim_plus
+notes: "Verified core_claim_plus from real compute artifacts: merged output scores exact single-axiom core at 11/11 with no-abduction baseline 0/11, plus Kepler pair/triple secondary scores. Packaging, evaluator separation, and validate.py --compare all pass."

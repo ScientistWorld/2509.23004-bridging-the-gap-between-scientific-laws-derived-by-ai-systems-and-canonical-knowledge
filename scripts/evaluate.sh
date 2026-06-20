@@ -33,7 +33,20 @@ if [ "${1:-}" = "--include-multi" ]; then
 fi
 
 if [ "$#" -eq 0 ]; then
-  set -- scoring/ai_noether_exact_outputs.json
+  default_inputs=()
+  if [ -e scoring/baseline_outputs.json ]; then
+    default_inputs+=(scoring/baseline_outputs.json)
+  fi
+  if [ -e scoring/ai_noether_merged_outputs.json ]; then
+    default_inputs+=(scoring/ai_noether_merged_outputs.json)
+  else
+    default_inputs+=(scoring/ai_noether_exact_outputs.json)
+  fi
+  if [ -e scoring/ai_noether_kepler_multi_outputs.json ]; then
+    default_inputs+=(scoring/ai_noether_kepler_multi_outputs.json)
+    include_multi=1
+  fi
+  set -- "${default_inputs[@]}"
 fi
 if [ "$include_multi" -eq 1 ]; then
   python eval/evaluate_exact.py --input "$@" --output scoring/scores.json --include-multi

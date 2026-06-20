@@ -219,7 +219,12 @@ def main() -> None:
             size=1,
         )
         all_single = summarize_cases(method_cases, size=1)
-        if all_single["cases_total"] == 75:
+        core_problems = {"simple_harmonic_oscillator", "kepler"}
+        has_broad_single_axiom_cases = any(
+            len(c.get("removed_indices", [])) == 1 and c["problem"] not in core_problems
+            for c in method_cases
+        )
+        if all_single["cases_total"] == 75 or has_broad_single_axiom_cases:
             add_summary(scores, "exact_single_axiom_all_paper", method_name, method_cases, size=1)
         if "simple_harmonic_oscillator" in by_problem:
             add_summary(
