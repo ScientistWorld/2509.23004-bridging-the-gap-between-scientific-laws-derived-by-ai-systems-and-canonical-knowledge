@@ -2,8 +2,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Regenerate stale split scores with the committed v3 evaluator so success_signal and rebalanced simple-harmonic/triple primary metrics are real-run outputs."
+notes: "Fixed split primary metric validation; python validate.py now passes."
