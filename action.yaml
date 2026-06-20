@@ -6,4 +6,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Regenerate split scores after adding success_signal primary metrics, simple-harmonic/triple rebalances, and missing multi-axiom baseline references."
+notes: "Regenerate stale split scores with the committed v3 evaluator so success_signal and rebalanced simple-harmonic/triple primary metrics are real-run outputs."
