@@ -9,6 +9,11 @@
 - Confirmed the method implementation is a real exact AI-Noether encode, primary-decompose, and Groebner-reason pipeline, and the evaluator remains method-independent.
 - Found current `scoring/scores.json` only contains the no-abduction baseline because a previous full rerun was cancelled; prepared a full CPU reproduction job to regenerate method scores from fresh outputs before restoring `core_claim_plus`.
 
+### [2026-06-20 07:47] - core_claim
+- Rechecked artifacts after continuation: no fresh full-run outputs were present, so `scoring/scores.json` remains baseline-only.
+- Verified the existing rational smoke artifact has no remaining integer-domain coefficient errors; the remaining smoke failures are case timeouts, not rational parsing failures.
+- Kept `scripts/run.sh` pointed at the full CPU reproduction and resubmitted it as the next required compute step.
+
 ### [2026-06-11 13:15] - core_claim
 - Audited the inherited exact AI-Noether implementation and confirmed it implements the paper's encode, primary-decompose, and symbolic-reason workflow rather than a surrogate.
 - Confirmed the existing single-axiom core reproduction remains valid: simple harmonic oscillator 6/6, Kepler 5/5, and combined core 11/11 in `scoring/scores.json`.

@@ -8,6 +8,8 @@ The evaluator is independent from `method/` and scores saved method outputs only
 
 Continuation audit on 2026-06-20 found that the current checked-in `scoring/scores.json` is stale and only contains the no-abduction baseline. This does not invalidate the method implementation, but it means the visible score artifact must be regenerated before restoring a milestone above `core_claim`. The prepared job now runs `scripts/reproduce.sh` and `validate.py --compare` to rebuild baseline, method, multi-axiom, and score artifacts together.
 
+A follow-up check at 2026-06-20 07:47 found no fresh full-run artifacts yet. The existing rational smoke output has no `"expected an integer"` failures, so the next step remains the full exact method rerun rather than another rational-only smoke test.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
