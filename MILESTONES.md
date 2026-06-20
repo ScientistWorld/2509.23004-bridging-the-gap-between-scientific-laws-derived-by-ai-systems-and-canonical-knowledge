@@ -1,8 +1,13 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 ## Progress Log
+
+### [2026-06-20 08:17] - core_claim_plus
+- Reviewed CPU validation job `809a51f1-bf9`: it regenerated baseline outputs, merged saved method artifacts, and wrote scores with explicit degeneracy metrics.
+- Fixed the reference schema by declaring `degenerate_candidate_count` as a constraint metric in every experiment.
+- Re-ran `python validate.py --compare`; validation now passes with 11/11 exact core recovery, no-abduction baseline at 0/11, Kepler pair/triple secondary scores, and `nondegenerate_candidate_rate=1.0`.
 
 ### [2026-06-20 08:12] - core_claim
 - Continuation audit found two evaluator-scoring issues after the prior `core_claim_plus` restoration: incomplete non-empty artifacts could fall back to trusted flags, and Kepler multi-axiom degeneracy filtering was documented but not scored explicitly.

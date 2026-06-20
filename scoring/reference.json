@@ -5,13 +5,38 @@
       "weight": 0.35,
       "primary_metric": "success_rate",
       "metrics": {
-        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
-        "success_count": {"higher_is_better": true, "coefficient": 0.0},
-        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
-        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
-        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
-        "nondegenerate_candidate_rate": {"higher_is_better": true, "coefficient": 0.2},
-        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+        "cases_total": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "success_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "derivable_candidate_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "degenerate_candidate_count": {
+          "higher_is_better": false,
+          "coefficient": -0.2
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 1.0
+        },
+        "derivable_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.4
+        },
+        "nondegenerate_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.2
+        },
+        "cases_completed": {
+          "higher_is_better": true,
+          "coefficient": 0.1
+        }
       },
       "results": {
         "no_abduction_baseline": {
@@ -43,13 +68,38 @@
       "weight": 0.25,
       "primary_metric": "success_rate",
       "metrics": {
-        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
-        "success_count": {"higher_is_better": true, "coefficient": 0.0},
-        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
-        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
-        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
-        "nondegenerate_candidate_rate": {"higher_is_better": true, "coefficient": 0.2},
-        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+        "cases_total": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "success_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "derivable_candidate_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "degenerate_candidate_count": {
+          "higher_is_better": false,
+          "coefficient": -0.2
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 1.0
+        },
+        "derivable_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.4
+        },
+        "nondegenerate_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.2
+        },
+        "cases_completed": {
+          "higher_is_better": true,
+          "coefficient": 0.1
+        }
       },
       "results": {
         "no_abduction_baseline": {
@@ -81,13 +131,38 @@
       "weight": 0.1,
       "primary_metric": "success_rate",
       "metrics": {
-        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
-        "success_count": {"higher_is_better": true, "coefficient": 0.0},
-        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
-        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
-        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
-        "nondegenerate_candidate_rate": {"higher_is_better": true, "coefficient": 0.2},
-        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+        "cases_total": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "success_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "derivable_candidate_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "degenerate_candidate_count": {
+          "higher_is_better": false,
+          "coefficient": -0.2
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 1.0
+        },
+        "derivable_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.4
+        },
+        "nondegenerate_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.2
+        },
+        "cases_completed": {
+          "higher_is_better": true,
+          "coefficient": 0.1
+        }
       },
       "results": {
         "no_abduction_baseline": {
@@ -119,13 +194,38 @@
       "weight": 0.1,
       "primary_metric": "success_rate",
       "metrics": {
-        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
-        "success_count": {"higher_is_better": true, "coefficient": 0.0},
-        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
-        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
-        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
-        "nondegenerate_candidate_rate": {"higher_is_better": true, "coefficient": 0.2},
-        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+        "cases_total": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "success_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "derivable_candidate_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "degenerate_candidate_count": {
+          "higher_is_better": false,
+          "coefficient": -0.2
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 1.0
+        },
+        "derivable_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.4
+        },
+        "nondegenerate_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.2
+        },
+        "cases_completed": {
+          "higher_is_better": true,
+          "coefficient": 0.1
+        }
       },
       "results": {
         "no_abduction_baseline": {
@@ -157,13 +257,38 @@
       "weight": 0.12,
       "primary_metric": "success_rate",
       "metrics": {
-        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
-        "success_count": {"higher_is_better": true, "coefficient": 0.0},
-        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
-        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
-        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
-        "nondegenerate_candidate_rate": {"higher_is_better": true, "coefficient": 0.2},
-        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+        "cases_total": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "success_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "derivable_candidate_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "degenerate_candidate_count": {
+          "higher_is_better": false,
+          "coefficient": -0.2
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 1.0
+        },
+        "derivable_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.4
+        },
+        "nondegenerate_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.2
+        },
+        "cases_completed": {
+          "higher_is_better": true,
+          "coefficient": 0.1
+        }
       },
       "results": {
         "ai_noether_exact": {
@@ -184,13 +309,38 @@
       "weight": 0.08,
       "primary_metric": "success_rate",
       "metrics": {
-        "cases_total": {"higher_is_better": true, "coefficient": 0.0},
-        "success_count": {"higher_is_better": true, "coefficient": 0.0},
-        "derivable_candidate_count": {"higher_is_better": true, "coefficient": 0.0},
-        "success_rate": {"higher_is_better": true, "coefficient": 1.0},
-        "derivable_candidate_rate": {"higher_is_better": true, "coefficient": 0.4},
-        "nondegenerate_candidate_rate": {"higher_is_better": true, "coefficient": 0.2},
-        "cases_completed": {"higher_is_better": true, "coefficient": 0.1}
+        "cases_total": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "success_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "derivable_candidate_count": {
+          "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "degenerate_candidate_count": {
+          "higher_is_better": false,
+          "coefficient": -0.2
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 1.0
+        },
+        "derivable_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.4
+        },
+        "nondegenerate_candidate_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.2
+        },
+        "cases_completed": {
+          "higher_is_better": true,
+          "coefficient": 0.1
+        }
       },
       "results": {
         "ai_noether_exact": {

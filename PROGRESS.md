@@ -20,6 +20,8 @@ Continuation audit at 2026-06-20 08:04 found the reproduction intact. The method
 
 Continuation audit at 2026-06-20 08:12 found two scoring integrity gaps that needed correction before keeping the higher milestone. The evaluator had a compatibility path that trusted success flags for incomplete non-empty artifacts, and the Kepler multi-axiom degeneracy constraint was documented but not represented as an explicit score metric. The evaluator now rejects incomplete non-empty artifacts, recomputes degenerate-boundary candidates by ideal membership, and reports `nondegenerate_candidate_rate`. Benchmark system files have also been mirrored into `data/systems_and_phenomena` so baseline and method entry points consume data assets from `data/` rather than method-private paths.
 
+CPU validation job `809a51f1-bf9` regenerated scores with the stricter evaluator. Its first validation pass failed because `degenerate_candidate_count` was present in result objects but missing from the reference metric schema. After declaring that constraint metric, `python validate.py --compare` passes. The restored core result remains 11/11 for AI-Noether exact recovery against 0/11 for the no-abduction baseline, with `nondegenerate_candidate_rate=1.0` across the scored experiments.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
@@ -45,7 +47,6 @@ Reproduced results currently in `scoring/scores.json` after merging saved comput
 
 ## What Remains
 
-- Regenerate `scoring/scores.json` inside the container with the stricter evaluator and validate that the new `nondegenerate_candidate_rate` metric is present for all scored experiments.
 - Rerun the full exact single-axiom sweep after rational-denominator normalization and regenerate `scoring/scores.json` from the fresh method outputs.
 - Run a fresh full 75-case exact sweep with the rational-denominator fix if pursuing a milestone beyond `core_claim_plus`.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the CPU job limit.

@@ -21,6 +21,6 @@
 - [x] Remove trusted-flag fallback for incomplete non-empty evaluation artifacts.
 - [x] Add explicit nondegenerate-candidate scoring for Kepler multi-axiom constraints.
 - [x] Mirror symbolic benchmark assets into `data/` for reusable loaders and baselines.
-- [ ] Validate stricter evaluator and regenerated scores inside the compute container.
+- [x] Validate stricter evaluator and regenerated scores inside the compute container.
 - [ ] Rerun targeted core and Kepler multi-axiom job with current rational handling.
 - [ ] Rerun full exact method after rational-denominator normalization.
