@@ -2,8 +2,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Regenerate split scores after balancing Kepler pair split and zeroing raw-count scoring coefficients."
+notes: "Grouped alternating split with fixed balanced Kepler pair cases; 96 train metric values, 96 test metric values; ai_noether_exact success gaps: all-paper 0.7568/0.6316, Kepler pair 0.6/0.4, triple 0.0/0.2; core/simple/Kepler single saturated at 1.0 on both slices; nondegenerate constraint saturated at 1.0 but retained as guardrail."
