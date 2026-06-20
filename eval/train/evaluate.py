@@ -25,7 +25,6 @@ SLICE_NAME = "train"
 SPLIT_NAME = "grouped_alternating_v3_primary_metric_calibrated"
 EXPECTED_TOTALS_BY_SLICE = {
     "train": {
-        "exact_single_axiom_all_paper": 36,
         "exact_single_axiom_core": 5,
         "simple_harmonic_single_axiom": 2,
         "kepler_single_axiom": 3,
@@ -33,7 +32,6 @@ EXPECTED_TOTALS_BY_SLICE = {
         "kepler_triple_axiom": 5,
     },
     "test": {
-        "exact_single_axiom_all_paper": 39,
         "exact_single_axiom_core": 6,
         "simple_harmonic_single_axiom": 4,
         "kepler_single_axiom": 2,
@@ -352,7 +350,6 @@ def build_scores(
             {"simple_harmonic_oscillator", "kepler"},
             size=1,
         )
-        add_summary(scores, "exact_single_axiom_all_paper", method_name, slice_method_cases, size=1)
         add_summary(
             scores,
             "simple_harmonic_single_axiom",

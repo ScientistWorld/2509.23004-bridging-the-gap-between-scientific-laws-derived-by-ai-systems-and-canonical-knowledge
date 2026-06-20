@@ -9,6 +9,7 @@ The workspace entered final verification at `core_claim_plus`. The claimed miles
 - Critical: the top-level evaluator was using only emitted cases as the denominator for success rates. This let incomplete artifacts inflate results by omitting failed or timed-out cases.
 - Critical: `scoring/reference.json` contained reproduced partial values for the all-paper proposed row instead of the paper-reported 73/75 exact recovery result.
 - Minor: `scores.json` was missing the same `success_signal` tie-break metric used by the reference schema for some experiments.
+- Minor: train/test split score files included `exact_single_axiom_all_paper`, but those slices contain only half of the 75 cases and are not directly comparable to the paper's full-sweep primary metric.
 - Minor: method-agnostic documentation and `scripts/download.sh` contained unnecessary method-name wording in places visible to from-scratch users.
 - Minor: `scripts/evaluate.sh` cannot recompute non-empty symbolic artifacts under the login-node Python because SymPy is not installed there. The packaged container installs SymPy via `environment/setup.sh`, so this is not a gym blocker.
 
@@ -17,6 +18,7 @@ The workspace entered final verification at `core_claim_plus`. The claimed miles
 - Updated `eval/evaluate_exact.py` so official experiments use fixed expected totals when summarizing cases. Missing cases now count against the denominator.
 - Restored the all-paper proposed reference result to the paper-reported 73/75 value and regenerated the checked-in reproduced summary values with corrected denominators.
 - Added `success_signal` consistently to the reproduced score summaries so scored metrics match the reference schema.
+- Removed `exact_single_axiom_all_paper` from train/test split evaluators and checked-in split scores. The official full-paper experiment remains in `scores.json`; split files now report only split-calibrated experiments.
 - Reworded the method-agnostic evaluation briefing and download script messages to avoid leaking the paper method.
 - Marked unremovable root metadata bind artifacts (`README.md`, `manifest.json`) as local skip-worktree entries; repository HEAD still carries the normal text files, and they are not part of the gym artifacts.
 - Re-ran `python validate.py --compare`; all scoring, import-separation, train/test, and shared-path checks pass.

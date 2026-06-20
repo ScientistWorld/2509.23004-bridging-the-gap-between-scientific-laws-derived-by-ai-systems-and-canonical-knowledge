@@ -6,4 +6,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Final verification passed after scoring-denominator and documentation fixes; workspace ready for gym use."
+notes: "Final verification passed after removing the non-comparable full-paper train/test split score; workspace ready for gym use."

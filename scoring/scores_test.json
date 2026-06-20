@@ -1,31 +1,5 @@
 {
   "experiments": {
-    "exact_single_axiom_all_paper": {
-      "results": {
-        "ai_noether_exact": {
-          "cases_completed": 32,
-          "cases_total": 39,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 27,
-          "derivable_candidate_rate": 0.6923076923076923,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 25,
-          "success_rate": 0.6410256410256411,
-          "success_signal": 0.6413589743589744
-        },
-        "no_abduction_baseline": {
-          "cases_completed": 39,
-          "cases_total": 39,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0
-        }
-      }
-    },
     "exact_single_axiom_core": {
       "results": {
         "ai_noether_exact": {

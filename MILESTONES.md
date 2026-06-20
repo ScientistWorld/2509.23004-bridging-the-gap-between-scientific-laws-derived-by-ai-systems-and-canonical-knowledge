@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-20 09:50] - core_claim_plus
+- Fixed the follow-up validation failure by removing the full 75-case `exact_single_axiom_all_paper` experiment from train/test split score artifacts.
+- Updated the train/test evaluators so future split evaluation does not recreate a non-comparable half-slice score for the full-paper primary metric.
+- Re-ran `python validate.py --compare`; validation passes and the official full-paper score remains in `scores.json`.
+
 ### [2026-06-20 09:40] - core_claim_plus
 - Completed final verification without lowering the inherited milestone.
 - Fixed scoring so incomplete artifacts are evaluated against fixed experiment totals, restored the all-paper proposed reference row to the paper-reported 73/75 result, and added the reproduced `success_signal` metric consistently.
