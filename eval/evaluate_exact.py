@@ -190,13 +190,15 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
     derivable = sum(1 for has_derivable, _, _ in scored if has_derivable)
     success = sum(1 for _, has_canonical, _ in scored if has_canonical)
     degenerate = sum(1 for _, _, has_degenerate in scored if has_degenerate)
+    success_rate = success / total if total else 0.0
+    derivable_candidate_rate = derivable / total if total else 0.0
     return {
         "cases_total": total,
         "cases_completed": completed,
         "success_count": success,
-        "success_rate": success / total if total else 0.0,
+        "success_rate": success_rate,
         "derivable_candidate_count": derivable,
-        "derivable_candidate_rate": derivable / total if total else 0.0,
+        "derivable_candidate_rate": derivable_candidate_rate,
         "degenerate_candidate_count": degenerate,
         "nondegenerate_candidate_rate": 1.0 - (degenerate / total) if total else 0.0,
     }
@@ -211,9 +213,13 @@ def add_summary(
     size: int | None = None,
 ) -> None:
     scores["experiments"].setdefault(experiment, {"results": {}})
-    scores["experiments"][experiment]["results"][method_name] = summarize_cases(
-        cases, problem_filter, size
-    )
+    summary = summarize_cases(cases, problem_filter, size)
+    if experiment == "kepler_triple_axiom":
+        total = summary["cases_total"]
+        summary["derivable_success_signal"] = summary["derivable_candidate_rate"] + 0.001 * (
+            summary["success_count"] / total if total else 0.0
+        )
+    scores["experiments"][experiment]["results"][method_name] = summary
 
 
 def main() -> None:

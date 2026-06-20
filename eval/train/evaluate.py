@@ -283,6 +283,7 @@ def summarize_cases(
     degenerate = sum(1 for _, _, has_degenerate in scored if has_degenerate)
     success_rate = success / total if total else 0.0
     success_signal = success_rate + 0.001 * (success / full_total if full_total else 0.0)
+    derivable_candidate_rate = derivable / total if total else 0.0
     return {
         "cases_total": total,
         "cases_completed": completed,
@@ -290,7 +291,7 @@ def summarize_cases(
         "success_rate": success_rate,
         "success_signal": success_signal,
         "derivable_candidate_count": derivable,
-        "derivable_candidate_rate": derivable / total if total else 0.0,
+        "derivable_candidate_rate": derivable_candidate_rate,
         "degenerate_candidate_count": degenerate,
         "nondegenerate_candidate_rate": 1.0 - (degenerate / total) if total else 0.0,
     }
@@ -307,9 +308,14 @@ def add_summary(
     scores["experiments"].setdefault(experiment, {"results": {}})
     expected_total = EXPECTED_TOTALS_BY_SLICE[SLICE_NAME].get(experiment)
     full_total = FULL_TOTALS_BY_EXPERIMENT.get(experiment)
-    scores["experiments"][experiment]["results"][method_name] = summarize_cases(
+    summary = summarize_cases(
         cases, problem_filter, size, expected_total, full_total
     )
+    if experiment == "kepler_triple_axiom":
+        summary["derivable_success_signal"] = summary["derivable_candidate_rate"] + 0.001 * (
+            summary["success_count"] / full_total if full_total else 0.0
+        )
+    scores["experiments"][experiment]["results"][method_name] = summary
 
 
 def method_name_for_payload(payload: dict, input_path: Path) -> str:

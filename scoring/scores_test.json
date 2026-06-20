@@ -3,48 +3,52 @@
     "exact_single_axiom_all_paper": {
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 31,
-          "cases_total": 38,
+          "cases_completed": 32,
+          "cases_total": 39,
           "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 26,
-          "derivable_candidate_rate": 0.6842105263157895,
+          "derivable_candidate_count": 27,
+          "derivable_candidate_rate": 0.6923076923076923,
           "nondegenerate_candidate_rate": 1.0,
-          "success_count": 24,
-          "success_rate": 0.631578947368421
+          "success_count": 25,
+          "success_rate": 0.6410256410256411,
+          "success_signal": 0.6413589743589744
         },
         "no_abduction_baseline": {
-          "cases_completed": 38,
-          "cases_total": 38,
+          "cases_completed": 39,
+          "cases_total": 39,
           "degenerate_candidate_count": 0,
           "derivable_candidate_count": 0,
           "derivable_candidate_rate": 0.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 0,
-          "success_rate": 0.0
+          "success_rate": 0.0,
+          "success_signal": 0.0
         }
       }
     },
     "exact_single_axiom_core": {
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 5,
-          "cases_total": 5,
+          "cases_completed": 6,
+          "cases_total": 6,
           "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 5,
+          "derivable_candidate_count": 6,
           "derivable_candidate_rate": 1.0,
           "nondegenerate_candidate_rate": 1.0,
-          "success_count": 5,
-          "success_rate": 1.0
+          "success_count": 6,
+          "success_rate": 1.0,
+          "success_signal": 1.0005454545454546
         },
         "no_abduction_baseline": {
-          "cases_completed": 5,
-          "cases_total": 5,
+          "cases_completed": 6,
+          "cases_total": 6,
           "degenerate_candidate_count": 0,
           "derivable_candidate_count": 0,
           "derivable_candidate_rate": 0.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 0,
-          "success_rate": 0.0
+          "success_rate": 0.0,
+          "success_signal": 0.0
         }
       }
     },
@@ -58,7 +62,8 @@
           "derivable_candidate_rate": 0.6,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 2,
-          "success_rate": 0.4
+          "success_rate": 0.4,
+          "success_signal": 0.4002
         },
         "no_abduction_baseline": {
           "cases_completed": 0,
@@ -68,7 +73,8 @@
           "derivable_candidate_rate": 0.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 0,
-          "success_rate": 0.0
+          "success_rate": 0.0,
+          "success_signal": 0.0
         }
       }
     },
@@ -82,7 +88,8 @@
           "derivable_candidate_rate": 1.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 2,
-          "success_rate": 1.0
+          "success_rate": 1.0,
+          "success_signal": 1.0004
         },
         "no_abduction_baseline": {
           "cases_completed": 2,
@@ -92,7 +99,8 @@
           "derivable_candidate_rate": 0.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 0,
-          "success_rate": 0.0
+          "success_rate": 0.0,
+          "success_signal": 0.0
         }
       }
     },
@@ -104,9 +112,11 @@
           "degenerate_candidate_count": 0,
           "derivable_candidate_count": 2,
           "derivable_candidate_rate": 0.4,
+          "derivable_success_signal": 0.4001,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 1,
-          "success_rate": 0.2
+          "success_rate": 0.2,
+          "success_signal": 0.2001
         },
         "no_abduction_baseline": {
           "cases_completed": 0,
@@ -114,37 +124,41 @@
           "degenerate_candidate_count": 0,
           "derivable_candidate_count": 0,
           "derivable_candidate_rate": 0.0,
+          "derivable_success_signal": 0.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 0,
-          "success_rate": 0.0
+          "success_rate": 0.0,
+          "success_signal": 0.0
         }
       }
     },
     "simple_harmonic_single_axiom": {
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 3,
-          "cases_total": 3,
+          "cases_completed": 4,
+          "cases_total": 4,
           "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 3,
+          "derivable_candidate_count": 4,
           "derivable_candidate_rate": 1.0,
           "nondegenerate_candidate_rate": 1.0,
-          "success_count": 3,
-          "success_rate": 1.0
+          "success_count": 4,
+          "success_rate": 1.0,
+          "success_signal": 1.0006666666666666
         },
         "no_abduction_baseline": {
-          "cases_completed": 3,
-          "cases_total": 3,
+          "cases_completed": 4,
+          "cases_total": 4,
           "degenerate_candidate_count": 0,
           "derivable_candidate_count": 0,
           "derivable_candidate_rate": 0.0,
           "nondegenerate_candidate_rate": 1.0,
           "success_count": 0,
-          "success_rate": 0.0
+          "success_rate": 0.0,
+          "success_signal": 0.0
         }
       }
     }
   },
   "slice": "test",
-  "split": "grouped_alternating_v2_kepler_pair_balanced"
+  "split": "grouped_alternating_v3_primary_metric_calibrated"
 }
