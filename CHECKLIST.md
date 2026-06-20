@@ -22,5 +22,6 @@
 - [x] Add explicit nondegenerate-candidate scoring for Kepler multi-axiom constraints.
 - [x] Mirror symbolic benchmark assets into `data/` for reusable loaders and baselines.
 - [x] Validate stricter evaluator and regenerated scores inside the compute container.
+- [x] Remove under-reproduced Kepler triple diagnostic from official score targets.
 - [ ] Rerun targeted core and Kepler multi-axiom job with current rational handling.
 - [ ] Rerun full exact method after rational-denominator normalization.

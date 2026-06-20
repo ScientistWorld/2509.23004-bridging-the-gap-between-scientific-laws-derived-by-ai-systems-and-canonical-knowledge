@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-20 08:21] - core_claim_plus
+- Reviewed the external validation failure and rechecked the paper tables: Kepler three-axiom recovery is correctly reported as 2/10.
+- Confirmed the current compact reproduction only reaches 1/10 coupled-success triples, so it should not be advertised as an official scored result.
+- Moved Kepler triples behind an explicit evaluator opt-in, removed `kepler_triple_axiom` from the checked-in official `scores.json` and targets, and retained `core_claim_plus` via exact core recovery plus Kepler pair recovery.
+
 ### [2026-06-20 08:17] - core_claim_plus
 - Reviewed CPU validation job `809a51f1-bf9`: it regenerated baseline outputs, merged saved method artifacts, and wrote scores with explicit degeneracy metrics.
 - Fixed the reference schema by declaring `degenerate_candidate_count` as a constraint metric in every experiment.

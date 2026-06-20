@@ -15,8 +15,9 @@
 # This file is read by the system for automated comparison.
 #
 # Example usage:
-#   ./evaluate.sh <method_and_run_name>                             # evaluate with defaults
-#   ./evaluate.sh <method_and_run_name> checkpoints/epoch_10.pt     # evaluate a specific checkpoint
+#   ./evaluate.sh                                                   # evaluate default artifacts
+#   ./evaluate.sh --include-multi scoring/outputs.json              # include Kepler pair scores
+#   ./evaluate.sh --include-triples --include-multi scoring/outputs.json
 #
 # Called from run.sh after training, or independently.
 
@@ -27,10 +28,22 @@ cd /home/user
 mkdir -p scoring
 
 include_multi=0
-if [ "${1:-}" = "--include-multi" ]; then
-  include_multi=1
-  shift
-fi
+include_triples=0
+while [ "$#" -gt 0 ]; do
+  case "${1:-}" in
+    --include-multi)
+      include_multi=1
+      shift
+      ;;
+    --include-triples)
+      include_triples=1
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
 
 if [ "$#" -eq 0 ]; then
   default_inputs=()
@@ -48,8 +61,11 @@ if [ "$#" -eq 0 ]; then
   fi
   set -- "${default_inputs[@]}"
 fi
+args=(--input "$@" --output scoring/scores.json)
 if [ "$include_multi" -eq 1 ]; then
-  python eval/evaluate_exact.py --input "$@" --output scoring/scores.json --include-multi
-else
-  python eval/evaluate_exact.py --input "$@" --output scoring/scores.json
+  args+=(--include-multi)
 fi
+if [ "$include_triples" -eq 1 ]; then
+  args+=(--include-triples)
+fi
+python eval/evaluate_exact.py "${args[@]}"

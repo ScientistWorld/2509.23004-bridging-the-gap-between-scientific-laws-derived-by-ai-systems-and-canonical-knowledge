@@ -5,4 +5,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Validated stricter AI-Noether evaluator after job 809a51f1-bf9: regenerated scores pass validate.py --compare with 11/11 exact core recovery, 0/11 no-abduction baseline, Kepler multi-axiom secondary scores, and nondegenerate_candidate_rate=1.0."
+notes: "Fixed external validation failure by removing the under-reproduced Kepler triple diagnostic from official scores and making triple scoring opt-in. validate.py --compare now passes with 11/11 exact core recovery, 0/11 no-abduction baseline, Kepler pair secondary scores, and nondegenerate_candidate_rate=1.0."

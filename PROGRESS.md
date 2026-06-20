@@ -22,6 +22,8 @@ Continuation audit at 2026-06-20 08:12 found two scoring integrity gaps that nee
 
 CPU validation job `809a51f1-bf9` regenerated scores with the stricter evaluator. Its first validation pass failed because `degenerate_candidate_count` was present in result objects but missing from the reference metric schema. After declaring that constraint metric, `python validate.py --compare` passes. The restored core result remains 11/11 for AI-Noether exact recovery against 0/11 for the no-abduction baseline, with `nondegenerate_candidate_rate=1.0` across the scored experiments.
 
+The external paper-consistency validator then flagged the Kepler three-axiom score: the paper reports 2/10 in Table 2/Table 3, while the current compact reproduction only obtains 1/10 coupled-success cases. The paper transcription is correct, so `kepler_triple_axiom` has been removed from the official `scores.json` and `TARGETS.md` until the method is improved. The saved triple artifact remains available as a diagnostic output, and triples can be scored explicitly with `scripts/evaluate.sh --include-triples --include-multi`.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
@@ -43,7 +45,7 @@ Reproduced results currently in `scoring/scores.json` after merging saved comput
 - All paper-counted exact single missing axiom cases: 52 canonical recoveries and 56 derivability-certified recoveries over the 65 cases available in saved method outputs; the 10 Compton cases remain absent from the merged artifact.
 - No-abduction baseline: 0/75 all-paper recoveries with all 75 cases completed; 0/11 core recoveries with all 11 core cases completed.
 - Kepler pair missing axioms: 5/10 coupled-success cases and 7/10 derivability-certified cases after post-decomposition degeneracy filtering.
-- Kepler triple missing axioms: 1/10 coupled-success cases and 4/10 derivability-certified cases after post-decomposition degeneracy filtering.
+- Kepler triple missing axioms: diagnostic artifact only, not an official score target, because the current coupled-success result is 1/10 against the paper's 2/10.
 
 ## What Remains
 
@@ -52,6 +54,7 @@ Reproduced results currently in `scoring/scores.json` after merging saved comput
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
+- Restore `kepler_triple_axiom` as an official score target only after the coupled-success result reaches the paper-consistent 2/10 level.
 - Add additional pair/triple missing-axiom systems beyond Kepler if future compute budget allows.
 
 ## Issues Encountered

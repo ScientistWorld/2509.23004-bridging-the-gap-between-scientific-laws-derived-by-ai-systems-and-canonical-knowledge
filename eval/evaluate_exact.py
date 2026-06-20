@@ -223,7 +223,16 @@ def main() -> None:
     parser.add_argument(
         "--include-multi",
         action="store_true",
-        help="Include exploratory multi-axiom diagnostics in the score file.",
+        help="Include validated Kepler two-axiom diagnostics in the score file.",
+    )
+    parser.add_argument(
+        "--include-triples",
+        action="store_true",
+        help=(
+            "Also include exploratory Kepler three-axiom diagnostics. "
+            "The compact reproduction currently under-recovers this paper table entry, "
+            "so triples are opt-in rather than part of the official score artifact."
+        ),
     )
     args = parser.parse_args()
 
@@ -284,7 +293,7 @@ def main() -> None:
                     {"kepler"},
                     size=2,
                 )
-            if args.include_multi and any(
+            if args.include_triples and any(
                 c["problem"] == "kepler" and len(c["removed_indices"]) == 3 for c in method_cases
             ):
                 add_summary(

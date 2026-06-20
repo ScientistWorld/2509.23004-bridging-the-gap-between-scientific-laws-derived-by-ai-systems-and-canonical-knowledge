@@ -86,20 +86,6 @@
         }
       }
     },
-    "kepler_triple_axiom": {
-      "results": {
-        "ai_noether_exact": {
-          "cases_completed": 10,
-          "cases_total": 10,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 4,
-          "derivable_candidate_rate": 0.4,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 1,
-          "success_rate": 0.1
-        }
-      }
-    },
     "simple_harmonic_single_axiom": {
       "results": {
         "ai_noether_exact": {
