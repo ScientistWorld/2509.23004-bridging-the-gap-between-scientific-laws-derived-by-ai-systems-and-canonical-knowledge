@@ -54,11 +54,11 @@
           "cases_completed": 5,
           "cases_total": 5,
           "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 3,
-          "derivable_candidate_rate": 0.6,
+          "derivable_candidate_count": 4,
+          "derivable_candidate_rate": 0.8,
           "nondegenerate_candidate_rate": 1.0,
-          "success_count": 1,
-          "success_rate": 0.2
+          "success_count": 3,
+          "success_rate": 0.6
         },
         "no_abduction_baseline": {
           "cases_completed": 0,
@@ -146,5 +146,5 @@
     }
   },
   "slice": "train",
-  "split": "grouped_alternating_v1"
+  "split": "grouped_alternating_v2_kepler_pair_balanced"
 }
