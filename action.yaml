@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: done
+action: submit
 gpus: 0
-test: false
-milestone: core_claim_plus
-notes: "2026-06-20 08:04 UTC continuation audit restored core_claim_plus: implementation is the real AI-Noether symbolic pipeline, standalone evaluate.sh and validate.py --compare pass, exact core remains 11/11 with baseline 0/11 plus Kepler pair/triple secondary scores."
+test: true
+milestone: core_claim
+notes: "Validate evaluator integrity fixes: data-separated benchmark assets, no trusted success fallback for incomplete non-empty artifacts, explicit nondegenerate_candidate_rate scoring, regenerated scores from saved AI-Noether artifacts."

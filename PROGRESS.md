@@ -18,6 +18,8 @@ At 2026-06-20 07:56, the saved rational-coefficient smoke artifact was merged wi
 
 Continuation audit at 2026-06-20 08:04 found the reproduction intact. The method code still matches the paper's symbolic AI-Noether pipeline, the evaluator remains independent from `method/`, and standalone `scripts/evaluate.sh` followed by `python validate.py --compare` reproduces the checked-in scores without changes.
 
+Continuation audit at 2026-06-20 08:12 found two scoring integrity gaps that needed correction before keeping the higher milestone. The evaluator had a compatibility path that trusted success flags for incomplete non-empty artifacts, and the Kepler multi-axiom degeneracy constraint was documented but not represented as an explicit score metric. The evaluator now rejects incomplete non-empty artifacts, recomputes degenerate-boundary candidates by ideal membership, and reports `nondegenerate_candidate_rate`. Benchmark system files have also been mirrored into `data/systems_and_phenomena` so baseline and method entry points consume data assets from `data/` rather than method-private paths.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
@@ -43,6 +45,7 @@ Reproduced results currently in `scoring/scores.json` after merging saved comput
 
 ## What Remains
 
+- Regenerate `scoring/scores.json` inside the container with the stricter evaluator and validate that the new `nondegenerate_candidate_rate` metric is present for all scored experiments.
 - Rerun the full exact single-axiom sweep after rational-denominator normalization and regenerate `scoring/scores.json` from the fresh method outputs.
 - Run a fresh full 75-case exact sweep with the rational-denominator fix if pursuing a milestone beyond `core_claim_plus`.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the CPU job limit.
@@ -73,6 +76,8 @@ Job `7227dc15-43e` completed successfully and confirmed the corrected Kepler mul
 Two all-paper single-axiom failures are rational-coefficient representation errors (`1/2` in escape velocity and `4/5` in inelastic relativistic collision). The method runner now clears rational denominators when loading benchmark equations and targets; multiplying a polynomial generator by a nonzero rational scalar preserves the ideal over characteristic zero.
 
 Job `7970b925-534` was cancelled during the full rerun because the rational-denominator patch fixed the original escape-velocity case but exposed the same integer-domain error on rational candidate generators emitted by Singular. The runner now normalizes candidate generators before checking them, and both the method and evaluator use SymPy Groebner bases over `QQ` instead of the default integer domain. The next submitted job is a targeted smoke test over the affected systems and writes separate `scoring/rational_smoke_*` artifacts rather than overwriting the main scores.
+
+The 2026-06-20 continuation audit found an evaluator fallback that could trust incomplete non-empty artifacts. That path has been removed for proposed-method outputs; zero-candidate artifacts can still score as failures without SymPy, but any artifact claiming candidates or success must include the symbolic fields needed for independent recomputation.
 
 ## Deviations from Paper
 

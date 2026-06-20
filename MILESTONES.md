@@ -1,8 +1,14 @@
 # Reproduction Milestones
 
-**Current: core_claim_plus**
+**Current: core_claim**
 
 ## Progress Log
+
+### [2026-06-20 08:12] - core_claim
+- Continuation audit found two evaluator-scoring issues after the prior `core_claim_plus` restoration: incomplete non-empty artifacts could fall back to trusted flags, and Kepler multi-axiom degeneracy filtering was documented but not scored explicitly.
+- Patched the evaluator to reject incomplete non-empty artifacts, recompute degeneracy by symbolic ideal membership, and report `nondegenerate_candidate_rate`.
+- Mirrored benchmark system definitions into `data/systems_and_phenomena` and repointed reusable scripts there so baseline/evaluation assets do not depend on `method/`.
+- Prepared a CPU validation job to regenerate baseline outputs, merge saved method artifacts, run the stricter evaluator, and validate the score file before restoring `core_claim_plus`.
 
 ### [2026-06-20 07:45] - core_claim
 - Continuation audit reset the active milestone to `core_claim` as instructed.

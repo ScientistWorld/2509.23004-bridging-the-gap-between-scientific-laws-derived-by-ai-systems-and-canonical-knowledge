@@ -18,5 +18,9 @@
 - [x] Cancel full rerun after detecting rational candidate-generator failures.
 - [x] Smoke-test rational candidate-generator handling on affected systems.
 - [x] Merge current rational-smoke outputs with exact sweep to restore core scores.
+- [x] Remove trusted-flag fallback for incomplete non-empty evaluation artifacts.
+- [x] Add explicit nondegenerate-candidate scoring for Kepler multi-axiom constraints.
+- [x] Mirror symbolic benchmark assets into `data/` for reusable loaders and baselines.
+- [ ] Validate stricter evaluator and regenerated scores inside the compute container.
 - [ ] Rerun targeted core and Kepler multi-axiom job with current rational handling.
 - [ ] Rerun full exact method after rational-denominator normalization.

@@ -40,7 +40,7 @@ Constraint targets:
 
 - `derivable_candidate_rate` should remain high, showing that recovered coupled explanations really make the target relation derivable.
 - `cases_completed` should equal 10, showing that gains are not achieved by skipping hard axiom pairs.
-- Degenerate boundary explanations such as zero masses, distances, or period should remain filtered.
+- `nondegenerate_candidate_rate` should remain 1.0, showing that degenerate boundary explanations such as zero masses, distances, or period remain filtered.
 
 ## kepler_triple_axiom
 
@@ -50,4 +50,4 @@ Constraint targets:
 
 - `derivable_candidate_rate` should remain high, showing that recovered coupled explanations really make the target relation derivable.
 - `cases_completed` should equal 10, showing that gains are not achieved by skipping hard axiom triples.
-- Degenerate boundary explanations such as zero masses, distances, or period should remain filtered.
+- `nondegenerate_candidate_rate` should remain 1.0, showing that degenerate boundary explanations such as zero masses, distances, or period remain filtered.

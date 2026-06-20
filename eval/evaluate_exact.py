@@ -97,26 +97,49 @@ def canonical_recovered(case: dict, candidates: list[str]) -> bool:
     return True
 
 
-def score_case(case: dict) -> tuple[bool, bool]:
-    """Return (has_derivable_candidate, canonical_success).
+def implied_by_ideal(poly: str, generators: list[str], variables: list[str]) -> bool:
+    if not generators:
+        return False
+    symbols = symbol_table(variables)
+    order = [symbols[v] for v in variables]
+    gb = sp.groebner([sympify_poly(p, symbols) for p in generators], *order, order="lex", domain=sp.QQ)
+    return sp.expand(gb.reduce(sympify_poly(poly, symbols))[1]) == 0
+
+
+def candidate_is_degenerate(case: dict, candidates: list[str]) -> bool:
+    return any(
+        implied_by_ideal(factor, case["remaining_axioms"] + candidates, case["variables"])
+        for factor in case.get("nonzero_factors", [])
+    )
+
+
+def score_case(case: dict) -> tuple[bool, bool, bool]:
+    """Return (has_derivable_candidate, success, has_degenerate_candidate).
 
     New method outputs include enough symbolic data for the evaluator to
-    recompute validity independently. Older outputs are accepted through a
-    compatibility path so historical scores remain readable.
+    recompute validity independently. Incomplete zero-candidate artifacts are
+    scored as failures, but incomplete artifacts that claim candidates or
+    success are rejected rather than trusted.
     """
     required = {"variables", "measured_vars", "targets", "remaining_axioms", "removed_axioms"}
     if not required.issubset(case):
-        return bool(case.get("num_accepted", 0) > 0), bool(case.get("success"))
+        if case.get("num_accepted", 0) or case.get("success") or case.get("accepted"):
+            raise ValueError(
+                f"Case {case.get('problem')} {case.get('removed_indices')} reports candidates "
+                "or success without symbolic fields required for independent evaluation."
+            )
+        return False, False, False
     if sp is None:
-        if len(case.get("removed_indices", [])) > 1:
-            return bool(case.get("num_accepted", 0) > 0), bool(case.get("coupled_success", case.get("success")))
-        return bool(case.get("num_accepted", 0) > 0), bool(case.get("success"))
+        if case.get("accepted") or case.get("num_accepted", 0) or case.get("success"):
+            raise RuntimeError("SymPy is required to evaluate non-empty symbolic method outputs.")
+        return False, False, False
     if case.get("status") != "ok":
-        return False, False
+        return False, False, False
     has_derivable = False
     has_strong_derivable = False
     has_canonical = False
     has_coupled = False
+    has_degenerate = False
     for item in case.get("accepted", []):
         candidates = item.get("candidates", [])
         derives_all = True
@@ -136,6 +159,9 @@ def score_case(case: dict) -> tuple[bool, bool]:
                 break
             strong_all = strong_all and strong
         if derives_all:
+            if candidate_is_degenerate(case, candidates):
+                has_degenerate = True
+                continue
             has_derivable = True
             has_strong_derivable = has_strong_derivable or strong_all
             if candidate_touches_unmeasured(case, candidates):
@@ -146,8 +172,8 @@ def score_case(case: dict) -> tuple[bool, bool]:
         # Multi-axiom recovery can be entangled: the paper credits coupled
         # explanations as recovered, while weak membership remains the
         # verifier's broader derivability check.
-        return has_derivable, has_coupled
-    return has_derivable, has_canonical
+        return has_derivable, has_coupled, has_degenerate
+    return has_derivable, has_canonical, has_degenerate
 
 
 def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, size: int | None = None) -> dict:
@@ -161,8 +187,9 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
     total = len(selected)
     completed = sum(1 for c in selected if c.get("status") == "ok")
     scored = [score_case(c) for c in selected]
-    derivable = sum(1 for has_derivable, _ in scored if has_derivable)
-    success = sum(1 for _, has_canonical in scored if has_canonical)
+    derivable = sum(1 for has_derivable, _, _ in scored if has_derivable)
+    success = sum(1 for _, has_canonical, _ in scored if has_canonical)
+    degenerate = sum(1 for _, _, has_degenerate in scored if has_degenerate)
     return {
         "cases_total": total,
         "cases_completed": completed,
@@ -170,6 +197,8 @@ def summarize_cases(cases: list[dict], problem_filter: set[str] | None = None, s
         "success_rate": success / total if total else 0.0,
         "derivable_candidate_count": derivable,
         "derivable_candidate_rate": derivable / total if total else 0.0,
+        "degenerate_candidate_count": degenerate,
+        "nondegenerate_candidate_rate": 1.0 - (degenerate / total) if total else 0.0,
     }
 
 

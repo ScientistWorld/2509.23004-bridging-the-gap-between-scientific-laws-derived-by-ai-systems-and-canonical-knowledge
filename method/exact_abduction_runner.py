@@ -471,7 +471,7 @@ def write_payload(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--systems-dir", default="method/AI-Noether/systems_and_phenomena")
+    parser.add_argument("--systems-dir", default="data/systems_and_phenomena")
     parser.add_argument("--problems", nargs="+", default=["simple_harmonic_oscillator", "kepler"])
     parser.add_argument("--sizes", default="1")
     parser.add_argument("--singular", default=os.environ.get("SINGULAR_BIN", "Singular"))

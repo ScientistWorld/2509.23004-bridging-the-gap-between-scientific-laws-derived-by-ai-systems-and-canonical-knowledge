@@ -19,10 +19,12 @@ This experiment isolates the 5 single-missing-axiom cases from the Kepler system
 ## kepler_pair_axiom
 
 This experiment evaluates all 10 two-missing-axiom cases from the Kepler system. It tests whether a method can recover coupled explanatory relations when the incomplete theory lacks more than one axiom.
+The score also checks that derivable candidates do not collapse the problem onto degenerate zero-mass, zero-distance, or zero-period boundary cases.
 
 ## kepler_triple_axiom
 
 This experiment evaluates all 10 three-missing-axiom cases from the Kepler system. It is a harder multi-axiom recovery setting where the paper reports only partial recovery.
+The score also checks that derivable candidates do not collapse the problem onto degenerate zero-mass, zero-distance, or zero-period boundary cases.
 
 ## Baseline Method
 

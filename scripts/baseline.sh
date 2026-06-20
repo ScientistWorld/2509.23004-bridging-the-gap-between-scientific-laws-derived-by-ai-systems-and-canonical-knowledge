@@ -38,22 +38,35 @@ systems = [
     "compton",
 ]
 axiom_limits = {"hall": 7}
-system_dir = Path("method/AI-Noether/systems_and_phenomena")
+system_dir = Path("data/systems_and_phenomena")
 cases = []
 for problem in systems:
     text = (system_dir / problem / "system.txt").read_text()
+    vars_match = re.search(r"Variables:\s*\[(.*?)\]", text, re.S)
     eqs_match = re.search(r"Equations?:\s*(.*?)(?=\n\s*\n\s*Measured)", text, re.S | re.I)
-    if not eqs_match:
-        raise RuntimeError(f"Could not parse equations for {problem}")
+    measured_match = re.search(r"Measured Variables:\s*\[(.*?)\]", text, re.S | re.I)
+    target_match = re.search(r"Target Polynomial:?\s*(.*)$", text, re.S | re.I)
+    if not (vars_match and eqs_match and measured_match and target_match):
+        raise RuntimeError(f"Could not parse system file for {problem}")
+    variables = [v.strip().strip('"').strip("'") for v in vars_match.group(1).split(",") if v.strip()]
     equations = [ln.strip() for ln in eqs_match.group(1).splitlines() if ln.strip()]
+    measured = [v.strip().strip('"').strip("'") for v in measured_match.group(1).split(",") if v.strip()]
+    targets = [ln.strip() for ln in target_match.group(1).splitlines() if ln.strip()]
     removal_count = min(len(equations), axiom_limits.get(problem, len(equations)))
-    for index in range(1, removal_count + 1):
+    for zero_index in range(removal_count):
         cases.append(
             {
                 "problem": problem,
-                "removed_indices": [index],
+                "variables": variables,
+                "measured_vars": measured,
+                "targets": targets,
+                "remaining_axioms": [axiom for i, axiom in enumerate(equations) if i != zero_index],
+                "removed_indices": [zero_index + 1],
+                "removed_axioms": [equations[zero_index]],
+                "nonzero_factors": [],
                 "status": "ok",
                 "num_accepted": 0,
+                "accepted": [],
                 "success": False,
                 "strong_success": False,
                 "runtime_seconds": 0.0,

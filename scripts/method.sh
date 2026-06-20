@@ -11,6 +11,7 @@ set -e
 cd /home/user
 
 python method/exact_abduction_runner.py \
+  --systems-dir data/systems_and_phenomena \
   --problems \
     decay \
     escape_velocity \
@@ -32,6 +33,7 @@ python method/exact_abduction_runner.py \
   --output scoring/ai_noether_exact_outputs.json
 
 python method/exact_abduction_runner.py \
+  --systems-dir data/systems_and_phenomena \
   --problems kepler \
   --sizes 2,3 \
   --filter-degenerate \
