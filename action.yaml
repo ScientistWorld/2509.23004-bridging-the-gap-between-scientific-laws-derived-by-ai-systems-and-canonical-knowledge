@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Resubmitting the full CPU reproduction because no fresh full-run artifacts are present yet; reruns baseline, exact AI-Noether sweeps, evaluation, and validate.py --compare to regenerate scoring/scores.json from method outputs."
+notes: "2026-06-20 07:50 UTC: validator still shows baseline-only scores, so run the full CPU reproduction to regenerate baseline, exact AI-Noether sweeps, Kepler multi-axiom outputs, combined scoring/scores.json, and validate.py --compare."

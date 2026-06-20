@@ -10,6 +10,8 @@ Continuation audit on 2026-06-20 found that the current checked-in `scoring/scor
 
 A follow-up check at 2026-06-20 07:47 found no fresh full-run artifacts yet. The existing rational smoke output has no `"expected an integer"` failures, so the next step remains the full exact method rerun rather than another rational-only smoke test.
 
+At 2026-06-20 07:50, `validate.py --compare` still reported only no-abduction baseline reproduction entries in `scoring/scores.json`. The full CPU reproduction remains the required next step; no method or evaluator code changes were made during this check.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.

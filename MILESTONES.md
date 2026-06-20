@@ -14,6 +14,11 @@
 - Verified the existing rational smoke artifact has no remaining integer-domain coefficient errors; the remaining smoke failures are case timeouts, not rational parsing failures.
 - Kept `scripts/run.sh` pointed at the full CPU reproduction and resubmitted it as the next required compute step.
 
+### [2026-06-20 07:50] - core_claim
+- Re-ran the lightweight validator on the login node; it still sees only baseline entries in `scoring/scores.json`, with no fresh proposed-method scores.
+- Left the implementation and evaluator unchanged because the audit found them structurally sound and the missing piece is compute-generated artifacts.
+- Resubmitted the full CPU reproduction job to regenerate baseline, exact single-axiom, Kepler multi-axiom, and combined score outputs from the current code.
+
 ### [2026-06-11 13:15] - core_claim
 - Audited the inherited exact AI-Noether implementation and confirmed it implements the paper's encode, primary-decompose, and symbolic-reason workflow rather than a surrogate.
 - Confirmed the existing single-axiom core reproduction remains valid: simple harmonic oscillator 6/6, Kepler 5/5, and combined core 11/11 in `scoring/scores.json`.
