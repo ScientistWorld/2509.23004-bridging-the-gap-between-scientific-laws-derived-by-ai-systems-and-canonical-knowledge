@@ -26,6 +26,8 @@ The external paper-consistency validator then flagged the Kepler three-axiom sco
 
 At 2026-06-20 09:10, `python validate.py --compare` passed on the checked-in official scores and train/test split scores. `scripts/run.sh` now runs the full current reproduction path (`scripts/reproduce.sh`), the split evaluators, and validation so the next CPU job can refresh method outputs from current code instead of relying only on merged saved artifacts.
 
+At 2026-06-20 09:34, a continuation audit confirmed the current checked-in artifacts still pass `python validate.py --compare`, the container has the required Singular and SymPy dependencies, and `scripts/run.sh` is already configured for a full CPU regeneration. The next submitted job refreshes the method artifacts from current code and validates the official plus train/test score files.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
@@ -58,6 +60,7 @@ Reproduced results currently in `scoring/scores.json` after merging saved comput
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
 - Restore `kepler_triple_axiom` as an official score target only after the coupled-success result reaches the paper-consistent 2/10 level.
 - Add additional pair/triple missing-axiom systems beyond Kepler if future compute budget allows.
+- Analyze the submitted fresh current-code CPU rerun and replace merged saved artifacts if the regenerated outputs match or improve the checked-in scores.
 
 ## Issues Encountered
 

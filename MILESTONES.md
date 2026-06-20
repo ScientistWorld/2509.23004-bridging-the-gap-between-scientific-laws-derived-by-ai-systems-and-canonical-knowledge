@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-20 09:34] - core_claim_plus
+- Rechecked the current repository after reactivation: saved official scores and train/test split scores still pass `python validate.py --compare`.
+- Confirmed `scripts/run.sh` is ready for a CPU full regeneration of baseline, exact AI-Noether, Kepler multi-axiom, split evaluation, and validation artifacts.
+- Submitted the fresh current-code rerun so future progress does not depend only on merged saved method outputs.
+
 ### [2026-06-20 09:24] - core_claim_plus
 - Completed final verification for gym readiness.
 - Confirmed `python validate.py --compare` passes and the milestone remains `core_claim_plus`.
