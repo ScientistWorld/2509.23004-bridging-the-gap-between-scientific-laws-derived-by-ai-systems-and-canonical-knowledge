@@ -3,6 +3,6 @@
 # only after your turn ends. Sleeping blocks the entire pipeline.
 action: submit
 gpus: 0
-test: false
+test: true
 milestone: core_claim
-notes: "2026-06-20 07:50 UTC: validator still shows baseline-only scores, so run the full CPU reproduction to regenerate baseline, exact AI-Noether sweeps, Kepler multi-axiom outputs, combined scoring/scores.json, and validate.py --compare."
+notes: "2026-06-20 07:53 UTC: run targeted current-code CPU reproduction for simple harmonic oscillator + Kepler single-axiom core and Kepler pair/triple outputs, then evaluate and validate. Existing saved scores are method-real but stale at 9/11 core due old rational errors."

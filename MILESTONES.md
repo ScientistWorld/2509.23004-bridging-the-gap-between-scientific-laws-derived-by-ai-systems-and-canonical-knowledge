@@ -19,6 +19,11 @@
 - Left the implementation and evaluator unchanged because the audit found them structurally sound and the missing piece is compute-generated artifacts.
 - Resubmitted the full CPU reproduction job to regenerate baseline, exact single-axiom, Kepler multi-axiom, and combined score outputs from the current code.
 
+### [2026-06-20 07:53] - core_claim
+- Rebuilt `scoring/scores.json` from the saved method output artifacts so every scoring target now has an explicit reproduced method entry.
+- Confirmed the saved artifacts are stale for the simple harmonic oscillator rational-coefficient cases: current score is 9/11 on the core subset instead of the earlier 11/11 claim.
+- Replaced the broad run script with a targeted CPU test job that reruns the current exact method on simple harmonic oscillator, Kepler, and Kepler pair/triple cases before restoring any higher milestone.
+
 ### [2026-06-11 13:15] - core_claim
 - Audited the inherited exact AI-Noether implementation and confirmed it implements the paper's encode, primary-decompose, and symbolic-reason workflow rather than a surrogate.
 - Confirmed the existing single-axiom core reproduction remains valid: simple harmonic oscillator 6/6, Kepler 5/5, and combined core 11/11 in `scoring/scores.json`.

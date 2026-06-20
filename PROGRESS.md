@@ -10,7 +10,9 @@ Continuation audit on 2026-06-20 found that the current checked-in `scoring/scor
 
 A follow-up check at 2026-06-20 07:47 found no fresh full-run artifacts yet. The existing rational smoke output has no `"expected an integer"` failures, so the next step remains the full exact method rerun rather than another rational-only smoke test.
 
-At 2026-06-20 07:50, `validate.py --compare` still reported only no-abduction baseline reproduction entries in `scoring/scores.json`. The full CPU reproduction remains the required next step; no method or evaluator code changes were made during this check.
+At 2026-06-20 07:50, `validate.py --compare` still reported only no-abduction baseline reproduction entries in `scoring/scores.json`. The full CPU reproduction remained the required next step; no method or evaluator code changes were made during that check.
+
+At 2026-06-20 07:53, `scoring/scores.json` was regenerated from the saved method artifacts. This restored proposed-method score entries for every target experiment, but the exact single-axiom core score is only 9/11 because the saved exact output predates the rational-coefficient fix for two simple harmonic oscillator cases. The next submitted job is narrowed to rerun the current code on the core systems and Kepler pair/triple cases so the milestone can be restored from fresh outputs.
 
 ## Results Achieved
 
@@ -25,12 +27,12 @@ Reference paper targets recorded in `scoring/reference.json`:
 - Kepler pair missing axioms: 7/10.
 - Kepler triple missing axioms: 2/10.
 
-Reproduced results after job `7227dc15-43e`:
+Reproduced results currently in `scoring/scores.json` after rescoring saved artifacts:
 
-- Simple harmonic oscillator single missing axiom: 6/6.
+- Simple harmonic oscillator single missing axiom: 4/6 from stale saved outputs; the two misses are rational-coefficient cases fixed in code but not yet rerun.
 - Kepler single missing axiom: 5/5.
-- Combined core subset: 11/11.
-- All paper-counted exact single missing axiom cases: 57/75 canonical recoveries, 62/75 cases with at least one derivable candidate, and 62/75 cases completed without error or timeout.
+- Combined core subset: 9/11 from stale saved outputs.
+- All paper-counted exact single missing axiom cases: baseline is scored, but current saved method output has only 65/75 cases and is not reported as the all-paper method score.
 - No-abduction baseline: 0/75 all-paper recoveries with all 75 cases completed; 0/11 core recoveries with all 11 core cases completed.
 - Kepler pair missing axioms: 5/10 coupled-success cases and 7/10 derivability-certified cases after post-decomposition degeneracy filtering.
 - Kepler triple missing axioms: 1/10 coupled-success cases and 4/10 derivability-certified cases after post-decomposition degeneracy filtering.
@@ -38,6 +40,7 @@ Reproduced results after job `7227dc15-43e`:
 ## What Remains
 
 - Rerun the full exact single-axiom sweep after rational-denominator normalization and regenerate `scoring/scores.json` from the fresh method outputs.
+- First rerun the targeted core exact systems after rational-denominator normalization to restore the 11/11 core result from current code.
 - Improve the all-paper score by optimizing the exact symbolic reasoning step for the remaining Compton and relativistic cases that time out under the CPU job limit.
 - Investigate the remaining non-timeout misses in inelastic collision and photo-Hall systems; the evaluator records candidates but the strict canonical-recovery check does not certify the removed axiom.
 - Improve the Kepler multi-axiom reproduction by matching the paper's full projection filtering and coupled-relation selection procedure more closely; the present implementation is honest but stricter than the reported Table 2 criterion.
