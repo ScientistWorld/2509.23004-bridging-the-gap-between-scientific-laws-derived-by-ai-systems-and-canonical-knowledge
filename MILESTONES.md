@@ -4,6 +4,11 @@
 
 ## Progress Log
 
+### [2026-06-20 09:10] - core_claim_plus
+- Revalidated the checked-in official and split score artifacts with `python validate.py --compare`; all structure, scoring, and import-separation checks pass.
+- Updated `scripts/run.sh` to regenerate reproduction outputs from the current method code, run train/test evaluators, and validate the result in one CPU job.
+- Kept the milestone at `core_claim_plus` while submitting a fresh full reproducibility job to replace merged saved artifacts where possible.
+
 ### [2026-06-20 08:21] - core_claim_plus
 - Reviewed the external validation failure and rechecked the paper tables: Kepler three-axiom recovery is correctly reported as 2/10.
 - Confirmed the current compact reproduction only reaches 1/10 coupled-success triples, so it should not be advertised as an official scored result.

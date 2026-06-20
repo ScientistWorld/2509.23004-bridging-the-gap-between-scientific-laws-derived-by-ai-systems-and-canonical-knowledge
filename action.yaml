@@ -2,8 +2,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Fixed split primary metric validation; python validate.py now passes."
+notes: "CPU job regenerates AI-Noether outputs from current method code, runs official and split evaluators, and validates scores."

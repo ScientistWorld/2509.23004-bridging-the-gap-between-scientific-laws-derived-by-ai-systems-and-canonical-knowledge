@@ -24,6 +24,8 @@ CPU validation job `809a51f1-bf9` regenerated scores with the stricter evaluator
 
 The external paper-consistency validator then flagged the Kepler three-axiom score: the paper reports 2/10 in Table 2/Table 3, while the current compact reproduction only obtains 1/10 coupled-success cases. The paper transcription is correct, so `kepler_triple_axiom` has been removed from the official `scores.json` and `TARGETS.md` until the method is improved. The saved triple artifact remains available as a diagnostic output, and triples can be scored explicitly with `scripts/evaluate.sh --include-triples --include-multi`.
 
+At 2026-06-20 09:10, `python validate.py --compare` passed on the checked-in official scores and train/test split scores. `scripts/run.sh` now runs the full current reproduction path (`scripts/reproduce.sh`), the split evaluators, and validation so the next CPU job can refresh method outputs from current code instead of relying only on merged saved artifacts.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.
