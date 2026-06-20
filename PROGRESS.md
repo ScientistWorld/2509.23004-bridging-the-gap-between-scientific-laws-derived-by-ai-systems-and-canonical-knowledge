@@ -16,6 +16,8 @@ At 2026-06-20 07:53, `scoring/scores.json` was regenerated from the saved method
 
 At 2026-06-20 07:56, the saved rational-coefficient smoke artifact was merged with the prior exact sweep. This uses real compute-node outputs only: the current-code rational smoke contributes the six simple harmonic oscillator cases, and the prior exact sweep contributes the five Kepler single-axiom cases and broader non-duplicate systems. The merged artifact restores 11/11 exact single-axiom core recovery and keeps the Kepler pair/triple secondary scores visible.
 
+Continuation audit at 2026-06-20 08:04 found the reproduction intact. The method code still matches the paper's symbolic AI-Noether pipeline, the evaluator remains independent from `method/`, and standalone `scripts/evaluate.sh` followed by `python validate.py --compare` reproduces the checked-in scores without changes.
+
 ## Results Achieved
 
 The CPU smoke job completed successfully on the compute node and wrote `scoring/scores.json`.

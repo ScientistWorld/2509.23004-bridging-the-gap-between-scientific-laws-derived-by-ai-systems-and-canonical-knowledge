@@ -29,6 +29,11 @@
 - Restored the exact single-axiom core reproduction to 11/11: simple harmonic oscillator 6/6 from the current rational-smoke job and Kepler 5/5 from the exact sweep.
 - Preserved secondary Kepler pair/triple scores: 5/10 coupled successes and 7/10 derivability-certified pair cases; 1/10 coupled successes and 4/10 derivability-certified triple cases.
 
+### [2026-06-20 08:04] - core_claim_plus
+- Continuation audit reset the working milestone to `core_claim` for review, then restored `core_claim_plus` after verifying the existing implementation and artifacts.
+- Confirmed `method/` implements the paper's encode, primary-decompose, and Groebner-reason algorithm rather than a surrogate.
+- Re-ran standalone `scripts/evaluate.sh` and `python validate.py --compare`; scores remain reproducible with 11/11 exact core recovery and passing import-separation checks.
+
 ### [2026-06-11 13:15] - core_claim
 - Audited the inherited exact AI-Noether implementation and confirmed it implements the paper's encode, primary-decompose, and symbolic-reason workflow rather than a surrogate.
 - Confirmed the existing single-axiom core reproduction remains valid: simple harmonic oscillator 6/6, Kepler 5/5, and combined core 11/11 in `scoring/scores.json`.

@@ -5,4 +5,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Verified core_claim_plus from real compute artifacts: merged output scores exact single-axiom core at 11/11 with no-abduction baseline 0/11, plus Kepler pair/triple secondary scores. Packaging, evaluator separation, and validate.py --compare all pass."
+notes: "2026-06-20 08:04 UTC continuation audit restored core_claim_plus: implementation is the real AI-Noether symbolic pipeline, standalone evaluate.sh and validate.py --compare pass, exact core remains 11/11 with baseline 0/11 plus Kepler pair/triple secondary scores."
