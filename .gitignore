@@ -233,3 +233,15 @@ tmp/
 protocol.md
 *.egg-info
 core.[0-9]*
+
+# Hardened gym: evaluator caches, per-instance run details and job logs.
+# Held-out (eval/test) caches and details contain solver outputs on hidden
+# instances and must never be committed outside eval/test.
+eval/test/_cache/
+eval/test/_runs/
+eval/train/_cache/
+eval/train/_runs/
+hardening/logs/
+**/__pycache__/
+tmp/*
+!tmp/.gitkeep

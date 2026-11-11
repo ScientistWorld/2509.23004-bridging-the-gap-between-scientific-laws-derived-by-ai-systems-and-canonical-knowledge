@@ -1,5 +1,25 @@
 # Overview
 
-The paper introduces AI-Noether, a symbolic system for repairing incomplete scientific theories. Given polynomial background axioms and a target relation that the incomplete theory cannot derive, AI-Noether uses algebraic geometry to propose missing axioms whose addition makes the target derivable.
+The paper introduces AI-Noether, a system for repairing incomplete scientific
+theories. Given polynomial background axioms and a target law that the
+incomplete theory cannot derive, it proposes missing axioms whose addition
+makes the target derivable, using algebraic geometry.
 
-This workspace reproduces the exact symbolic core claim on single-missing-axiom benchmark cases from the simple harmonic oscillator and Kepler systems. It also defines broader exact single-axiom and Kepler multi-axiom scoring targets. The environment includes the official benchmark definitions, a runner for the paper's encode-decompose-reason algorithm, reusable evaluation scripts, and scoring targets for future agents.
+This gym measures that capability as exact symbolic abduction. Solvers receive
+anonymized, unit-rescaled instances (known axioms, targets, which quantities are
+measured or nonzero, and how many axioms are missing) and return a ranked list
+of candidate axiom sets. The evaluator runs every solver itself under a fixed
+time limit and checks each candidate exactly against the complete theory:
+does it make the targets derivable, is it true in the complete theory, does it
+add information, and does it recover the removed axioms.
+
+* Train slice: the paper's twelve public benchmark theories (75 single-axiom
+  removals as in the paper's Table 6, plus samples of two- and three-axiom
+  removals as in Table 3).
+* Test slice (held out): fourteen further physical theories that exist only on
+  the evaluator side.
+
+The reference solver implements the paper's exact Encode–Decompose–Reason
+pipeline; the baselines are an empty answer and a syntax-guided enumerator.
+Single-axiom recovery is close to solved by the reference; two- and three-axiom
+removals are where it falls short, as in the paper.

@@ -1,26 +1,46 @@
 # Experiments
 
-## exact_single_axiom_core
+All experiments use the same interface and checks (see `briefing/evaluation.md`).
+Each instance removes axioms from a complete polynomial theory; a solver sees the
+remaining axioms, the target law(s), which variables are measured or nonzero, and
+how many axioms are missing. Only the first five ranked candidate sets count.
 
-This experiment asks whether a method can solve all single-missing-axiom cases in the selected core benchmark subset. It combines the simple harmonic oscillator and Kepler systems to give 11 cases. Success means the output candidates make the target relation derivable from the incomplete background theory.
+## single_missing_axiom (weight 0.40)
 
-## simple_harmonic_single_axiom
+Establishes whether a method can reconstruct one missing law of a theory from
+the rest of the theory and an observed consequence, without data for the missing
+law. Every single removal whose target is no longer derivable is included. The
+primary metric is exact recovery (the proposed law, together with the known
+axioms, implies the removed axiom on the physical locus); the paper reports
+near-complete success on its benchmark, so this experiment mainly checks that a
+method keeps this capability and ranks the right law first.
 
-This experiment isolates the 6 single-missing-axiom cases from the simple harmonic oscillator system. It provides a compact sanity check for exact symbolic recovery.
+## two_missing_axioms (weight 0.35)
 
-## exact_single_axiom_all_paper
+Establishes whether a method can still explain an observed law when two laws are
+missing. The targets often do not pin down each missing law separately, so the
+primary metric credits any valid explanation: a set of at most two polynomials
+that makes the targets derivable, is true in the complete theory, and adds
+information beyond the targets. Exact recovery of both laws is scored as a
+secondary benefit. The paper reports roughly half of such cases solved; this is
+where better methods can show headroom.
 
-This experiment sweeps the 75 single-missing-axiom cases reported in the paper's detailed appendix table. It is the broader single-axiom reproduction target beyond the two-system core subset.
+## three_missing_axioms (weight 0.25)
 
-## kepler_single_axiom
+The same question with three missing laws (at most three proposed polynomials).
+The paper reports roughly a quarter of such cases solved; most of the remaining
+headroom of the gym is here.
 
-This experiment isolates the 5 single-missing-axiom cases from the Kepler system. It is a second exact symbolic benchmark with a different physical domain.
+## Constraint in every experiment
 
-## kepler_pair_axiom
+`unsound_rate` counts instances where some considered candidate set makes the
+targets derivable only by being false in the complete theory — a contradiction,
+a law that forces a physical quantity to zero, or a law stronger than the theory
+— plus every instance whose run failed. It protects against "explaining"
+anything by asserting too much.
 
-This experiment evaluates all 10 two-missing-axiom cases from the Kepler system. It tests whether a method can recover coupled explanatory relations when the incomplete theory lacks more than one axiom.
-The score also checks that derivable candidates do not collapse the problem onto degenerate zero-mass, zero-distance, or zero-period boundary cases.
+## Baselines (method rows, not experiments)
 
-## Baseline Method
-
-`no_abduction_baseline` is a method result within the single-axiom experiments, not a separate experiment. It emits no candidate axioms and should score zero on recovery metrics while completing all cases, which helps confirm that the evaluator rewards explanatory candidates rather than file presence or case enumeration.
+`no_abduction_baseline` keeps the incomplete theory (scores zero on every
+benefit metric). `enumerative_baseline` tries small binomial laws by brute force
+for a few seconds per instance.

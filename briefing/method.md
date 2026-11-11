@@ -1,16 +1,40 @@
-# Method
+# Method (reference implementation)
 
-AI-Noether performs abductive inference for polynomial scientific theories using an encode, decompose, and reason pipeline.
+AI-Noether performs abductive inference for polynomial theories with an
+Encode–Decompose–Reason pipeline (paper Section 2.1, Algorithm 1 in
+Appendix E.3). The reference solver is `scripts/solvers/ai_noether_exact.sh`,
+which runs `method/exact_abduction_runner.py` on one instance:
 
-First, the incomplete background axioms and the target hypothesis are encoded as a polynomial ideal. Second, the corresponding variety is decomposed into irreducible components using primary decomposition. Third, generators from those components are treated as candidate missing axioms and verified by algebraic reasoning: if adding a candidate to the incomplete axiom set makes the target polynomial reduce to zero under Groebner-basis reasoning, the candidate is accepted.
+1. **Encode** the known axioms and the targets as one ideal
+   `I = <A_1..A_k, Q_1..Q_s>`.
+2. **Decompose** its variety into irreducible components: Singular `minAss`
+   (minimal associated primes), as in the paper's implementation. The generators
+   of each prime component are candidate axioms; generators already in
+   `<known axioms, targets>` carry no new information and are dropped (as in the
+   official code's `generate_candidate_sets`).
+3. **Reason**: every subset of one component's generators with at most
+   `num_missing` elements is added to the known axioms. A set is accepted when
+   each target lies in the elimination ideal onto the target's measured
+   variables (weak test, ideal membership) and the augmented theory does not
+   force a declared nonzero quantity (or 1) to zero (degeneracy filtering,
+   Appendix E.2). The strong test checks that the target appears literally (up
+   to a scalar) in the reduced lexicographic Groebner basis of that projection.
+4. **Rank** as in Appendix E.2's two tiers: inclusion-minimal strong sets first,
+   then the remaining minimal weak sets; ties broken by parsimony (fewer
+   polynomials, fewer terms, lower degree).
 
-This reproduction targets the exact symbolic branch of the paper. It uses the official AI-Noether benchmark systems and wraps the exact algorithm with a compact runner that:
+All Groebner basis work runs in Singular (the paper uses Macaulay2 for this
+step and Singular for decomposition). The decomposition gets at most 70% of the
+per-instance budget; reasoning stops before the deadline and returns what it
+has accepted.
 
-- removes each single axiom from a benchmark system,
-- encodes the remaining axioms plus the target,
-- calls Singular for primary decomposition,
-- enumerates component generators as one-axiom candidates,
-- verifies target derivability with symbolic Groebner reduction, and
-- records whether the recovered candidate also matches the removed canonical axiom.
+Ablation switches used in the hardening audit (not the reference setting):
+`--saturate` (remove degenerate components before decomposing),
+`--extra-orders` (also take generators from Groebner bases of each component
+in two other monomial orders), `--saturation-only` (one saturated component
+instead of a primary decomposition), `--no-rank`, `--max-set-size`,
+`--no-degenerate-filter`, `--no-reason`.
 
-The noisy witness-set and theorem-prover branch is not part of the initial core reproduction. The code is organized so those experiments can be added later without changing the evaluator interface.
+The paper's noisy pathway (numerical irreducible decomposition with witness
+sets, symbolic regression, KeYmaera X existential reasoning) is not
+reproduced; this gym measures the exact symbolic setting.

@@ -1,0 +1,15 @@
+Variables: ["Fe", "Fc", "k", "q", "r", "m", "v", "L", "n", "hb", "K", "U", "E"]
+Equations:
+Fe*r^2 - k*q^2
+Fc*r - m*v^2
+Fe - Fc
+L - m*v*r
+L - n*hb
+2*K - m*v^2
+U*r + k*q^2
+E - K - U
+
+Measured Variables: ["k", "q", "m", "n", "hb", "E"]
+
+Target Polynomial:
+2*E*n^2*hb^2 + k^2*q^4*m

@@ -1,0 +1,12 @@
+Variables: ["K", "m", "v", "U", "r", "k", "q1", "q2", "p", "lam", "h"]
+Equations:
+2*K - m*v^2
+U*r - k*q1*q2
+K - U
+p - m*v
+lam*p - h
+
+Measured Variables: ["k", "q1", "q2", "m", "r", "lam", "h"]
+
+Target Polynomial:
+h^2*r - 2*k*q1*q2*m*lam^2

@@ -1,16 +1,54 @@
 # Problem Definition
 
-The benchmark is polynomial abductive inference for scientific theories. Each instance provides:
+The task is **abductive inference for polynomial scientific theories**: given an
+incomplete theory and an observed law it cannot explain, propose the missing
+axioms.
 
-- a finite set of background polynomial equations treated as known axioms,
-- one or more polynomial target hypotheses, and
-- a deliberately incomplete axiom set produced by removing one or more required axioms.
+Each instance is built from a complete theory: polynomial axioms
+`A_1 = 0, ..., A_m = 0` over variables `x1..xn` together with one or more target
+relations `Q = 0` that follow from the complete theory (`Q` is an algebraic
+combination `Q = sum alpha_i A_i` with polynomial multipliers). One, two or three
+axioms are removed. What remains is given to the solver:
 
-The task is to propose additional polynomial equations which, when added to the incomplete axiom set, make the target hypothesis algebraically derivable. A candidate succeeds only if it is not merely numerically correlated with the target but actually closes the logical gap between the incomplete theory and the target relation.
+| field | meaning |
+|---|---|
+| `variables` | ordered variable names `x1..xn` (anonymized physical quantities) |
+| `measured_variables` | variables that occur in the observed targets |
+| `nonzero_variables` | quantities that are physically nonzero in the complete theory (masses, lengths, ...) |
+| `known_axioms` | the remaining axioms, as polynomial strings (each means `poly = 0`) |
+| `targets` | the observed relation(s), not derivable from `known_axioms` alone |
+| `num_missing` | how many axioms were removed |
+| `time_limit_seconds` | wall-clock budget for this instance |
 
-The core setting reproduced here is exact symbolic recovery with one missing axiom on two benchmark physical systems:
+The solver returns a **ranked list of candidate sets**; each set holds at most
+`num_missing` polynomials (each again meaning `poly = 0`). Only the first five
+sets are considered. A good answer:
 
-- simple harmonic oscillator, with 6 single-axiom removal cases;
-- Kepler/orbital dynamics, with 5 single-axiom removal cases.
+1. makes every target derivable when added to the known axioms;
+2. is true in the complete (hidden) theory, i.e. it does not contradict it, force a
+   physical quantity to zero, or assert a law that is stronger than the theory;
+3. adds information beyond what the known axioms and the target already state;
+4. ideally recovers the removed axioms themselves (up to rescaling and
+   substitution of known axioms), not only some sufficient relation.
 
-Inputs and outputs are symbolic polynomial strings, not sampled data. Evaluation must be independent of any particular implementation: a future method may use a different search strategy as long as it writes the same output format for recovered candidates.
+No numerical data is provided for the missing axioms; inputs and outputs are exact
+polynomials with rational coefficients. Polynomial strings use integers,
+variable names, `+ - * ^` (or `**`), parentheses and division by integer
+constants only.
+
+## Slices
+
+* **Train (visible):** the twelve published benchmark theories of the paper
+  (classical mechanics, relativity, electromagnetism, semiconductor physics),
+  in `data/systems_and_phenomena`, presented in the same anonymized and
+  unit-rescaled form as the held-out slice. Instances and their answers are in
+  `eval/train/instances.json`.
+* **Test (held out):** different physical theories of comparable size that are
+  not published anywhere; only their evaluator-side copy exists. A method must
+  therefore work from the algebraic structure of the instance, not from a memory
+  of benchmark laws.
+
+Each slice contains every well-posed single removal of each theory and a fixed
+sample of two- and three-axiom removals. Multi-axiom removals are much harder:
+often the targets do not determine each missing law separately, so a correct
+answer may be a coupled relation that combines several missing laws.

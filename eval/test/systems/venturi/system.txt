@@ -1,0 +1,12 @@
+Variables: ["A1", "v1", "A2", "v2", "P1", "P2", "rho", "Qf", "rhom", "g", "hm", "Vol", "tc"]
+Equations:
+A1*v1 - A2*v2
+2*P1 + rho*v1^2 - 2*P2 - rho*v2^2
+Qf - A1*v1
+P1 - P2 - rhom*g*hm
+Qf*tc - Vol
+
+Measured Variables: ["A1", "A2", "rho", "rhom", "g", "hm", "Vol", "tc"]
+
+Target Polynomial:
+2*rhom*g*hm*A1^2*A2^2*tc^2 - rho*Vol^2*A1^2 + rho*Vol^2*A2^2

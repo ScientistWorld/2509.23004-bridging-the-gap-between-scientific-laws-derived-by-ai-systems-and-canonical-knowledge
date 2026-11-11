@@ -1,13 +1,21 @@
 # Constraints
 
-The benchmark is about abductive recovery of polynomial axioms. Improvements must preserve the task and evaluation contract.
-
-- Use the same benchmark systems and removed-axiom cases unless adding a clearly named new experiment.
-- Write method outputs as JSON artifacts that `scripts/evaluate.sh` can score without importing method code.
-- Do not hardcode paper results, reference answers, or evaluator outcomes into generated outputs.
-- Do not change the evaluator to call a candidate generator or regenerate candidates internally.
-- Keep symbolic problem assets in `data/` and avoid references to local shared caches in committed code.
-- Report all attempted cases, including timeouts or failures, so `cases_completed` remains meaningful.
-- Any alternate method must still solve the same abductive problem: propose polynomial equations that make the target derivable from the incomplete theory.
-
-Resource scaling is allowed for new experiments, but changing the problem into supervised prediction or numeric curve fitting is outside this gym's direction.
+* A method is a solver script `scripts/solvers/<name>.sh <instance.json> <output.json>`
+  that writes `{"candidate_sets": [[poly, ...], ...]}`. It must finish within
+  `ABDUCTION_TIME_LIMIT` seconds per instance; the evaluator kills it otherwise.
+* At most five candidate sets are considered, each with at most `num_missing`
+  polynomials. Exact polynomials only (integers, variables, `+ - * ^`,
+  parentheses, division by integer constants).
+* The evaluator, the instances, the time limit, the candidate budget and all
+  ground truth are fixed by `eval/`. Do not modify `eval/`, the instance files,
+  or the scoring files; scores written anywhere else are not read.
+* Do not read evaluator files (`eval/`, instance files, cached outputs) from a
+  solver, and do not hardcode benchmark laws, removed axioms or reference outputs.
+  The held-out theories are not available to methods.
+* Proposed axioms must be justified by the instance itself; the evaluator checks
+  them against the complete theory, so contradictions, zero-forcing laws, copies
+  of the target and restatements of known axioms earn nothing or are penalized.
+* No training data exists for the missing axioms; methods that need training
+  must train on the visible slice only.
+* Keep `eval/` free of imports from `method/`; solvers may use any code under
+  `method/`, `baseline/` or new directories.

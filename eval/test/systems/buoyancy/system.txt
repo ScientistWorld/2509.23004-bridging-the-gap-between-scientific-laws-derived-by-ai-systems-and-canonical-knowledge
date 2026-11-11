@@ -1,0 +1,12 @@
+Variables: ["Fb", "rhof", "g", "Vd", "W", "m", "rhoo", "Vo", "frac"]
+Equations:
+Fb - rhof*g*Vd
+W - m*g
+m - rhoo*Vo
+Fb - W
+Vd - frac*Vo
+
+Measured Variables: ["rhof", "rhoo", "frac", "g", "Vo"]
+
+Target Polynomial:
+rhof*frac*g*Vo - rhoo*g*Vo

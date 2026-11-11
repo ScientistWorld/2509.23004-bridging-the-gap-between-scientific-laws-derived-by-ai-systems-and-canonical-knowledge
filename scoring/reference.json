@@ -1,479 +1,267 @@
 {
+  "_note": "Scored rows under results are the gym's own reference runs on the held-out slice (filled from scoring/scores_test.json). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular, and the paper's own success criterion, so they are not on the held-out scale.",
+  "_paper_reported": {
+    "single_axiom_recovery": {
+      "value": 0.9733,
+      "count": "73/75",
+      "source": "Appendix D.1 / Table 6; Table 4 reports 97%"
+    },
+    "two_axiom_recovery": {
+      "value": 0.4884,
+      "count": "105/215",
+      "source": "Table 3 (sum over the twelve systems); Kepler 7/10 in Table 2"
+    },
+    "three_axiom_recovery": {
+      "value": 0.2846,
+      "count": "109/383",
+      "source": "Table 3 (sum over the twelve systems); Kepler 2/10 in Table 2"
+    },
+    "multi_axiom_overall": {
+      "value": 0.49,
+      "source": "Table 4"
+    },
+    "baselines": {
+      "llm_gpt5_pro_single": 0.0,
+      "llm_gpt5_pro_multi": 0.0,
+      "cvc5_sygus": "timed out (8 h limit)",
+      "source": "Table 4, Appendix F"
+    },
+    "timeout_seconds": 7200
+  },
   "experiments": {
-    "exact_single_axiom_all_paper": {
-      "description": "Exact data-free single-axiom recovery across the 75 cases reported in Appendix D.1 / Table 6.",
+    "single_missing_axiom": {
+      "description": "One axiom is removed from a complete polynomial theory; recover it from the remaining axioms and the target relation (held-out theories, anonymized and unit-rescaled).",
+      "weight": 0.4,
+      "primary_metric": "recovery_rate",
       "metrics": {
-        "cases_completed": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators.",
-          "higher_is_better": true
-        },
-        "cases_total": {
-          "coefficient": 0.0,
-          "description": "Number of cases in this experiment slice denominator.",
-          "higher_is_better": true
-        },
-        "degenerate_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring.",
-          "higher_is_better": false
-        },
-        "derivable_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation.",
-          "higher_is_better": true
-        },
-        "derivable_candidate_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
-          "higher_is_better": true
-        },
-        "nondegenerate_candidate_rate": {
-          "coefficient": 0.2,
-          "description": "Fraction of cases not solved through degenerate boundary explanations.",
-          "higher_is_better": true
-        },
-        "success_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_rate": {
+        "recovery_rate": {
           "coefficient": 1.0,
-          "description": "Fraction of cases in the slice that satisfy the experiment success criterion.",
-          "higher_is_better": true
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero."
         },
-        "success_signal": {
+        "explanation_rate": {
+          "coefficient": 0.25,
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true consequence of the complete theory (vanishes on all its solutions), and none is already implied by the known axioms plus targets."
+        },
+        "top1_success_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": true,
+          "description": "Fraction of instances whose first-ranked candidate set already succeeds (recovers the removed axiom for single-axiom instances; is a valid explanation for multi-axiom instances)."
+        },
+        "unsound_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": false,
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed."
+        },
+        "failed_rate": {
           "coefficient": 0.0,
-          "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
+          "higher_is_better": false,
+          "description": "Diagnostic: fraction of instances whose run crashed, timed out or wrote malformed output (already counted as worst in every scored metric)."
+        },
+        "mean_candidate_sets": {
+          "coefficient": 0.0,
+          "higher_is_better": false,
+          "description": "Diagnostic: average number of candidate sets considered per instance (at most five)."
+        },
+        "instances": {
+          "coefficient": 0.0,
+          "higher_is_better": true,
+          "description": "Diagnostic: number of instances in this experiment, fixed by the evaluator."
         }
       },
-      "primary_metric": "success_rate",
+      "_paper_reported": {
+        "recovery_rate": 0.9733,
+        "note": "73/75 on the paper's twelve theories (train slice here)"
+      },
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 75,
-          "cases_total": 75,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 73,
-          "derivable_candidate_rate": 0.9733333333333334,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 73,
-          "success_rate": 0.9733333333333334,
-          "success_signal": 0.9743066666666668,
-          "type": "proposed"
+          "type": "proposed",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
         },
         "no_abduction_baseline": {
-          "cases_completed": 75,
-          "cases_total": 75,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0,
-          "type": "baseline"
+          "type": "baseline",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
+        },
+        "enumerative_baseline": {
+          "type": "baseline",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
         }
-      },
-      "weight": 0.35
+      }
     },
-    "exact_single_axiom_core": {
-      "description": "Exact data-free single-axiom recovery on the core symbolic benchmark subset used in this reproduction.",
+    "two_missing_axioms": {
+      "description": "Two axioms are removed; propose at most two polynomials that, added to the remaining axioms, make the target derivable while staying true in the complete theory.",
+      "weight": 0.35,
+      "primary_metric": "explanation_rate",
       "metrics": {
-        "cases_completed": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators.",
-          "higher_is_better": true
+        "recovery_rate": {
+          "coefficient": 0.5,
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero."
         },
-        "cases_total": {
-          "coefficient": 0.0,
-          "description": "Number of cases in this experiment slice denominator.",
-          "higher_is_better": true
-        },
-        "degenerate_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring.",
-          "higher_is_better": false
-        },
-        "derivable_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation.",
-          "higher_is_better": true
-        },
-        "derivable_candidate_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
-          "higher_is_better": true
-        },
-        "nondegenerate_candidate_rate": {
-          "coefficient": 0.2,
-          "description": "Fraction of cases not solved through degenerate boundary explanations.",
-          "higher_is_better": true
-        },
-        "success_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_rate": {
-          "coefficient": 0.0,
-          "description": "Fraction of cases in the slice that satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_signal": {
+        "explanation_rate": {
           "coefficient": 1.0,
-          "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true consequence of the complete theory (vanishes on all its solutions), and none is already implied by the known axioms plus targets."
+        },
+        "top1_success_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": true,
+          "description": "Fraction of instances whose first-ranked candidate set already succeeds (recovers the removed axiom for single-axiom instances; is a valid explanation for multi-axiom instances)."
+        },
+        "unsound_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": false,
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed."
+        },
+        "failed_rate": {
+          "coefficient": 0.0,
+          "higher_is_better": false,
+          "description": "Diagnostic: fraction of instances whose run crashed, timed out or wrote malformed output (already counted as worst in every scored metric)."
+        },
+        "mean_candidate_sets": {
+          "coefficient": 0.0,
+          "higher_is_better": false,
+          "description": "Diagnostic: average number of candidate sets considered per instance (at most five)."
+        },
+        "instances": {
+          "coefficient": 0.0,
+          "higher_is_better": true,
+          "description": "Diagnostic: number of instances in this experiment, fixed by the evaluator."
         }
       },
-      "primary_metric": "success_signal",
+      "_paper_reported": {
+        "explanation_rate": 0.4884,
+        "note": "105/215 coupled recoveries over the paper's twelve theories (Table 3)"
+      },
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 11,
-          "cases_total": 11,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 11,
-          "derivable_candidate_rate": 1.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 11,
-          "success_rate": 1.0,
-          "success_signal": 1.001,
-          "type": "proposed"
+          "type": "proposed",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
         },
         "no_abduction_baseline": {
-          "cases_completed": 11,
-          "cases_total": 11,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0,
-          "type": "baseline"
+          "type": "baseline",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
+        },
+        "enumerative_baseline": {
+          "type": "baseline",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
         }
-      },
-      "weight": 0.25
+      }
     },
-    "kepler_pair_axiom": {
-      "description": "Kepler two-missing-axiom recovery reported in Table 2 as 7/10.",
+    "three_missing_axioms": {
+      "description": "Three axioms are removed; propose at most three polynomials that, added to the remaining axioms, make the target derivable while staying true in the complete theory.",
+      "weight": 0.25,
+      "primary_metric": "explanation_rate",
       "metrics": {
-        "cases_completed": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators.",
-          "higher_is_better": true
+        "recovery_rate": {
+          "coefficient": 0.5,
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero."
         },
-        "cases_total": {
-          "coefficient": 0.0,
-          "description": "Number of cases in this experiment slice denominator.",
-          "higher_is_better": true
-        },
-        "degenerate_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring.",
-          "higher_is_better": false
-        },
-        "derivable_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation.",
-          "higher_is_better": true
-        },
-        "derivable_candidate_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
-          "higher_is_better": true
-        },
-        "nondegenerate_candidate_rate": {
-          "coefficient": 0.2,
-          "description": "Fraction of cases not solved through degenerate boundary explanations.",
-          "higher_is_better": true
-        },
-        "success_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_rate": {
+        "explanation_rate": {
           "coefficient": 1.0,
-          "description": "Fraction of cases in the slice that satisfy the experiment success criterion.",
-          "higher_is_better": true
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true consequence of the complete theory (vanishes on all its solutions), and none is already implied by the known axioms plus targets."
         },
-        "success_signal": {
+        "top1_success_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": true,
+          "description": "Fraction of instances whose first-ranked candidate set already succeeds (recovers the removed axiom for single-axiom instances; is a valid explanation for multi-axiom instances)."
+        },
+        "unsound_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": false,
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed."
+        },
+        "failed_rate": {
           "coefficient": 0.0,
-          "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
+          "higher_is_better": false,
+          "description": "Diagnostic: fraction of instances whose run crashed, timed out or wrote malformed output (already counted as worst in every scored metric)."
+        },
+        "mean_candidate_sets": {
+          "coefficient": 0.0,
+          "higher_is_better": false,
+          "description": "Diagnostic: average number of candidate sets considered per instance (at most five)."
+        },
+        "instances": {
+          "coefficient": 0.0,
+          "higher_is_better": true,
+          "description": "Diagnostic: number of instances in this experiment, fixed by the evaluator."
         }
       },
-      "primary_metric": "success_rate",
+      "_paper_reported": {
+        "explanation_rate": 0.2846,
+        "note": "109/383 coupled recoveries over the paper's twelve theories (Table 3)"
+      },
       "results": {
         "ai_noether_exact": {
-          "cases_completed": 10,
-          "cases_total": 10,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 7,
-          "derivable_candidate_rate": 0.7,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 7,
-          "success_rate": 0.7,
-          "success_signal": 0.7007,
-          "type": "proposed"
+          "type": "proposed",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
         },
         "no_abduction_baseline": {
-          "cases_completed": 0,
-          "cases_total": 10,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0,
-          "type": "baseline"
+          "type": "baseline",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
+        },
+        "enumerative_baseline": {
+          "type": "baseline",
+          "recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0,
+          "failed_rate": 0.0,
+          "mean_candidate_sets": 0.0,
+          "instances": 0
         }
-      },
-      "weight": 0.12
-    },
-    "kepler_single_axiom": {
-      "description": "Kepler single-axiom recovery reported as 5/5 in the paper.",
-      "metrics": {
-        "cases_completed": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators.",
-          "higher_is_better": true
-        },
-        "cases_total": {
-          "coefficient": 0.0,
-          "description": "Number of cases in this experiment slice denominator.",
-          "higher_is_better": true
-        },
-        "degenerate_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring.",
-          "higher_is_better": false
-        },
-        "derivable_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation.",
-          "higher_is_better": true
-        },
-        "derivable_candidate_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
-          "higher_is_better": true
-        },
-        "nondegenerate_candidate_rate": {
-          "coefficient": 0.2,
-          "description": "Fraction of cases not solved through degenerate boundary explanations.",
-          "higher_is_better": true
-        },
-        "success_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_rate": {
-          "coefficient": 0.0,
-          "description": "Fraction of cases in the slice that satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_signal": {
-          "coefficient": 1.0,
-          "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
-        }
-      },
-      "primary_metric": "success_signal",
-      "results": {
-        "ai_noether_exact": {
-          "cases_completed": 5,
-          "cases_total": 5,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 5,
-          "derivable_candidate_rate": 1.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 5,
-          "success_rate": 1.0,
-          "success_signal": 1.001,
-          "type": "proposed"
-        },
-        "no_abduction_baseline": {
-          "cases_completed": 5,
-          "cases_total": 5,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0,
-          "type": "baseline"
-        }
-      },
-      "weight": 0.1
-    },
-    "kepler_triple_axiom": {
-      "description": "Kepler three-missing-axiom recovery reported in Table 2 as 2/10.",
-      "metrics": {
-        "cases_completed": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators.",
-          "higher_is_better": true
-        },
-        "cases_total": {
-          "coefficient": 0.0,
-          "description": "Number of cases in this experiment slice denominator.",
-          "higher_is_better": true
-        },
-        "degenerate_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring.",
-          "higher_is_better": false
-        },
-        "derivable_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation.",
-          "higher_is_better": true
-        },
-        "derivable_candidate_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
-          "higher_is_better": true
-        },
-        "derivable_success_signal": {
-          "coefficient": 1.0,
-          "description": "Derivability rate with a tiny coupled-success coverage tie-breaker used as the primary metric for the saturated Kepler triple split.",
-          "higher_is_better": true
-        },
-        "nondegenerate_candidate_rate": {
-          "coefficient": 0.2,
-          "description": "Fraction of cases not solved through degenerate boundary explanations.",
-          "higher_is_better": true
-        },
-        "success_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases in the slice that satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_signal": {
-          "coefficient": 0.0,
-          "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
-        }
-      },
-      "primary_metric": "derivable_success_signal",
-      "results": {
-        "ai_noether_exact": {
-          "cases_completed": 10,
-          "cases_total": 10,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 4,
-          "derivable_candidate_rate": 0.35,
-          "derivable_success_signal": 0.3502,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 2,
-          "success_rate": 0.2,
-          "success_signal": 0.20020000000000002,
-          "type": "proposed"
-        },
-        "no_abduction_baseline": {
-          "cases_completed": 0,
-          "cases_total": 10,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "derivable_success_signal": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0,
-          "type": "baseline"
-        }
-      },
-      "weight": 0.08
-    },
-    "simple_harmonic_single_axiom": {
-      "description": "Simple harmonic oscillator single-axiom recovery reported as 6/6 in the paper.",
-      "metrics": {
-        "cases_completed": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose method artifact reports normal completion rather than timeout or failure; reported for diagnostics because missing cases already count against rate denominators.",
-          "higher_is_better": true
-        },
-        "cases_total": {
-          "coefficient": 0.0,
-          "description": "Number of cases in this experiment slice denominator.",
-          "higher_is_better": true
-        },
-        "degenerate_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases where derivability is achieved only through a degenerate boundary explanation; reported for diagnostics, with the normalized nondegenerate rate used for scoring.",
-          "higher_is_better": false
-        },
-        "derivable_candidate_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases with at least one nondegenerate candidate that symbolically derives the target relation.",
-          "higher_is_better": true
-        },
-        "derivable_candidate_rate": {
-          "coefficient": 0.4,
-          "description": "Fraction of cases with at least one nondegenerate derivability-certified candidate.",
-          "higher_is_better": true
-        },
-        "nondegenerate_candidate_rate": {
-          "coefficient": 0.2,
-          "description": "Fraction of cases not solved through degenerate boundary explanations.",
-          "higher_is_better": true
-        },
-        "success_count": {
-          "coefficient": 0.0,
-          "description": "Number of cases whose accepted candidates satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_rate": {
-          "coefficient": 0.0,
-          "description": "Fraction of cases in the slice that satisfy the experiment success criterion.",
-          "higher_is_better": true
-        },
-        "success_signal": {
-          "coefficient": 1.0,
-          "description": "Success rate with a tiny solved-case coverage tie-breaker used only as the primary metric for saturated split sub-experiments.",
-          "higher_is_better": true
-        }
-      },
-      "primary_metric": "success_signal",
-      "results": {
-        "ai_noether_exact": {
-          "cases_completed": 6,
-          "cases_total": 6,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 6,
-          "derivable_candidate_rate": 1.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 6,
-          "success_rate": 1.0,
-          "success_signal": 1.001,
-          "type": "proposed"
-        },
-        "no_abduction_baseline": {
-          "cases_completed": 6,
-          "cases_total": 6,
-          "degenerate_candidate_count": 0,
-          "derivable_candidate_count": 0,
-          "derivable_candidate_rate": 0.0,
-          "nondegenerate_candidate_rate": 1.0,
-          "success_count": 0,
-          "success_rate": 0.0,
-          "success_signal": 0.0,
-          "type": "baseline"
-        }
-      },
-      "weight": 0.1
+      }
     }
   }
 }

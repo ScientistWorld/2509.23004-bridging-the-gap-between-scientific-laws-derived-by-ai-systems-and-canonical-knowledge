@@ -1,46 +1,7 @@
 #!/bin/bash
-# Run the paper's proposed method.
-#
-# This script trains/runs the paper's method using code in method/.
-#
-# Usage:
-#   bash scripts/method.sh
-
+# Run the paper's method (AI-Noether exact Encode-Decompose-Reason) on the
+# train instances through the evaluator.  The method needs no training: the
+# solver scripts/solvers/ai_noether_exact.sh is run once per instance.
 set -e
-
-cd /home/user
-
-python method/exact_abduction_runner.py \
-  --systems-dir data/systems_and_phenomena \
-  --problems \
-    decay \
-    escape_velocity \
-    hagen \
-    hall \
-    inelastic_relativistic_collision \
-    kepler \
-    light \
-    photoHall \
-    relativistic_laws \
-    simple_harmonic_oscillator \
-    time_dilation \
-    compton \
-  --sizes 1 \
-  --max-candidate-size 1 \
-  --axiom-limits hall=7 \
-  --timeout-decomposition 300 \
-  --timeout-case 600 \
-  --output scoring/ai_noether_exact_outputs.json
-
-python method/exact_abduction_runner.py \
-  --systems-dir data/systems_and_phenomena \
-  --problems kepler \
-  --sizes 2,3 \
-  --filter-degenerate \
-  --timeout-decomposition 120 \
-  --timeout-case 120 \
-  --output scoring/ai_noether_kepler_multi_outputs.json
-
-bash scripts/evaluate.sh --include-multi \
-  scoring/ai_noether_exact_outputs.json \
-  scoring/ai_noether_kepler_multi_outputs.json
+cd "$(dirname "$0")/.."
+python eval/train/evaluate.py --only ai_noether_exact "$@"

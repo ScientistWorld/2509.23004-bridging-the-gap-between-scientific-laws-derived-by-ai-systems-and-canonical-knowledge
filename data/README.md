@@ -1,5 +1,12 @@
 # Data Assets
 
-`systems_and_phenomena/` contains the symbolic benchmark system definitions used
-for evaluation and baselines. They are tracked problem assets so reusable
-components can load instances without importing or depending on any method code.
+`systems_and_phenomena/` holds the twelve polynomial benchmark theories published
+with the paper (https://github.com/IBM/AI-Noether, folder
+`systems_and_phenomena`; `scripts/download.sh` re-fetches them). Each
+`system.txt` lists variables, axioms, measured variables and target
+polynomial(s); `system_noise_*.txt` are the upstream noisy-target variants
+(unused by the exact gym).
+
+These theories form the visible train slice. `eval/train/build_instances.py`
+turns them into anonymized, unit-rescaled abduction instances
+(`eval/train/instances.json`). The held-out theories are not stored here.

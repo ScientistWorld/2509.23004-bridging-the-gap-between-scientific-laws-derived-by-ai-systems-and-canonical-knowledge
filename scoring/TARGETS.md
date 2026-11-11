@@ -1,43 +1,29 @@
 # Scoring Targets
 
-Future agents should optimize symbolic recovery of missing polynomial axioms while preserving derivability guarantees.
+Scores come from `scoring/scores_test.json` (hidden test) and
+`scoring/scores_train.json` (visible train); the reference rows are those of
+`ai_noether_exact`. Coefficients and weights are in `scoring/reference.json`.
 
-## exact_single_axiom_all_paper
+## single_missing_axiom
 
-Primary target: maximize `success_rate` over the 75 single-axiom removal cases reported in the paper.
+* Primary: maximize `recovery_rate` (coefficient 1.0).
+* Secondary benefits: `top1_success_rate` (0.3), `explanation_rate` (0.25).
+* Constraint: keep `unsound_rate` low (0.3, lower is better); failed runs count here
+  and as zero in every benefit metric.
 
-Constraint targets:
+## two_missing_axioms
 
-- `derivable_candidate_rate` should remain high, showing that successful cases include candidates that actually derive the target relation.
-- `cases_completed` should equal 75, showing that gains are not achieved by skipping hard cases.
+* Primary: maximize `explanation_rate` (1.0).
+* Secondary benefits: `recovery_rate` (0.5), `top1_success_rate` (0.3).
+* Constraint: keep `unsound_rate` low (0.3).
 
-## exact_single_axiom_core
+## three_missing_axioms
 
-Primary target: maximize `success_rate` on the combined 11 single-axiom cases from simple harmonic oscillator and Kepler.
+* Primary: maximize `explanation_rate` (1.0).
+* Secondary benefits: `recovery_rate` (0.5), `top1_success_rate` (0.3).
+* Constraint: keep `unsound_rate` low (0.3).
 
-Constraint targets:
-
-- `derivable_candidate_rate` should remain high, showing that successful cases include candidates that actually derive the target relation.
-- `cases_completed` should equal the number of benchmark cases, showing that gains are not achieved by silently skipping hard cases.
-
-## simple_harmonic_single_axiom
-
-Primary target: recover all 6 single missing axioms in the simple harmonic oscillator system.
-
-Constraint targets: maintain `derivable_candidate_rate` and complete all 6 cases.
-
-## kepler_single_axiom
-
-Primary target: recover all 5 single missing axioms in the Kepler system.
-
-Constraint targets: maintain `derivable_candidate_rate` and complete all 5 cases.
-
-## kepler_pair_axiom
-
-Primary target: recover coupled explanatory relations for all 10 two-missing-axiom Kepler cases from Table 2.
-
-Constraint targets:
-
-- `derivable_candidate_rate` should remain high, showing that recovered coupled explanations really make the target relation derivable.
-- `cases_completed` should equal 10, showing that gains are not achieved by skipping hard axiom pairs.
-- `nondegenerate_candidate_rate` should remain 1.0, showing that degenerate boundary explanations such as zero masses, distances, or period remain filtered.
+Paper-reported values (on the paper's twelve theories, 7200 s timeout) are kept
+under `_paper_reported` in `scoring/reference.json`: 73/75 single-axiom
+recoveries, 105/215 two-axiom and 109/383 three-axiom coupled recoveries; the
+paper's LLM and cvc5 baselines solve none.

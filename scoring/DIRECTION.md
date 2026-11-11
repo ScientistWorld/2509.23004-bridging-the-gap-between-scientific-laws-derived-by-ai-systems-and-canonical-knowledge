@@ -1,7 +1,20 @@
 # Research Direction
 
-This gym studies automated abductive inference for scientific laws represented as polynomial equations.
+This gym studies automated abductive inference for scientific laws written as
+polynomial equations: recover the axioms missing from a theory, given the rest of
+the theory and an observed law, with formal derivability.
 
-Acceptable improvements include better component selection, stronger symbolic simplification, more efficient decomposition orchestration, support for multi-axiom recovery, and extensions to noisy polynomial hypotheses. New methods should still produce candidate axioms and verify that the target follows from the augmented theory.
+Productive directions:
 
-Out-of-scope approaches include training a generic model to predict the missing axiom from labels, returning memorized benchmark axioms, changing the benchmark target equations, or replacing symbolic derivability with a purely numerical fit score. Such approaches may obtain high numbers but do not address the paper's claim.
+* recovering coupled or decoupled explanations when two or three axioms are
+  missing (the largest headroom);
+* better candidate generation from the algebraic structure of the instance and
+  better ranking, so that the first proposed set is the right one;
+* avoiding unsound explanations (stronger-than-true or degenerate laws) without
+  access to the complete theory;
+* doing more within the fixed per-instance time limit on larger theories.
+
+Out of scope: looking up or memorizing benchmark laws, reading evaluator files,
+proposing contradictions or degenerate laws, copying or rearranging the target
+and known axioms, replacing exact derivability with numerical fits, or changing
+the evaluator, instances, time limit or candidate budget.

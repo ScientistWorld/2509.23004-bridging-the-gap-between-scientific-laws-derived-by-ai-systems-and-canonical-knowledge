@@ -1,23 +1,21 @@
 #!/bin/bash
-# Download all data and models needed for this environment.
+# Fetch the public artifacts this gym uses.  Idempotent; safe to rerun.
 #
-# Run on a node with internet access BEFORE building the container
-# or submitting compute jobs.
+# Estimated total download size: < 5 MB.  Estimated disk usage: < 10 MB.
 #
-# This script should be idempotent — safe to run multiple times.
-# It should skip files that already exist.
-#
-# Update the storage estimate below as you add downloads.
-#
-# Estimated total download size: 0 GB
-# Estimated disk usage after extraction: 0 GB
-#
-# No external dataset or model download is required for the symbolic benchmark
-# instances packaged in this workspace.
-
+# The train slice uses the twelve benchmark theories published with the paper
+# (https://github.com/IBM/AI-Noether, folder systems_and_phenomena).  A copy is
+# tracked in data/systems_and_phenomena; this script clones the upstream
+# repository into data/downloads/ and restores that copy if it is missing.
+# The held-out test theories are authored for this gym and live in eval/test/.
 set -e
-
 cd "$(dirname "$0")/.."
-
 mkdir -p data/downloads
-echo "Packaged symbolic benchmarks require no external datasets."
+if [ ! -d data/downloads/AI-Noether/.git ]; then
+  git clone --depth 1 https://github.com/IBM/AI-Noether.git data/downloads/AI-Noether
+fi
+if [ ! -f data/systems_and_phenomena/kepler/system.txt ]; then
+  mkdir -p data/systems_and_phenomena
+  cp -r data/downloads/AI-Noether/systems_and_phenomena/. data/systems_and_phenomena/
+fi
+echo "Benchmark theories available in data/systems_and_phenomena"

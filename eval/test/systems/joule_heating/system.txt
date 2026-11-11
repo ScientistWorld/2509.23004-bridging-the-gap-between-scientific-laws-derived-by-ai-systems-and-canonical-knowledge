@@ -1,0 +1,12 @@
+Variables: ["V", "I", "Rr", "Pw", "rho", "Lw", "Aw", "Eh", "t", "mw", "cw", "dT"]
+Equations:
+V - I*Rr
+Pw - V*I
+Rr*Aw - rho*Lw
+Eh - Pw*t
+Eh - mw*cw*dT
+
+Measured Variables: ["V", "rho", "Lw", "Aw", "t", "mw", "cw", "dT"]
+
+Target Polynomial:
+mw*cw*dT*rho*Lw - V^2*Aw*t

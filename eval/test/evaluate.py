@@ -1,439 +1,448 @@
 #!/usr/bin/env python3
-"""Held-out test-slice evaluator for exact symbolic abduction artifacts."""
+"""Held-out test evaluator for polynomial abduction solvers.
+
+The evaluator owns everything on the scoring side: the instances (built from
+complete theories that exist only in ``eval/test``), the per-instance time
+limit, the candidate budget, and the ground truth.  It runs every solver found
+in ``scripts/solvers/*.sh`` on every instance:
+
+    bash scripts/solvers/<name>.sh <instance.json> <output.json>
+
+with ``ABDUCTION_TIME_LIMIT`` set, reads only the ranked list of candidate
+polynomial sets from ``output.json`` and recomputes every scored quantity in
+Singular.  Nothing a solver reports about itself (flags, scores, problem
+definitions) is read.
+
+Per candidate set S (only the first TOP_K sets count):
+  derives     every target lies in the ideal <known axioms, S>
+  sound       every polynomial of S vanishes on every solution of the complete
+              theory (radical membership), so contradictions, zero-forcing
+              and false laws are rejected
+  nontrivial  no polynomial of S already lies in <known axioms, targets>
+  valid       derives and sound and nontrivial
+  recovered   valid, and every removed axiom lies in <known, S> saturated by
+              the instance's nonzero variables (equivalent to the complete
+              theory wherever physical quantities are nonzero)
+A run that crashes, times out or writes malformed output fails the instance,
+which then receives the worst value of every scored metric.
+"""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
 import re
-from collections import defaultdict
+import signal
+import subprocess
+import sys
+import tempfile
+import time
 from pathlib import Path
 
-try:
-    import sympy as sp
-except ModuleNotFoundError:  # pragma: no cover - login-node compatibility path
-    sp = None
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+from polyutil import PolyError, parse_poly  # noqa: E402
 
+SLICE = "test"
+DEFAULT_INSTANCES = HERE / "instances.json"
+DEFAULT_OUTPUT = ROOT / "scoring" / "scores_test.json"
+DEFAULT_SOLVERS_DIR = ROOT / "scripts" / "solvers"
+TIME_LIMIT_SECONDS = 60
+GRACE_SECONDS = 5
+TOP_K = 5
+EVAL_TIMEOUT_SECONDS = 300
+MAX_OUTPUT_BYTES = 2_000_000
+CANDIDATE_LIMITS = {"max_chars": 4000, "max_terms": 400, "max_degree": 24, "max_exponent": 12, "max_int_digits": 60}
+SINGULAR = os.environ.get("SINGULAR_BIN", "Singular")
+SOLVER_NAME_RE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.\-]*$")
 
-SLICE_NAME = "test"
-SPLIT_NAME = "grouped_alternating_v3_primary_metric_calibrated"
-EXPECTED_TOTALS_BY_SLICE = {
-    "train": {
-        "exact_single_axiom_core": 5,
-        "simple_harmonic_single_axiom": 2,
-        "kepler_single_axiom": 3,
-        "kepler_pair_axiom": 5,
-        "kepler_triple_axiom": 5,
-    },
-    "test": {
-        "exact_single_axiom_core": 6,
-        "simple_harmonic_single_axiom": 4,
-        "kepler_single_axiom": 2,
-        "kepler_pair_axiom": 5,
-        "kepler_triple_axiom": 5,
-    },
-}
-FULL_TOTALS_BY_EXPERIMENT = {
-    "exact_single_axiom_all_paper": 75,
-    "exact_single_axiom_core": 11,
-    "simple_harmonic_single_axiom": 6,
-    "kepler_single_axiom": 5,
-    "kepler_pair_axiom": 10,
-    "kepler_triple_axiom": 10,
-}
-FIXED_SPLITS = {
-    ("simple_harmonic_oscillator", 1): {
-        "train": {(1,), (3,)},
-        "test": {(2,), (4,), (5,), (6,)},
-    },
-    ("kepler", 2): {
-        "train": {(1, 2), (1, 5), (2, 3), (2, 4), (3, 5)},
-        "test": {(1, 3), (1, 4), (2, 5), (3, 4), (4, 5)},
-    },
-    ("kepler", 3): {
-        "train": {(1, 2, 3), (1, 2, 5), (1, 3, 5), (1, 4, 5), (2, 3, 4)},
-        "test": {(1, 2, 4), (1, 3, 4), (2, 3, 5), (2, 4, 5), (3, 4, 5)},
-    }
+EXPERIMENTS = {
+    1: "single_missing_axiom",
+    2: "two_missing_axioms",
+    3: "three_missing_axioms",
 }
 
 
-def symbol_table(variables: list[str]) -> dict[str, sp.Symbol]:
-    if sp is None:
-        raise RuntimeError("SymPy is required to recompute symbolic evaluation metrics.")
-    return {name: sp.Symbol(name) for name in variables}
+# --------------------------------------------------------------------------
+# instances and solvers
+# --------------------------------------------------------------------------
+
+def load_instances(path: Path) -> list[dict]:
+    if not path.is_file():
+        import build_instances  # same-slice builder
+
+        build_instances.build(path, timeout=900.0)
+    payload = json.loads(path.read_text())
+    return payload["instances"]
 
 
-def sympify_poly(poly: str, symbols: dict[str, sp.Symbol]) -> sp.Expr:
-    return sp.sympify(poly.replace("^", "**"), locals=symbols)
-
-
-def poly_equal_up_to_scalar(a: sp.Expr, b: sp.Expr, variables: list[sp.Symbol]) -> bool:
-    pa = sp.Poly(sp.expand(a), *variables, domain=sp.QQ)
-    pb = sp.Poly(sp.expand(b), *variables, domain=sp.QQ)
-    if pa.is_zero and pb.is_zero:
-        return True
-    da = pa.as_dict()
-    db = pb.as_dict()
-    if set(da) != set(db) or not da:
-        return False
-    key = next(iter(da))
-    ratio = sp.simplify(da[key] / db[key])
-    return all(sp.simplify(da[k] - ratio * db[k]) == 0 for k in da)
-
-
-def vars_in_poly(poly: str, variables: list[str]) -> list[str]:
+def discover_solvers(solvers_dir: Path) -> list[tuple[str, Path]]:
     found = []
-    for variable in sorted(variables, key=len, reverse=True):
-        left_ok = f"(?<![A-Za-z0-9_]){re.escape(variable)}"
-        right_ok = "(?![A-Za-z0-9_])"
-        if re.search(left_ok + right_ok, poly):
-            found.append(variable)
+    for path in sorted(solvers_dir.resolve().glob("*.sh")):
+        if SOLVER_NAME_RE.match(path.stem):
+            found.append((path.stem, path))
     return found
 
 
-def candidate_touches_unmeasured(case: dict, candidates: list[str]) -> bool:
-    measured = set(case.get("measured_vars", []))
-    for candidate in candidates:
-        if set(vars_in_poly(candidate, case["variables"])) - measured:
-            return True
-    return False
+def kill_group(proc: subprocess.Popen) -> None:
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        pass
+    try:
+        proc.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        pass
 
 
-def groebner_derives(
-    variables: list[str],
-    measured_vars: list[str],
-    remaining_axioms: list[str],
-    candidates: list[str],
-    target: str,
-) -> tuple[bool, bool]:
-    symbols = symbol_table(variables)
-    measured = [symbols[v] for v in measured_vars if v in symbols]
-    non_measured = [symbols[v] for v in variables if v not in measured_vars]
-    order = non_measured + measured
-    polynomials = [sympify_poly(p, symbols) for p in remaining_axioms + candidates]
-    target_expr = sympify_poly(target, symbols)
-    if not polynomials or not measured:
-        return False, False
-    gb = sp.groebner(polynomials, *order, order="lex", domain=sp.QQ)
-    elim = [g.as_expr() for g in gb.polys if set(g.as_expr().free_symbols).issubset(set(measured))]
-    if not elim:
-        return False, False
-    gb_elim = sp.groebner(elim, *measured, order="lex", domain=sp.QQ)
-    weak = sp.expand(gb_elim.reduce(target_expr)[1]) == 0
-    strong = any(poly_equal_up_to_scalar(g, target_expr, measured) for g in elim)
-    return bool(weak), bool(strong)
-
-
-def canonical_recovered(case: dict, candidates: list[str]) -> bool:
-    variables = case["variables"]
-    symbols = symbol_table(variables)
-    order = [symbols[v] for v in variables]
-    polynomials = [sympify_poly(p, symbols) for p in case["remaining_axioms"] + candidates]
-    if not polynomials:
-        return False
-    gb = sp.groebner(polynomials, *order, order="lex", domain=sp.QQ)
-    for missing_axiom in case["removed_axioms"]:
-        missing = sympify_poly(missing_axiom, symbols)
-        if sp.expand(gb.reduce(missing)[1]) != 0:
-            return False
-    return True
-
-
-def implied_by_ideal(poly: str, generators: list[str], variables: list[str]) -> bool:
-    if not generators:
-        return False
-    symbols = symbol_table(variables)
-    order = [symbols[v] for v in variables]
-    gb = sp.groebner([sympify_poly(p, symbols) for p in generators], *order, order="lex", domain=sp.QQ)
-    return sp.expand(gb.reduce(sympify_poly(poly, symbols))[1]) == 0
-
-
-def candidate_is_degenerate(case: dict, candidates: list[str]) -> bool:
-    return any(
-        implied_by_ideal(factor, case["remaining_axioms"] + candidates, case["variables"])
-        for factor in case.get("nonzero_factors", [])
-    )
-
-
-def score_case(case: dict) -> tuple[bool, bool, bool]:
-    required = {"variables", "measured_vars", "targets", "remaining_axioms", "removed_axioms"}
-    if not required.issubset(case):
-        if case.get("num_accepted", 0) or case.get("success") or case.get("accepted"):
-            raise ValueError(
-                f"Case {case.get('problem')} {case.get('removed_indices')} reports candidates "
-                "or success without symbolic fields required for independent evaluation."
+def run_solver(solver: Path, public: dict, time_limit: float) -> tuple[str, object, float, str]:
+    with tempfile.TemporaryDirectory(prefix="abduction_") as td:
+        inp = Path(td) / "instance.json"
+        out = Path(td) / "output.json"
+        payload = dict(public)
+        payload["time_limit_seconds"] = time_limit
+        inp.write_text(json.dumps(payload))
+        env = dict(os.environ)
+        env["ABDUCTION_TIME_LIMIT"] = str(time_limit)
+        start = time.monotonic()
+        with open(Path(td) / "solver.log", "w") as log:
+            proc = subprocess.Popen(
+                ["bash", str(solver), str(inp), str(out)],
+                cwd=str(ROOT),
+                stdin=subprocess.DEVNULL,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                env=env,
+                start_new_session=True,
             )
-        return False, False, False
-    if sp is None:
-        if case.get("accepted") or case.get("num_accepted", 0) or case.get("success"):
-            raise RuntimeError("SymPy is required to evaluate non-empty symbolic method outputs.")
-        return False, False, False
-    if case.get("status") != "ok":
-        return False, False, False
-    has_derivable = False
-    has_strong_derivable = False
-    has_canonical = False
-    has_coupled = False
-    has_degenerate = False
-    for item in case.get("accepted", []):
-        candidates = item.get("candidates", [])
-        derives_all = True
-        strong_all = True
-        for target in case["targets"]:
-            target_vars = vars_in_poly(target, case["variables"])
-            measured_subset = [v for v in case["measured_vars"] if v in target_vars]
-            weak, strong = groebner_derives(
-                case["variables"],
-                measured_subset,
-                case["remaining_axioms"],
-                candidates,
-                target,
-            )
-            if not weak:
-                derives_all = False
-                break
-            strong_all = strong_all and strong
-        if derives_all:
-            if candidate_is_degenerate(case, candidates):
-                has_degenerate = True
-                continue
-            has_derivable = True
-            has_strong_derivable = has_strong_derivable or strong_all
-            if candidate_touches_unmeasured(case, candidates):
-                has_coupled = True
-            if canonical_recovered(case, candidates):
-                has_canonical = True
-    if len(case.get("removed_indices", [])) > 1:
-        return has_derivable, has_coupled, has_degenerate
-    return has_derivable, has_canonical, has_degenerate
+            try:
+                rc = proc.wait(timeout=time_limit + GRACE_SECONDS)
+                status = "ok" if rc == 0 else f"exit_{rc}"
+            except subprocess.TimeoutExpired:
+                status = "timeout"
+            finally:
+                kill_group(proc)
+        elapsed = time.monotonic() - start
+        try:
+            tail = (Path(td) / "solver.log").read_text(errors="replace")[-600:]
+        except OSError:
+            tail = ""
+        if status != "ok":
+            return status, None, elapsed, tail
+        if not out.is_file():
+            return "missing_output", None, elapsed, tail
+        if out.stat().st_size > MAX_OUTPUT_BYTES:
+            return "output_too_large", None, elapsed, tail
+        try:
+            data = json.loads(out.read_text())
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return "invalid_json", None, elapsed, tail
+    return "ok", data, elapsed, tail
 
 
-def case_identity(case: dict) -> str:
-    stable = {
-        "problem": case.get("problem"),
-        "removed_indices": case.get("removed_indices", []),
-        "targets": case.get("targets", []),
-        "measured_vars": case.get("measured_vars", []),
-    }
-    return json.dumps(stable, sort_keys=True, separators=(",", ":"))
+def canonical_set(entry, public: dict):
+    """Return canonical polynomial strings of a well-formed set, else None."""
+    if not isinstance(entry, list) or not (1 <= len(entry) <= public["num_missing"]):
+        return None
+    polys: list[str] = []
+    for text in entry:
+        try:
+            poly = parse_poly(text, public["variables"], CANDIDATE_LIMITS)
+        except (PolyError, RecursionError):
+            return None
+        if poly.is_zero():
+            return None
+        canon = poly.to_string(public["variables"])
+        if canon not in polys:
+            polys.append(canon)
+    return polys
 
 
-def case_sort_key(case: dict) -> tuple:
-    return (
-        str(case.get("problem", "")),
-        len(case.get("removed_indices", [])),
-        tuple(case.get("removed_indices", [])),
-        json.dumps(case.get("targets", []), sort_keys=True),
-    )
+def extract_sets(data, public: dict):
+    if not isinstance(data, dict):
+        return None
+    sets = data.get("candidate_sets")
+    if not isinstance(sets, list):
+        return None
+    return [canonical_set(entry, public) for entry in sets[:TOP_K]]
 
 
-def selected_for_slice(case: dict, ordinal: int) -> str:
-    fixed_split = FIXED_SPLITS.get((case.get("problem"), len(case.get("removed_indices", []))))
-    if fixed_split is not None:
-        removed = tuple(case.get("removed_indices", []))
-        if removed in fixed_split["train"]:
-            return "train"
-        if removed in fixed_split["test"]:
-            return "test"
-        raise ValueError(f"Case {case.get('problem')} {removed} is missing from fixed split.")
-    group_key = f"{case.get('problem')}|{len(case.get('removed_indices', []))}"
-    offset = int(hashlib.sha256(group_key.encode("utf-8")).hexdigest()[:8], 16) % 2
-    return "train" if (ordinal + offset) % 2 == 0 else "test"
+# --------------------------------------------------------------------------
+# Singular scoring
+# --------------------------------------------------------------------------
+
+def run_singular(script: str, timeout: float) -> str:
+    with tempfile.TemporaryDirectory(prefix="abduction_eval_") as td:
+        path = Path(td) / "score.sing"
+        path.write_text(script)
+        proc = subprocess.run(
+            [SINGULAR, "-q", "--random=1", str(path)],
+            capture_output=True,
+            stdin=subprocess.DEVNULL,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    errors = [ln.strip() for ln in (proc.stdout + '\n' + proc.stderr).splitlines() if ln.strip().startswith('?')]
+    if errors:
+        raise RuntimeError('Singular error: ' + ' | '.join(errors[:4]))
+    if proc.returncode != 0:
+        raise RuntimeError(f"Singular exit {proc.returncode}: {proc.stderr[-1000:]}")
+    return proc.stdout
 
 
-def slice_cases(cases: list[dict]) -> list[dict]:
-    grouped: dict[tuple[str, int], list[dict]] = defaultdict(list)
-    for case in cases:
-        grouped[(case.get("problem", ""), len(case.get("removed_indices", [])))].append(case)
-    selected = []
-    for group_cases in grouped.values():
-        for ordinal, case in enumerate(sorted(group_cases, key=case_sort_key)):
-            if selected_for_slice(case, ordinal) == SLICE_NAME:
-                selected.append(case)
-    return sorted(selected, key=case_sort_key)
+def scoring_script(inst: dict, sets: list) -> str:
+    public, hidden = inst["public"], inst["hidden"]
+    nonzero = public["nonzero_variables"]
+    lines = [
+        f"ring R = 0, (t, {', '.join(public['variables'])}), dp;",
+        "short = 0;",
+        "poly one = 1;",
+        f"poly hnz = {'*'.join(nonzero) if nonzero else '1'};",
+        "int der; int ntr; int rec;",
+        "ideal G; ideal JK; ideal JS;",
+    ]
+    for i, a in enumerate(hidden["full_axioms"], 1):
+        lines.append(f"poly a{i} = {a};")
+    lines.append("ideal FULL = " + ", ".join(f"a{i}" for i in range(1, len(hidden["full_axioms"]) + 1)) + ";")
+    lines.append("ideal FS = std(FULL);")
+    known = public["known_axioms"]
+    for i, a in enumerate(known, 1):
+        lines.append(f"poly k{i} = {a};")
+    lines.append("ideal KNOWN = " + (", ".join(f"k{i}" for i in range(1, len(known) + 1)) or "0") + ";")
+    for j, q in enumerate(public["targets"], 1):
+        lines.append(f"poly q{j} = {q};")
+    lines.append("ideal KT = std(KNOWN + ideal(" + ", ".join(f"q{j}" for j in range(1, len(public["targets"]) + 1)) + "));")
+    for i, r in enumerate(hidden["removed_axioms"], 1):
+        lines.append(f"poly r{i} = {r};")
 
-
-def summarize_cases(
-    cases: list[dict],
-    problem_filter: set[str] | None = None,
-    size: int | None = None,
-    expected_total: int | None = None,
-    full_total: int | None = None,
-) -> dict:
-    selected = []
-    for case in cases:
-        if problem_filter is not None and case["problem"] not in problem_filter:
+    names: dict[str, str] = {}
+    for s in sets:
+        for p in s or []:
+            if p not in names:
+                u = f"u{len(names) + 1}"
+                names[p] = u
+                lines += [
+                    f"poly {u} = {p};",
+                    f"int s{u} = 0;",
+                    f"if (size(reduce({u}, FS)) == 0) {{ s{u} = 1; }} else {{ G = std(FULL + ideal(1 - t*{u})); "
+                    f"if (size(reduce(one, G)) == 0) {{ s{u} = 1; }} }}",
+                    f'print("POLY {u} " + string(s{u}));',
+                ]
+    nq = len(public["targets"])
+    nr = len(hidden["removed_axioms"])
+    for k, s in enumerate(sets):
+        if not s:
             continue
-        if size is not None and len(case["removed_indices"]) != size:
+        us = [names[p] for p in s]
+        ideal_s = "ideal(" + ", ".join(us) + ")"
+        lines.append(f"JK = std(KNOWN + {ideal_s});")
+        lines.append("der = 1;")
+        for j in range(1, nq + 1):
+            lines.append(f"if (size(reduce(q{j}, JK)) != 0) {{ der = 0; }}")
+        lines.append("ntr = 1;")
+        for u in us:
+            lines.append(f"if (size(reduce({u}, KT)) == 0) {{ ntr = 0; }}")
+        sound_all = " && ".join(f"(s{u} == 1)" for u in us)
+        miss = " || ".join(f"(size(reduce(r{i}, JK)) != 0)" for i in range(1, nr + 1))
+        lines.append("rec = 0;")
+        lines.append(f"if ((der == 1) && (ntr == 1) && {sound_all}) {{")
+        lines.append("  rec = 1;")
+        lines.append(f"  if ({miss}) {{")
+        lines.append(f"    JS = std(KNOWN + {ideal_s} + ideal(1 - t*hnz));")
+        for i in range(1, nr + 1):
+            lines.append(f"    if (size(reduce(r{i}, JS)) != 0) {{ rec = 0; }}")
+        lines.append("  }")
+        lines.append("}")
+        lines.append(f'print("SET {k} " + string(der) + " " + string(ntr) + " " + string(rec));')
+    lines.append("quit;")
+    return "\n".join(lines) + "\n"
+
+
+def score_sets(inst: dict, sets: list) -> tuple[list, str | None]:
+    """Return per-set verdict dicts (None for malformed sets) and an error note."""
+    verdicts: list = [None] * len(sets)
+    if not any(sets):
+        return verdicts, None
+    try:
+        out = run_singular(scoring_script(inst, sets), EVAL_TIMEOUT_SECONDS)
+    except (subprocess.TimeoutExpired, RuntimeError) as exc:
+        return verdicts, f"scoring_failed: {type(exc).__name__}: {str(exc)[:400]}"
+    sound: dict[str, bool] = {}
+    flags: dict[int, tuple[bool, bool, bool]] = {}
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) == 3 and parts[0] == "POLY":
+            sound[parts[1]] = parts[2] == "1"
+        elif len(parts) == 5 and parts[0] == "SET":
+            flags[int(parts[1])] = (parts[2] == "1", parts[3] == "1", parts[4] == "1")
+    names: dict[str, str] = {}
+    for s in sets:
+        for p in s or []:
+            names.setdefault(p, f"u{len(names) + 1}")
+    error = None
+    for k, s in enumerate(sets):
+        if not s:
             continue
-        selected.append(case)
-    total = max(len(selected), expected_total or 0)
-    completed = sum(1 for c in selected if c.get("status") == "ok")
-    scored = [score_case(c) for c in selected]
-    derivable = sum(1 for has_derivable, _, _ in scored if has_derivable)
-    success = sum(1 for _, has_success, _ in scored if has_success)
-    degenerate = sum(1 for _, _, has_degenerate in scored if has_degenerate)
-    success_rate = success / total if total else 0.0
-    success_signal = success_rate + 0.001 * (success / full_total if full_total else 0.0)
-    derivable_candidate_rate = derivable / total if total else 0.0
+        if k not in flags or any(names[p] not in sound for p in s):
+            error = "scoring_incomplete"
+            continue
+        der, ntr, rec = flags[k]
+        snd = all(sound[names[p]] for p in s)
+        valid = der and snd and ntr
+        verdicts[k] = {
+            "derives": der,
+            "sound": snd,
+            "nontrivial": ntr,
+            "valid": valid,
+            "unsound": der and not snd,
+            "recovered": valid and rec,
+        }
+    return verdicts, error
+
+
+def evaluate_instance(inst: dict, status: str, data) -> dict:
+    record = {"id": inst["id"], "num_missing": inst["num_missing"], "status": status}
+    sets = extract_sets(data, inst["public"]) if status == "ok" else None
+    if sets is None:
+        record.update({"failed": True, "status": status if status != "ok" else "invalid_output"})
+        return record
+    verdicts, error = score_sets(inst, sets)
+    record.update({"failed": False, "num_sets": len(sets), "verdicts": verdicts})
+    if error:
+        record["scoring_error"] = error
+    return record
+
+
+# --------------------------------------------------------------------------
+# aggregation
+# --------------------------------------------------------------------------
+
+def instance_outcome(record: dict) -> dict:
+    if record["failed"]:
+        return {"failed": 1, "recovered": 0, "valid": 0, "unsound": 1, "top1_recovered": 0, "top1_valid": 0, "sets": 0}
+    v = [x for x in record["verdicts"]]
+    first = v[0] if v else None
     return {
-        "cases_total": total,
-        "cases_completed": completed,
-        "success_count": success,
-        "success_rate": success_rate,
-        "success_signal": success_signal,
-        "derivable_candidate_count": derivable,
-        "derivable_candidate_rate": derivable_candidate_rate,
-        "degenerate_candidate_count": degenerate,
-        "nondegenerate_candidate_rate": 1.0 - (degenerate / total) if total else 0.0,
+        "failed": 0,
+        "recovered": int(any(x and x["recovered"] for x in v)),
+        "valid": int(any(x and x["valid"] for x in v)),
+        # sets the evaluator could not verify count against the constraint
+        "unsound": int(any(x and x["unsound"] for x in v) or bool(record.get("scoring_error"))),
+        "top1_recovered": int(bool(first and first["recovered"])),
+        "top1_valid": int(bool(first and first["valid"])),
+        "sets": record["num_sets"],
     }
 
 
-def add_summary(
-    scores: dict,
-    experiment: str,
-    method_name: str,
-    cases: list[dict],
-    problem_filter: set[str] | None = None,
-    size: int | None = None,
-) -> None:
-    scores["experiments"].setdefault(experiment, {"results": {}})
-    expected_total = EXPECTED_TOTALS_BY_SLICE[SLICE_NAME].get(experiment)
-    full_total = FULL_TOTALS_BY_EXPERIMENT.get(experiment)
-    summary = summarize_cases(
-        cases, problem_filter, size, expected_total, full_total
-    )
-    if experiment == "kepler_triple_axiom":
-        summary["derivable_success_signal"] = summary["derivable_candidate_rate"] + 0.001 * (
-            summary["success_count"] / full_total if full_total else 0.0
-        )
-    scores["experiments"][experiment]["results"][method_name] = summary
-
-
-def method_name_for_payload(payload: dict, input_path: Path) -> str:
-    return payload.get("method") or input_path.stem.removesuffix("_outputs")
-
-
-def load_cases_by_method(input_paths: list[str]) -> dict[str, list[dict]]:
-    cases_by_method: dict[str, dict[str, dict]] = defaultdict(dict)
-    for raw_path in input_paths:
-        input_path = Path(raw_path)
-        payload = json.loads(input_path.read_text())
-        method_name = method_name_for_payload(payload, input_path)
-        for case in payload.get("cases", []):
-            cases_by_method[method_name][case_identity(case)] = case
+def aggregate(records: list[dict], size: int, total: int) -> dict:
+    outs = [instance_outcome(r) for r in records if r["num_missing"] == size]
+    n = total
+    def rate(key: str) -> float:
+        return sum(o[key] for o in outs) / n if n else 0.0
+    top1_key = "top1_recovered" if size == 1 else "top1_valid"
     return {
-        method_name: list(cases_by_identity.values())
-        for method_name, cases_by_identity in cases_by_method.items()
+        "recovery_rate": rate("recovered"),
+        "explanation_rate": rate("valid"),
+        "top1_success_rate": rate(top1_key),
+        "unsound_rate": (sum(o["unsound"] for o in outs) + (n - len(outs))) / n if n else 1.0,
+        "failed_rate": (sum(o["failed"] for o in outs) + (n - len(outs))) / n if n else 1.0,
+        "mean_candidate_sets": sum(o["sets"] for o in outs) / n if n else 0.0,
+        "instances": n,
     }
 
 
-def build_scores(
-    cases_by_method: dict[str, list[dict]],
-    include_multi: bool,
-    include_triples: bool,
-) -> dict:
-    scores = {"slice": SLICE_NAME, "split": SPLIT_NAME, "experiments": {}}
-    for method_name, method_cases in sorted(cases_by_method.items()):
-        slice_method_cases = slice_cases(method_cases)
-        add_summary(
-            scores,
-            "exact_single_axiom_core",
-            method_name,
-            slice_method_cases,
-            {"simple_harmonic_oscillator", "kepler"},
-            size=1,
-        )
-        add_summary(
-            scores,
-            "simple_harmonic_single_axiom",
-            method_name,
-            slice_method_cases,
-            {"simple_harmonic_oscillator"},
-            size=1,
-        )
-        add_summary(
-            scores,
-            "kepler_single_axiom",
-            method_name,
-            slice_method_cases,
-            {"kepler"},
-            size=1,
-        )
-        if include_multi:
-            add_summary(
-                scores,
-                "kepler_pair_axiom",
-                method_name,
-                slice_method_cases,
-                {"kepler"},
-                size=2,
+# --------------------------------------------------------------------------
+# main
+# --------------------------------------------------------------------------
+
+def solver_digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def evaluate(args) -> dict:
+    instances = load_instances(Path(args.instances))
+    if args.max_instances:
+        kept, seen = [], {}
+        for inst in instances:
+            seen[inst["num_missing"]] = seen.get(inst["num_missing"], 0) + 1
+            if seen[inst["num_missing"]] <= args.max_instances:
+                kept.append(inst)
+        instances = kept
+    totals = {size: sum(1 for i in instances if i["num_missing"] == size) for size in EXPERIMENTS}
+    solvers = discover_solvers(Path(args.solvers_dir))
+    if args.only:
+        solvers = [(n, p) for n, p in solvers if n in set(args.only)]
+    cache_dir = Path(args.cache_dir) if args.cache_dir else None
+    scores = {
+        "slice": SLICE,
+        "time_limit_seconds": TIME_LIMIT_SECONDS,
+        "top_k": TOP_K,
+        "experiments": {name: {"results": {}} for name in EXPERIMENTS.values()},
+    }
+    details: dict = {}
+    for name, path in solvers:
+        records = []
+        started = time.monotonic()
+        digest = solver_digest(path)
+        for idx, inst in enumerate(instances, 1):
+            cached = None
+            cache_file = None
+            if cache_dir is not None:
+                cache_file = cache_dir / name / f"{digest}_{inst['id']}.json"
+                if cache_file.is_file():
+                    cached = json.loads(cache_file.read_text())
+            if cached is not None:
+                status, data, elapsed, tail = cached["status"], cached["data"], cached["elapsed"], cached["tail"]
+            else:
+                status, data, elapsed, tail = run_solver(path, inst["public"], TIME_LIMIT_SECONDS)
+                if cache_file is not None:
+                    cache_file.parent.mkdir(parents=True, exist_ok=True)
+                    cache_file.write_text(json.dumps({"status": status, "data": data, "elapsed": elapsed, "tail": tail}))
+            record = evaluate_instance(inst, status, data)
+            record["solver_seconds"] = round(elapsed, 2)
+            if args.details_out:
+                if status != "ok":
+                    record["log_tail"] = tail
+                if isinstance(data, dict) and isinstance(data.get("diagnostics"), dict):
+                    record["solver_diagnostics"] = json.dumps(data["diagnostics"])[:1500]
+            records.append(record)
+            out = instance_outcome(record)
+            print(
+                f"[eval {SLICE}] {name} {idx}/{len(instances)} {inst['id']} status={record['status']} "
+                f"rec={out['recovered']} valid={out['valid']} unsound={out['unsound']} t={elapsed:.1f}s",
+                flush=True,
             )
-        if include_triples:
-            add_summary(
-                scores,
-                "kepler_triple_axiom",
-                method_name,
-                slice_method_cases,
-                {"kepler"},
-                size=3,
-            )
+        for size, exp in EXPERIMENTS.items():
+            scores["experiments"][exp]["results"][name] = aggregate(records, size, totals[size])
+        details[name] = {"records": records, "seconds": round(time.monotonic() - started, 1)}
+        print(f"[eval {SLICE}] {name} done in {details[name]['seconds']}s", flush=True)
+    if args.details_out:
+        Path(args.details_out).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.details_out).write_text(json.dumps(details, indent=1))
     return scores
 
 
-def train_score_shape(path: Path) -> tuple[dict[str, list[str]], set[str]]:
-    payload = json.loads(path.read_text())
-    shape = {}
-    methods = set()
-    for experiment, experiment_payload in payload.get("experiments", {}).items():
-        experiment_methods = sorted(experiment_payload.get("results", {}).keys())
-        shape[experiment] = experiment_methods
-        methods.update(experiment_methods)
-    return shape, methods
-
-
-def align_to_train_scores(scores: dict, train_scores_path: Path, available_methods: set[str]) -> dict:
-    shape, required_methods = train_score_shape(train_scores_path)
-    missing_methods = sorted(required_methods - available_methods)
-    if missing_methods:
-        raise ValueError(
-            "Test inputs are missing method artifacts already present in train scores: "
-            + ", ".join(missing_methods)
-        )
-    aligned = {"slice": SLICE_NAME, "split": SPLIT_NAME, "experiments": {}}
-    empty_summary = summarize_cases([])
-    for experiment, methods in shape.items():
-        aligned["experiments"][experiment] = {"results": {}}
-        current_results = scores.get("experiments", {}).get(experiment, {}).get("results", {})
-        for method_name in methods:
-            aligned["experiments"][experiment]["results"][method_name] = current_results.get(
-                method_name,
-                empty_summary,
-            )
-    return aligned
-
-
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--input", nargs="+", required=True)
-    parser.add_argument("--output", default="scoring/scores_test.json")
-    parser.add_argument("--include-multi", action="store_true")
-    parser.add_argument("--include-triples", action="store_true")
-    parser.add_argument(
-        "--required-methods-from",
-        help="Optional train scores file whose experiment/method shape must be mirrored.",
-    )
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--instances", default=str(DEFAULT_INSTANCES))
+    parser.add_argument("--solvers-dir", default=str(DEFAULT_SOLVERS_DIR))
+    parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
+    parser.add_argument("--only", nargs="*", help="evaluate only these solver names")
+    parser.add_argument("--max-instances", type=int, default=0, help="smoke test: first N per experiment")
+    parser.add_argument("--cache-dir", default="", help="optional resumable cache of solver outputs")
+    parser.add_argument("--details-out", default="", help="optional per-instance verdict dump")
     args = parser.parse_args()
-
-    cases_by_method = load_cases_by_method(args.input)
-    scores = build_scores(cases_by_method, args.include_multi, args.include_triples)
-    if args.required_methods_from:
-        scores = align_to_train_scores(scores, Path(args.required_methods_from), set(cases_by_method))
-    output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(scores, indent=2, sort_keys=True))
-    print(f"Wrote {args.output}")
+    scores = evaluate(args)
+    out = Path(args.output)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    tmp = out.with_suffix(".tmp")
+    tmp.write_text(json.dumps(scores, indent=2, sort_keys=True))
+    tmp.replace(out)
+    print(f"Wrote {out}", flush=True)
 
 
 if __name__ == "__main__":
