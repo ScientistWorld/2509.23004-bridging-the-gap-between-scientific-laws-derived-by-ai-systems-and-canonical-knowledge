@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
 test: false
-notes: "Run bundled benchmark audit: three actual seeded reference reruns, expanded search, weak ablation, and shortcut examples through the untouched no-argument hidden test."
+notes: "Audit follow-up: verify five genuine Escape Velocity recoveries and a paired ablation through the untouched hidden test; test whether the omitted broad target rewards better coverage."

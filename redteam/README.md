@@ -9,12 +9,17 @@ byte. Candidate generation and hidden evaluation run in separate processes.
 No evaluator file or Python environment is altered.
 
 `generate_reference.py` imports only the improve-mode reference implementation.
-`visible_cases.py` and `prepare_shortcut.py` read only public data, with three
+`visible_cases.py` and `prepare_shortcut.py` read only public data, with five
 shortcuts explicitly reusing method-generated reference outputs to save compute.
-Run reference_seed_11 first if invoking one of those shortcuts independently.
+Their individual runners regenerate that cache when necessary.
 Reference_seed_{11,23,47} rerun every case that can affect the hidden score;
 the omitted 64 single-axiom cases cannot affect it. Reference snapshots are used
 only in audit analysis, never as inputs to a shortcut.
+
+`honest_broader` runs the actual algorithm on five additional Escape Velocity
+cases. Its paired ablation removes only those additional explanations. A separate
+check with the visible evaluator records whether the added explanations solve
+the promised task, even when the hidden test omits the broad experiment.
 
 `summary.json` reports raw metric values, weighted raw deltas, and a normalized
 rank for an explicit audit population. The actual future ranking population is

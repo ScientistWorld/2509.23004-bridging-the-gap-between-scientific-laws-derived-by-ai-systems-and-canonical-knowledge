@@ -1,0 +1,26 @@
+  File "/home/user/eval/train/evaluate.py", line 278, in <listcomp>
+    scored = [score_case(c) for c in selected]
+              ^^^^^^^^^^^^^
+  File "/home/user/eval/train/evaluate.py", line 184, in score_case
+    for item in case.get("accepted", []):
+TypeError: 'NoneType' object is not iterable
+Traceback (most recent call last):
+  File "/home/user/eval/test/evaluate.py", line 440, in <module>
+    main()
+  File "/home/user/eval/test/evaluate.py", line 430, in main
+    scores = build_scores(cases_by_method, args.include_multi, args.include_triples)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 340, in build_scores
+    add_summary(
+  File "/home/user/eval/test/evaluate.py", line 304, in add_summary
+    summary = summarize_cases(
+              ^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 273, in summarize_cases
+    scored = [score_case(c) for c in selected]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 273, in <listcomp>
+    scored = [score_case(c) for c in selected]
+              ^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate.py", line 179, in score_case
+    for item in case.get("accepted", []):
+TypeError: 'NoneType' object is not iterable

@@ -33,6 +33,18 @@ def main():
         for p in affected:
             p.unlink(missing_ok=True)
         with (folder/'generation.log').open('w') as log:
+            reused = {
+                'shortcut_case_multiplication', 'shortcut_target_copy',
+                'shortcut_omit_broad', 'shortcut_move_baseline',
+                'shortcut_unlisted_method', 'honest_broader',
+                'honest_broader_weaker',
+            }
+            if name in reused:
+                reference = ROOT/'redteam/reference_seed_11/candidates.json'
+                if not reference.exists() or not json.loads(reference.read_text()).get('complete'):
+                    subprocess.run(['python', 'redteam/generate_reference.py', '--seed', '11',
+                                    '--output', str(reference)], cwd=ROOT, stdout=log,
+                                   stderr=subprocess.STDOUT, check=True)
             if name.startswith('reference_seed_') or name == 'honest_stronger':
                 seed = int(name.rsplit('_', 1)[1]) if name.startswith('reference_seed_') else 11
                 artifact = folder/'candidates.json'
@@ -42,6 +54,9 @@ def main():
                         cmd += ['--stronger']
                     subprocess.run(cmd, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, check=True)
                 shutil.copyfile(artifact, scoring/'audit_outputs.json')
+            elif name in {'honest_broader', 'honest_broader_weaker'}:
+                subprocess.run(['python', 'redteam/generate_broader.py', name], cwd=ROOT,
+                               stdout=log, stderr=subprocess.STDOUT, check=True)
             else:
                 subprocess.run(['python', 'redteam/prepare_shortcut.py', name], cwd=ROOT,
                                stdout=log, stderr=subprocess.STDOUT, check=True)
