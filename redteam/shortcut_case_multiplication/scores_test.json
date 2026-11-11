@@ -1,0 +1,82 @@
+{
+  "experiments": {
+    "exact_single_axiom_core": {
+      "results": {
+        "shortcut_case_multiplication": {
+          "cases_completed": 26,
+          "cases_total": 26,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 26,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 26,
+          "success_rate": 1.0,
+          "success_signal": 1.0023636363636363
+        }
+      }
+    },
+    "kepler_pair_axiom": {
+      "results": {
+        "shortcut_case_multiplication": {
+          "cases_completed": 20,
+          "cases_total": 20,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 12,
+          "derivable_candidate_rate": 0.6,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 8,
+          "success_rate": 0.4,
+          "success_signal": 0.40080000000000005
+        }
+      }
+    },
+    "kepler_single_axiom": {
+      "results": {
+        "shortcut_case_multiplication": {
+          "cases_completed": 10,
+          "cases_total": 10,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 10,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 10,
+          "success_rate": 1.0,
+          "success_signal": 1.002
+        }
+      }
+    },
+    "kepler_triple_axiom": {
+      "results": {
+        "shortcut_case_multiplication": {
+          "cases_completed": 20,
+          "cases_total": 20,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 12,
+          "derivable_candidate_rate": 0.6,
+          "derivable_success_signal": 0.6003999999999999,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 4,
+          "success_rate": 0.2,
+          "success_signal": 0.20040000000000002
+        }
+      }
+    },
+    "simple_harmonic_single_axiom": {
+      "results": {
+        "shortcut_case_multiplication": {
+          "cases_completed": 16,
+          "cases_total": 16,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 16,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 16,
+          "success_rate": 1.0,
+          "success_signal": 1.0026666666666666
+        }
+      }
+    }
+  },
+  "slice": "test",
+  "split": "grouped_alternating_v3_primary_metric_calibrated"
+}

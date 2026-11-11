@@ -1,0 +1,8 @@
+{
+  "name": "shortcut_answer_replay",
+  "train_exit": 0,
+  "test_exit": 0,
+  "test_command": "bash scripts/evaluate_test.sh",
+  "test_has_arguments": false,
+  "elapsed_seconds": 19.405374125999515
+}

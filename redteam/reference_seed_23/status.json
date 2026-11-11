@@ -1,0 +1,8 @@
+{
+  "name": "reference_seed_23",
+  "train_exit": 0,
+  "test_exit": 0,
+  "test_command": "bash scripts/evaluate_test.sh",
+  "test_has_arguments": false,
+  "elapsed_seconds": 99.2139994110039
+}

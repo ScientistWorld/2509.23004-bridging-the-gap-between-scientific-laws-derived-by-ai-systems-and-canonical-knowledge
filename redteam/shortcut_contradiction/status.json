@@ -1,0 +1,8 @@
+{
+  "name": "shortcut_contradiction",
+  "train_exit": 0,
+  "test_exit": 0,
+  "test_command": "bash scripts/evaluate_test.sh",
+  "test_has_arguments": false,
+  "elapsed_seconds": 27.674740534988814
+}

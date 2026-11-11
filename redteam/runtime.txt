@@ -1,0 +1,45 @@
+Python 3.11.15
+Singular for x86_64-Linux version 4.4.1 (44100, 64 bit) Jan 2025
+with
+	GMP(6.3.0),NTL(11.5.1),FLINT(3.1.0),
+	omalloc,static readline(8),Plural,vspace(2),DBM,
+	dynamic modules,OM_NDEBUG,SING_NDEBUG,
+	CC:OPTIMIZE,GenericAdd,TableMult,no invTable,
+	eigenvalues,Gauss-Manin system,random=1794357722
+built-in modules: {}
+AC_CONFIGURE_ARGS =  '--build=x86_64-linux-gnu' '--prefix=/usr' '--includedir=${prefix}/include' '--mandir=${prefix}/share/man' '--infodir=${prefix}/share/info' '--sysconfdir=/etc' '--localstatedir=/var' '--disable-option-checking' '--disable-silent-rules' '--libdir=${prefix}/lib/x86_64-linux-gnu' '--runstatedir=/run' '--disable-maintainer-mode' '--disable-dependency-tracking' '--libexecdir=/usr/libexec/x86_64-linux-gnu' '--htmldir=/usr/share/doc/singular/html' '--with-libparse' '--enable-streamio' 'build_alias=x86_64-linux-gnu' 'CFLAGS=-g -O2 -Werror=implicit-function-declaration -ffile-prefix-map=/build/reproducible-path/singular-4.4.1+ds=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection' 'LDFLAGS=-Wl,-z,relro -Wl,-z,now' 'CPPFLAGS=-Wdate-time -D_FORTIFY_SOURCE=2' 'CXXFLAGS=-g -O2 -ffile-prefix-map=/build/reproducible-path/singular-4.4.1+ds=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection' 'PYTHON=/usr/bin/python3' --enable-omalloc  OMALLOC_LIBS='/build/reproducible-path/singular-4.4.1+ds/omalloc/libsingular-omalloc.la' OMALLOC_INCLUDES='-I/build/reproducible-path/singular-4.4.1+ds'  --with-Singular RESOURCES_LIBS='/build/reproducible-path/singular-4.4.1+ds/resources/libsingular-resources.la' RESOURCES_INCLUDES='-I/build/reproducible-path/singular-4.4.1+ds ' FACTORY_LIBS='/build/reproducible-path/singular-4.4.1+ds/factory/libsingular-factory.la' FACTORY_INCLUDES='-I/build/reproducible-path/singular-4.4.1+ds -I/build/reproducible-path/singular-4.4.1+ds/factory -I/build/reproducible-path/singular-4.4.1+ds/factory/include',
+CC = gcc,FLAGS :  -g -O2 -Werror=implicit-function-declaration -ffile-prefix-map=/build/reproducible-path/singular-4.4.1+ds=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -pipe -fno-common -O3 -Wno-unused-function -Wno-trigraphs -Wno-unused-parameter -Wunknown-pragmas -Wno-unused-variable -fomit-frame-pointer -fwrapv -fvisibility=default -finline-functions -fno-exceptions -fno-threadsafe-statics -fno-enforce-eh-specs -fconserve-space -funroll-loops -pthread -pthread,
+CXX = g++,FLAGS : -g -O2 -ffile-prefix-map=/build/reproducible-path/singular-4.4.1+ds=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -pipe -fno-common -O3 -Wno-unused-function -Wno-trigraphs -Wno-unused-parameter -Wunknown-pragmas -Wno-unused-variable -fomit-frame-pointer -fwrapv -fvisibility=default -finline-functions -fno-exceptions -fno-threadsafe-statics -fno-enforce-eh-specs -fconserve-space -funroll-loops -fno-rtti -fno-delete-null-pointer-checks -pthread,
+DEFS : ,CPPFLAGS : -Wdate-time -D_FORTIFY_SOURCE=2,
+LDFLAGS : -Wl,-z,relro -Wl,-z,now -pipe -fno-common -g -O3 -Wno-unused-function -Wno-trigraphs -Wno-unused-parameter -Wunknown-pragmas -Wno-unused-variable -fomit-frame-pointer -fwrapv -fvisibility=default -finline-functions -fno-exceptions -fno-threadsafe-statics -fno-enforce-eh-specs -fconserve-space -funroll-loops  -rdynamic -Wl,-undefined,dynamic_lookup,LIBS : -lreadline -lncurses  -lgmp -lrt  -lpthread (ver: 14.2.0)
+argv[0]   :	Singular
+SearchPath:	/usr/bin/../share/singular/LIB:/usr/bin/../share/singular/factory:/usr/lib/x86_64-linux-gnu/singular/MOD:/usr/bin
+Singular  :	/usr/bin/Singular
+BinDir    :	/usr/bin
+ProcDir   :	/usr/lib/x86_64-linux-gnu/singular/MOD
+RootDir   :	/usr/bin/..
+DataDir   :	/usr/bin/../share
+DefaultDir:	/usr
+InfoFile  :	
+IdxFile   :	
+HtmlDir   :	
+ManualUrl :	https://www.singular.uni-kl.de/Manual/
+ExDir     :	
+Path      :	/usr/bin:/usr/lib/x86_64-linux-gnu/singular/MOD:/opt/uv/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/sbin:/bin
+emacs     :	
+xemacs    :	
+SingularEmacs:	/usr/bin/Singular
+EmacsLoad :	
+EmacsDir  :	
+SingularXterm:	/usr/bin/Singular
+xterm     :	
+EmacsDir  :	
+Available HelpBrowsers: dummy, emacs, 
+Current HelpBrowser: dummy 
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.4.1
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Jan 2025
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \  Debian 1:4.4.1+ds-2
+Auf Wiedersehen.
+SymPy 1.14.0

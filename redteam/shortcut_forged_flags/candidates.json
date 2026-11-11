@@ -1,0 +1,1398 @@
+{
+  "method": "shortcut_forged_flags",
+  "cases": [
+    {
+      "problem": "simple_harmonic_oscillator",
+      "variables": [
+        "ad",
+        "T",
+        "omega",
+        "theta",
+        "sintheta",
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "measured_vars": [
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "targets": [
+        "d*g*Tj^2-4*d*L*j^2*Pi^2"
+      ],
+      "remaining_axioms": [
+        "d-L*theta",
+        "T*omega-2*Pi",
+        "d*omega^2-ad",
+        "Tj-j*T",
+        "sintheta - theta"
+      ],
+      "removed_axioms": [
+        "ad-g*sintheta"
+      ],
+      "removed_indices": [
+        1
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "variables": [
+        "ad",
+        "T",
+        "omega",
+        "theta",
+        "sintheta",
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "measured_vars": [
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "targets": [
+        "d*g*Tj^2-4*d*L*j^2*Pi^2"
+      ],
+      "remaining_axioms": [
+        "ad-g*sintheta",
+        "T*omega-2*Pi",
+        "d*omega^2-ad",
+        "Tj-j*T",
+        "sintheta - theta"
+      ],
+      "removed_axioms": [
+        "d-L*theta"
+      ],
+      "removed_indices": [
+        2
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "variables": [
+        "ad",
+        "T",
+        "omega",
+        "theta",
+        "sintheta",
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "measured_vars": [
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "targets": [
+        "d*g*Tj^2-4*d*L*j^2*Pi^2"
+      ],
+      "remaining_axioms": [
+        "ad-g*sintheta",
+        "d-L*theta",
+        "d*omega^2-ad",
+        "Tj-j*T",
+        "sintheta - theta"
+      ],
+      "removed_axioms": [
+        "T*omega-2*Pi"
+      ],
+      "removed_indices": [
+        3
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "variables": [
+        "ad",
+        "T",
+        "omega",
+        "theta",
+        "sintheta",
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "measured_vars": [
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "targets": [
+        "d*g*Tj^2-4*d*L*j^2*Pi^2"
+      ],
+      "remaining_axioms": [
+        "ad-g*sintheta",
+        "d-L*theta",
+        "T*omega-2*Pi",
+        "Tj-j*T",
+        "sintheta - theta"
+      ],
+      "removed_axioms": [
+        "d*omega^2-ad"
+      ],
+      "removed_indices": [
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "variables": [
+        "ad",
+        "T",
+        "omega",
+        "theta",
+        "sintheta",
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "measured_vars": [
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "targets": [
+        "d*g*Tj^2-4*d*L*j^2*Pi^2"
+      ],
+      "remaining_axioms": [
+        "ad-g*sintheta",
+        "d-L*theta",
+        "T*omega-2*Pi",
+        "d*omega^2-ad",
+        "sintheta - theta"
+      ],
+      "removed_axioms": [
+        "Tj-j*T"
+      ],
+      "removed_indices": [
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "simple_harmonic_oscillator",
+      "variables": [
+        "ad",
+        "T",
+        "omega",
+        "theta",
+        "sintheta",
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "measured_vars": [
+        "d",
+        "g",
+        "L",
+        "j",
+        "Pi",
+        "Tj"
+      ],
+      "targets": [
+        "d*g*Tj^2-4*d*L*j^2*Pi^2"
+      ],
+      "remaining_axioms": [
+        "ad-g*sintheta",
+        "d-L*theta",
+        "T*omega-2*Pi",
+        "d*omega^2-ad",
+        "Tj-j*T"
+      ],
+      "removed_axioms": [
+        "sintheta - theta"
+      ],
+      "removed_indices": [
+        6
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2"
+      ],
+      "removed_indices": [
+        1
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2"
+      ],
+      "removed_indices": [
+        2
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_indices": [
+        3
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fc - m2*d2*w^2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2"
+      ],
+      "removed_indices": [
+        1,
+        2
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_indices": [
+        1,
+        3
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        1,
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        1,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_indices": [
+        2,
+        3
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        2,
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        2,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        3,
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        3,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_axioms": [
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        4,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_indices": [
+        1,
+        2,
+        3
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        1,
+        2,
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        1,
+        2,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        1,
+        3,
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        1,
+        3,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        1,
+        4,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "w*p - 1"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "Fc - Fg"
+      ],
+      "removed_indices": [
+        2,
+        3,
+        4
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - Fg"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - m2*d2*w^2",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        2,
+        3,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fc - m2*d2*w^2"
+      ],
+      "removed_axioms": [
+        "Fg*(d1+d2)^2 - m1*m2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        2,
+        4,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    },
+    {
+      "problem": "kepler",
+      "variables": [
+        "Fc",
+        "Fg",
+        "w",
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "measured_vars": [
+        "m1",
+        "d1",
+        "m2",
+        "d2",
+        "p"
+      ],
+      "targets": [
+        "m1*m2*p^2-m1*d1*d2^2-m2*d1^2*d2-2*m2*d1*d2^2"
+      ],
+      "remaining_axioms": [
+        "m1*d1-m2*d2",
+        "Fg*(d1+d2)^2 - m1*m2"
+      ],
+      "removed_axioms": [
+        "Fc - m2*d2*w^2",
+        "Fc - Fg",
+        "w*p - 1"
+      ],
+      "removed_indices": [
+        3,
+        4,
+        5
+      ],
+      "nonzero_factors": [],
+      "status": "ok",
+      "accepted": [],
+      "num_accepted": 1000000000000000000000000000000,
+      "success": true,
+      "runtime_seconds": -1e+99,
+      "strong_success": true,
+      "coupled_success": true
+    }
+  ]
+}

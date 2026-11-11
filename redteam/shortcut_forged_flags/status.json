@@ -1,0 +1,8 @@
+{
+  "name": "shortcut_forged_flags",
+  "train_exit": 0,
+  "test_exit": 0,
+  "test_command": "bash scripts/evaluate_test.sh",
+  "test_has_arguments": false,
+  "elapsed_seconds": 14.881427260988858
+}

@@ -1,0 +1,82 @@
+{
+  "experiments": {
+    "exact_single_axiom_core": {
+      "results": {
+        "shortcut_contradiction": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 5,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 5,
+          "success_rate": 1.0,
+          "success_signal": 1.0004545454545455
+        }
+      }
+    },
+    "kepler_pair_axiom": {
+      "results": {
+        "shortcut_contradiction": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 5,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 5,
+          "success_rate": 1.0,
+          "success_signal": 1.0005
+        }
+      }
+    },
+    "kepler_single_axiom": {
+      "results": {
+        "shortcut_contradiction": {
+          "cases_completed": 3,
+          "cases_total": 3,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 3,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 3,
+          "success_rate": 1.0,
+          "success_signal": 1.0006
+        }
+      }
+    },
+    "kepler_triple_axiom": {
+      "results": {
+        "shortcut_contradiction": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 5,
+          "derivable_candidate_rate": 1.0,
+          "derivable_success_signal": 1.0005,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 5,
+          "success_rate": 1.0,
+          "success_signal": 1.0005
+        }
+      }
+    },
+    "simple_harmonic_single_axiom": {
+      "results": {
+        "shortcut_contradiction": {
+          "cases_completed": 2,
+          "cases_total": 2,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 2,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 2,
+          "success_rate": 1.0,
+          "success_signal": 1.0003333333333333
+        }
+      }
+    }
+  },
+  "slice": "train",
+  "split": "grouped_alternating_v3_primary_metric_calibrated"
+}
