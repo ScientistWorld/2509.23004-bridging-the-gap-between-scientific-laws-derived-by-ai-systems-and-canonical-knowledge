@@ -1,0 +1,47 @@
+[
+  {
+    "problem": "escape_velocity",
+    "removed_indices": [
+      1
+    ],
+    "derivable": false,
+    "recovered": false,
+    "degenerate": false
+  },
+  {
+    "problem": "escape_velocity",
+    "removed_indices": [
+      2
+    ],
+    "derivable": false,
+    "recovered": false,
+    "degenerate": false
+  },
+  {
+    "problem": "escape_velocity",
+    "removed_indices": [
+      3
+    ],
+    "derivable": false,
+    "recovered": false,
+    "degenerate": false
+  },
+  {
+    "problem": "escape_velocity",
+    "removed_indices": [
+      4
+    ],
+    "derivable": false,
+    "recovered": false,
+    "degenerate": false
+  },
+  {
+    "problem": "escape_velocity",
+    "removed_indices": [
+      5
+    ],
+    "derivable": false,
+    "recovered": false,
+    "degenerate": false
+  }
+]

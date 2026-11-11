@@ -1,0 +1,416 @@
+[
+  {
+    "problem": "escape_velocity",
+    "variables": [
+      "Eki",
+      "Ekf",
+      "Ugi",
+      "Ugf",
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "measured_vars": [
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "targets": [
+      "2*G*M*m - m*r*ve^2"
+    ],
+    "remaining_axioms": [
+      "Ekf",
+      "G*M*m + Ugi*r",
+      "Ugf",
+      "-Ekf + Eki - Ugf + Ugi"
+    ],
+    "removed_indices": [
+      1
+    ],
+    "removed_axioms": [
+      "2*Eki - m*ve^2"
+    ],
+    "nonzero_factors": [],
+    "status": "ok",
+    "num_components": 5,
+    "num_accepted": 4,
+    "accepted": [
+      {
+        "candidates": [
+          "-2*G*M + r*ve^2"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "2*Ugi + m*ve^2"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "r"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "m"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      }
+    ],
+    "success": true,
+    "coupled_success": true,
+    "strong_success": true,
+    "runtime_seconds": 1.016
+  },
+  {
+    "problem": "escape_velocity",
+    "variables": [
+      "Eki",
+      "Ekf",
+      "Ugi",
+      "Ugf",
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "measured_vars": [
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "targets": [
+      "2*G*M*m - m*r*ve^2"
+    ],
+    "remaining_axioms": [
+      "2*Eki - m*ve^2",
+      "G*M*m + Ugi*r",
+      "Ugf",
+      "-Ekf + Eki - Ugf + Ugi"
+    ],
+    "removed_indices": [
+      2
+    ],
+    "removed_axioms": [
+      "Ekf"
+    ],
+    "nonzero_factors": [],
+    "status": "ok",
+    "num_components": 5,
+    "num_accepted": 6,
+    "accepted": [
+      {
+        "candidates": [
+          "Ekf"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "Eki + Ugi"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "-2*G*M + r*ve^2"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "2*Ugi + m*ve^2"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "m"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "r"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      }
+    ],
+    "success": true,
+    "coupled_success": true,
+    "strong_success": true,
+    "runtime_seconds": 0.65
+  },
+  {
+    "problem": "escape_velocity",
+    "variables": [
+      "Eki",
+      "Ekf",
+      "Ugi",
+      "Ugf",
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "measured_vars": [
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "targets": [
+      "2*G*M*m - m*r*ve^2"
+    ],
+    "remaining_axioms": [
+      "2*Eki - m*ve^2",
+      "Ekf",
+      "Ugf",
+      "-Ekf + Eki - Ugf + Ugi"
+    ],
+    "removed_indices": [
+      3
+    ],
+    "removed_axioms": [
+      "G*M*m + Ugi*r"
+    ],
+    "nonzero_factors": [],
+    "status": "ok",
+    "num_components": 2,
+    "num_accepted": 2,
+    "accepted": [
+      {
+        "candidates": [
+          "-2*G*M + r*ve^2"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "m"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": true
+      }
+    ],
+    "success": true,
+    "coupled_success": false,
+    "strong_success": false,
+    "runtime_seconds": 0.471
+  },
+  {
+    "problem": "escape_velocity",
+    "variables": [
+      "Eki",
+      "Ekf",
+      "Ugi",
+      "Ugf",
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "measured_vars": [
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "targets": [
+      "2*G*M*m - m*r*ve^2"
+    ],
+    "remaining_axioms": [
+      "2*Eki - m*ve^2",
+      "Ekf",
+      "G*M*m + Ugi*r",
+      "-Ekf + Eki - Ugf + Ugi"
+    ],
+    "removed_indices": [
+      4
+    ],
+    "removed_axioms": [
+      "Ugf"
+    ],
+    "nonzero_factors": [],
+    "status": "ok",
+    "num_components": 5,
+    "num_accepted": 6,
+    "accepted": [
+      {
+        "candidates": [
+          "Ugf"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "Eki + Ugi"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "-2*G*M + r*ve^2"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "2*Ugi + m*ve^2"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "m"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "r"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      }
+    ],
+    "success": true,
+    "coupled_success": true,
+    "strong_success": true,
+    "runtime_seconds": 0.715
+  },
+  {
+    "problem": "escape_velocity",
+    "variables": [
+      "Eki",
+      "Ekf",
+      "Ugi",
+      "Ugf",
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "measured_vars": [
+      "G",
+      "M",
+      "m",
+      "ve",
+      "r"
+    ],
+    "targets": [
+      "2*G*M*m - m*r*ve^2"
+    ],
+    "remaining_axioms": [
+      "2*Eki - m*ve^2",
+      "Ekf",
+      "G*M*m + Ugi*r",
+      "Ugf"
+    ],
+    "removed_indices": [
+      5
+    ],
+    "removed_axioms": [
+      "-Ekf + Eki - Ugf + Ugi"
+    ],
+    "nonzero_factors": [],
+    "status": "ok",
+    "num_components": 5,
+    "num_accepted": 5,
+    "accepted": [
+      {
+        "candidates": [
+          "Eki + Ugi"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "-2*G*M + r*ve^2"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "2*Ugi + m*ve^2"
+        ],
+        "strong": true,
+        "coupled": true,
+        "canonical_recovered": true
+      },
+      {
+        "candidates": [
+          "m"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      },
+      {
+        "candidates": [
+          "r"
+        ],
+        "strong": false,
+        "coupled": false,
+        "canonical_recovered": false
+      }
+    ],
+    "success": true,
+    "coupled_success": true,
+    "strong_success": true,
+    "runtime_seconds": 0.61
+  }
+]
