@@ -13,7 +13,8 @@ law. Every single removal whose target is no longer derivable is included. The
 primary metric is exact recovery (the proposed law, together with the known
 axioms, implies the removed axiom on the physical locus); the paper reports
 near-complete success on its benchmark, so this experiment mainly checks that a
-method keeps this capability and ranks the right law first.
+method keeps this capability, ranks the right law first and does not propose
+false laws alongside it.
 
 ## two_missing_axioms (weight 0.35)
 
@@ -21,9 +22,10 @@ Establishes whether a method can still explain an observed law when two laws are
 missing. The targets often do not pin down each missing law separately, so the
 primary metric credits any valid explanation: a set of at most two polynomials
 that makes the targets derivable, is true in the complete theory, and adds
-information beyond the targets. Exact recovery of both laws is scored as a
-secondary benefit. The paper reports roughly half of such cases solved; this is
-where better methods can show headroom.
+information beyond the targets. Exact recovery of both laws separately is
+reported as a diagnostic only: with a single observed target it is out of reach
+for every method tried so far. The paper reports roughly half of such cases
+solved; this is where better methods can show headroom.
 
 ## three_missing_axioms (weight 0.25)
 

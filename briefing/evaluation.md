@@ -57,7 +57,7 @@ instance: it receives the worst value in every scored metric.
 
 | metric | direction | meaning |
 |---|---|---|
-| `recovery_rate` | higher | instances where some considered set is recovered |
+| `recovery_rate` | higher | instances where some considered set is recovered (scored for single-axiom removals; a diagnostic with coefficient 0 for multi-axiom removals) |
 | `explanation_rate` | higher | instances where some considered set is valid |
 | `top1_success_rate` | higher | instances whose first set succeeds (recovered for single-axiom, valid for multi-axiom) |
 | `unsound_rate` | lower | instances where some considered set derives the targets but is unsound, plus failed instances and instances whose sets the evaluator could not verify |

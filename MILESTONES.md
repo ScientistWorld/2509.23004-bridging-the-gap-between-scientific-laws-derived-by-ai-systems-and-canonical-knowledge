@@ -4,6 +4,12 @@
 
 ## Progress Log
 
+### [2026-11-11 11:00] - core_claim_plus
+- Hardening (iteration 11): soundness is now judged wherever the physically nonzero quantities are nonzero (the old test flagged true laws such as virial relations as false); nontriviality also excludes the target divided by nonzero factors; builders reject removals whose target still follows generically.
+- The hidden instance file and complete theories are held in memory and removed from disk while solvers run; the Singular binary is pinned; the enumerative baseline is deterministic.
+- Multi-axiom decoupled recovery became a diagnostic (0 for every honest method on the held-out slice); `scoring/reference.json` results filled from the final test run.
+- Reference on held-out: single recovery 1.000 / top-1 0.844 / unsound 0.344; two-axiom explanation 0.655; three-axiom 0.300. A sign-prior variant beats it by +0.05 (noise about +-0.005). Details in HARDENING.md.
+
 ### [2026-06-20 09:50] - core_claim_plus
 - Fixed the follow-up validation failure by removing the full 75-case `exact_single_axiom_all_paper` experiment from train/test split score artifacts.
 - Updated the train/test evaluators so future split evaluation does not recreate a non-comparable half-slice score for the full-paper primary metric.

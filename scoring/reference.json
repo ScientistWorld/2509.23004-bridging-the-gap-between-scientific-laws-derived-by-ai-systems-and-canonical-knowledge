@@ -1,5 +1,5 @@
 {
-  "_note": "Scored rows under results are the gym's own reference runs on the held-out slice (filled from scoring/scores_test.json). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular, and the paper's own success criterion, so they are not on the held-out scale.",
+  "_note": "Scored rows under results are the gym's own runs on the held-out slice (copied from scoring/scores_test.json; the ai_noether_exact row is the median of three runs of the final reference code: Singular's minAss returns different generating sets from run to run, which moves the weighted score by about +-0.005, see HARDENING.md). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate (decoupled recovery) is a diagnostic: 0 for every honest method on the held-out slice.",
   "_paper_reported": {
     "single_axiom_recovery": {
       "value": 0.9733,
@@ -77,13 +77,13 @@
       "results": {
         "ai_noether_exact": {
           "type": "proposed",
-          "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
+          "recovery_rate": 1.0,
+          "explanation_rate": 1.0,
+          "top1_success_rate": 0.84375,
+          "unsound_rate": 0.34375,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 0
+          "mean_candidate_sets": 3.078125,
+          "instances": 64
         },
         "no_abduction_baseline": {
           "type": "baseline",
@@ -93,17 +93,17 @@
           "unsound_rate": 0.0,
           "failed_rate": 0.0,
           "mean_candidate_sets": 0.0,
-          "instances": 0
+          "instances": 64
         },
         "enumerative_baseline": {
           "type": "baseline",
-          "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
+          "recovery_rate": 0.4375,
+          "explanation_rate": 0.4375,
+          "top1_success_rate": 0.390625,
+          "unsound_rate": 0.15625,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 0
+          "mean_candidate_sets": 1.125,
+          "instances": 64
         }
       }
     },
@@ -156,12 +156,12 @@
         "ai_noether_exact": {
           "type": "proposed",
           "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
+          "explanation_rate": 0.6545454545454545,
+          "top1_success_rate": 0.6,
+          "unsound_rate": 0.14545454545454545,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 0
+          "mean_candidate_sets": 1.7454545454545454,
+          "instances": 55
         },
         "no_abduction_baseline": {
           "type": "baseline",
@@ -171,17 +171,17 @@
           "unsound_rate": 0.0,
           "failed_rate": 0.0,
           "mean_candidate_sets": 0.0,
-          "instances": 0
+          "instances": 55
         },
         "enumerative_baseline": {
           "type": "baseline",
           "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
+          "explanation_rate": 0.09090909090909091,
+          "top1_success_rate": 0.09090909090909091,
+          "unsound_rate": 0.03636363636363636,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 0
+          "mean_candidate_sets": 0.34545454545454546,
+          "instances": 55
         }
       }
     },
@@ -234,12 +234,12 @@
         "ai_noether_exact": {
           "type": "proposed",
           "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
+          "explanation_rate": 0.3,
+          "top1_success_rate": 0.275,
+          "unsound_rate": 0.05,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 0
+          "mean_candidate_sets": 0.725,
+          "instances": 40
         },
         "no_abduction_baseline": {
           "type": "baseline",
@@ -249,17 +249,17 @@
           "unsound_rate": 0.0,
           "failed_rate": 0.0,
           "mean_candidate_sets": 0.0,
-          "instances": 0
+          "instances": 40
         },
         "enumerative_baseline": {
           "type": "baseline",
           "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
+          "explanation_rate": 0.05,
+          "top1_success_rate": 0.05,
           "unsound_rate": 0.0,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 0
+          "mean_candidate_sets": 0.125,
+          "instances": 40
         }
       }
     }

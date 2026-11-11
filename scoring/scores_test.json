@@ -6,9 +6,9 @@
           "explanation_rate": 1.0,
           "failed_rate": 0.0,
           "instances": 64,
-          "mean_candidate_sets": 3.109375,
+          "mean_candidate_sets": 3.078125,
           "recovery_rate": 1.0,
-          "top1_success_rate": 0.8125,
+          "top1_success_rate": 0.84375,
           "unsound_rate": 0.34375
         },
         "enumerative_baseline": {
@@ -37,10 +37,10 @@
           "explanation_rate": 0.3,
           "failed_rate": 0.0,
           "instances": 40,
-          "mean_candidate_sets": 0.8,
+          "mean_candidate_sets": 0.725,
           "recovery_rate": 0.0,
-          "top1_success_rate": 0.3,
-          "unsound_rate": 0.075
+          "top1_success_rate": 0.275,
+          "unsound_rate": 0.05
         },
         "enumerative_baseline": {
           "explanation_rate": 0.05,
@@ -68,7 +68,7 @@
           "explanation_rate": 0.6545454545454545,
           "failed_rate": 0.0,
           "instances": 55,
-          "mean_candidate_sets": 1.8181818181818181,
+          "mean_candidate_sets": 1.7454545454545454,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.6,
           "unsound_rate": 0.14545454545454545

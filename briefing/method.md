@@ -28,12 +28,20 @@ step and Singular for decomposition). The decomposition gets at most 70% of the
 per-instance budget; reasoning stops before the deadline and returns what it
 has accepted.
 
-Ablation switches used in the hardening audit (not the reference setting):
+Switches used in the hardening audit (not the reference setting):
 `--saturate` (remove degenerate components before decomposing),
 `--extra-orders` (also take generators from Groebner bases of each component
 in two other monomial orders), `--saturation-only` (one saturated component
-instead of a primary decomposition), `--no-rank`, `--max-set-size`,
-`--no-degenerate-filter`, `--no-reason`.
+instead of a primary decomposition), `--canonical` (reduced Groebner basis of
+each prime as its generators), `--dim-rank` (top-dimensional components first),
+`--sign-prior` (sign-based filtering and ranking of candidates),
+`--drop-restatements`, `--no-rank`, `--max-set-size`, `--no-degenerate-filter`,
+`--no-reason`; `AINOETHER_NO_ASLR=1` runs Singular with a fixed memory layout.
+
+Singular's `minAss` returns different (equally valid) generating sets of the
+same prime components from run to run, also with a fixed `--random` seed and a
+fixed memory layout, as in the official code. The reference's outputs therefore
+vary on about 15% of instances; its weighted score moves by about +-0.005.
 
 The paper's noisy pathway (numerical irreducible decomposition with witness
 sets, symbolic regression, KeYmaera X existential reasoning) is not

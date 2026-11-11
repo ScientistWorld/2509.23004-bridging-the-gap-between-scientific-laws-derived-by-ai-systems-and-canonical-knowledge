@@ -21,5 +21,6 @@ add information, and does it recover the removed axioms.
 
 The reference solver implements the paper's exact Encode–Decompose–Reason
 pipeline; the baselines are an empty answer and a syntax-guided enumerator.
-Single-axiom recovery is close to solved by the reference; two- and three-axiom
-removals are where it falls short, as in the paper.
+The reference recovers every held-out single removal but often ranks a false
+alternative first or proposes false laws next to the right one; two- and
+three-axiom removals are where it falls short most, as in the paper.
