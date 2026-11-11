@@ -1,0 +1,32 @@
+[
+  {
+    "job_id": "2c59ebf5-e83",
+    "result": {
+      "run_id": "2c59ebf5-e83",
+      "status": "failed",
+      "returncode": 127,
+      "duration": 1384.0626604557037,
+      "started_at": 1794357765.348479,
+      "completed_at": 1794359149.4111395
+    },
+    "wrapper_error": "scripts/run.sh: line 5: method: command not found",
+    "stdout_sha256": "20970dbc88867ce5b9de760e62511996dd43dfb55fe1035832c2506891f79ff6",
+    "stderr_sha256": "fe95cf164fe4c1278aeecb62f62cc45724f1eedd0342fdaf2540541e10884c9c",
+    "completed_audit_attempts": 20
+  },
+  {
+    "job_id": "a337253e-725",
+    "result": {
+      "run_id": "a337253e-725",
+      "status": "completed",
+      "returncode": 0,
+      "duration": 60.02847218513489,
+      "started_at": 1794359509.6092074,
+      "completed_at": 1794359569.6376796
+    },
+    "wrapper_error": null,
+    "stdout_sha256": "d98ca7f4d90eb37e6cf5b8390ebb1cf02f756aa574ca1b627980251deaff10e4",
+    "stderr_sha256": "1ae12914cc1074718db93d59104620b07ea27762b645af8679b6f22f43cd6160",
+    "completed_audit_attempts": 2
+  }
+]

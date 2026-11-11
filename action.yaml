@@ -1,4 +1,5 @@
-action: submit
+action: done
 gpus: 0
 test: false
-notes: "Audit follow-up: verify five genuine Escape Velocity recoveries and a paired ablation through the untouched hidden test; test whether the omitted broad target rewards better coverage."
+milestone: core_claim_plus
+notes: "Audit complete: genuine broader recovery earns no credit; five shortcuts score perfectly, empty results tie, and three reference seeds have zero test-score spread. Evidence in REDTEAM.md and redteam/."

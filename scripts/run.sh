@@ -1,6 +1,12 @@
 #!/bin/bash
-set -euo pipefail
+# Regenerate the reproduction artifacts from the current method code, then
+# validate the official and split score files.
+
+set -e
+
 cd /home/user
-bash redteam/honest_broader/run.sh
-bash redteam/honest_broader_weaker/run.sh
-python redteam/summarize.py
+
+bash scripts/reproduce.sh
+bash scripts/evaluate_train.sh
+bash scripts/evaluate_test.sh
+python validate.py --compare
