@@ -1,0 +1,100 @@
+{
+  "experiments": {
+    "single_missing_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "explanation_rate": 0.9322033898305084,
+          "failed_rate": 0.0,
+          "instances": 59,
+          "mean_candidate_sets": 3.5254237288135593,
+          "recovery_rate": 0.9322033898305084,
+          "top1_success_rate": 0.7288135593220338,
+          "unsound_rate": 0.847457627118644
+        },
+        "enumerative_baseline": {
+          "explanation_rate": 0.2542372881355932,
+          "failed_rate": 0.0,
+          "instances": 59,
+          "mean_candidate_sets": 0.8135593220338984,
+          "recovery_rate": 0.2542372881355932,
+          "top1_success_rate": 0.23728813559322035,
+          "unsound_rate": 0.2033898305084746
+        },
+        "no_abduction_baseline": {
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 59,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        }
+      }
+    },
+    "three_missing_axioms": {
+      "results": {
+        "ai_noether_exact": {
+          "explanation_rate": 0.18181818181818182,
+          "failed_rate": 0.0,
+          "instances": 33,
+          "mean_candidate_sets": 1.303030303030303,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.18181818181818182,
+          "unsound_rate": 0.5151515151515151
+        },
+        "enumerative_baseline": {
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 33,
+          "mean_candidate_sets": 0.30303030303030304,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.06060606060606061
+        },
+        "no_abduction_baseline": {
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 33,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        }
+      }
+    },
+    "two_missing_axioms": {
+      "results": {
+        "ai_noether_exact": {
+          "explanation_rate": 0.3235294117647059,
+          "failed_rate": 0.0,
+          "instances": 34,
+          "mean_candidate_sets": 1.7941176470588236,
+          "recovery_rate": 0.058823529411764705,
+          "top1_success_rate": 0.20588235294117646,
+          "unsound_rate": 0.6470588235294118
+        },
+        "enumerative_baseline": {
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 34,
+          "mean_candidate_sets": 0.058823529411764705,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.058823529411764705
+        },
+        "no_abduction_baseline": {
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 34,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        }
+      }
+    }
+  },
+  "slice": "train",
+  "time_limit_seconds": 60,
+  "top_k": 5
+}
