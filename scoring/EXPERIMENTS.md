@@ -34,10 +34,11 @@ headroom of the gym is here.
 ## Constraint in every experiment
 
 `unsound_rate` counts instances where some considered candidate set makes the
-targets derivable only by being false in the complete theory — a contradiction,
-a law that forces a physical quantity to zero, or a law stronger than the theory
-— plus every instance whose run failed. It protects against "explaining"
-anything by asserting too much.
+targets derivable only by being false in the complete theory (wherever the
+physical quantities that are nonzero in it are nonzero) — a contradiction, a law
+that forces a physical quantity to zero, or a law stronger than the theory —
+plus every instance whose run failed. It protects against "explaining" anything
+by asserting too much; true laws in an unfamiliar form are not penalized.
 
 ## Baselines (method rows, not experiments)
 

@@ -25,9 +25,11 @@ The solver returns a **ranked list of candidate sets**; each set holds at most
 sets are considered. A good answer:
 
 1. makes every target derivable when added to the known axioms;
-2. is true in the complete (hidden) theory, i.e. it does not contradict it, force a
+2. is true in the complete (hidden) theory wherever the declared nonzero
+   quantities are nonzero, i.e. it does not contradict the theory, force a
    physical quantity to zero, or assert a law that is stronger than the theory;
-3. adds information beyond what the known axioms and the target already state;
+3. adds information beyond what the known axioms and the target already state
+   (the target itself, or the target divided by nonzero quantities, does not);
 4. ideally recovers the removed axioms themselves (up to rescaling and
    substitution of known axioms), not only some sufficient relation.
 
@@ -49,6 +51,9 @@ constants only.
   of benchmark laws.
 
 Each slice contains every well-posed single removal of each theory and a fixed
-sample of two- and three-axiom removals. Multi-axiom removals are much harder:
+sample of two- and three-axiom removals. A removal is well posed when the
+targets do not follow from the remaining axioms, not even wherever the nonzero
+quantities are nonzero, and no removed axiom is already implied by the remaining
+axioms and the targets. Multi-axiom removals are much harder:
 often the targets do not determine each missing law separately, so a correct
 answer may be a coupled relation that combines several missing laws.

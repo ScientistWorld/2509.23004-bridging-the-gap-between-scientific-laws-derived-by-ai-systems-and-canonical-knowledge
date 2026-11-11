@@ -12,9 +12,11 @@ monomials of total degree <= 2 and small coprime integer constants
   * derives:   every target lies in <known axioms, candidate>;
   * not degenerate: does not force a declared nonzero variable (or 1) to zero.
 For multi-axiom instances the same single-polynomial grammar is used (coupled
-explanations).  The search stops at its own budget (ENUM_BUDGET seconds,
-default 5 to keep the evaluation light, never more than the instance time
-limit minus a safety margin) and returns the first accepted candidates.
+explanations).  The search stops after ENUM_MAX_CANDIDATES grammar candidates
+(0 = no count limit; the gym's baseline solver sets 6000 so its result does not
+depend on machine speed) or at its time budget (ENUM_BUDGET seconds, default 5,
+never more than the instance time limit minus a safety margin), whichever comes
+first, and returns the first accepted candidates.
 
 Usage: enumerative_abduction.py --instance in.json --output out.json
 """
@@ -123,6 +125,7 @@ def main() -> None:
     inst = json.loads(Path(args.instance).read_text())
     limit = float(os.environ.get("ABDUCTION_TIME_LIMIT", "60"))
     budget = min(float(os.environ.get("ENUM_BUDGET", "5")), max(1.0, limit - 6.0))
+    max_candidates = int(os.environ.get("ENUM_MAX_CANDIDATES", "0"))
     end = time.monotonic() + budget
     names = inst["variables"]
     accepted: list[str] = []
@@ -131,7 +134,10 @@ def main() -> None:
     offset = 0
     try:
         while time.monotonic() < end and len(accepted) < MAX_ACCEPT:
-            batch = list(itertools.islice(gen, BATCH))
+            size = BATCH if not max_candidates else min(BATCH, max_candidates - tested)
+            if size <= 0:
+                break
+            batch = list(itertools.islice(gen, size))
             if not batch:
                 break
             try:
@@ -149,7 +155,7 @@ def main() -> None:
     payload = {
         "method": "enumerative_baseline",
         "candidate_sets": [[c] for c in accepted[:MAX_ACCEPT]],
-        "diagnostics": {"tested": tested, "budget_seconds": budget},
+        "diagnostics": {"tested": tested, "budget_seconds": budget, "max_candidates": max_candidates},
     }
     Path(args.output).write_text(json.dumps(payload))
 

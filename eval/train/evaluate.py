@@ -16,9 +16,14 @@ definitions) is read.
 Per candidate set S (only the first TOP_K sets count):
   derives     every target lies in the ideal <known axioms, S>
   sound       every polynomial of S vanishes on every solution of the complete
-              theory (radical membership), so contradictions, zero-forcing
-              and false laws are rejected
-  nontrivial  no polynomial of S already lies in <known axioms, targets>
+              theory at which the instance's nonzero quantities are nonzero
+              (radical membership in the complete theory saturated by their
+              product), so contradictions, zero-forcing and false laws are
+              rejected while true laws that need a physical quantity to be
+              nonzero (for example after dividing by it) are accepted
+  nontrivial  no polynomial of S already lies in <known axioms, targets,
+              targets with their monomial factors in nonzero quantities
+              divided out>, so restatements of the target earn nothing
   valid       derives and sound and nontrivial
   recovered   valid, and every removed axiom lies in <known, S> saturated by
               the instance's nonzero variables (equivalent to the complete
@@ -34,6 +39,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -44,7 +50,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
-from polyutil import PolyError, parse_poly  # noqa: E402
+from polyutil import Poly, PolyError, parse_poly  # noqa: E402
 
 SLICE = "train"
 DEFAULT_INSTANCES = HERE / "instances.json"
@@ -56,8 +62,22 @@ TOP_K = 5
 EVAL_TIMEOUT_SECONDS = 300
 MAX_OUTPUT_BYTES = 2_000_000
 CANDIDATE_LIMITS = {"max_chars": 4000, "max_terms": 400, "max_degree": 24, "max_exponent": 12, "max_int_digits": 60}
-SINGULAR = os.environ.get("SINGULAR_BIN", "Singular")
+TARGET_LIMITS = {"max_terms": 5000, "max_degree": 80, "max_exponent": 80, "max_chars": 100000, "max_int_digits": 200}
 SOLVER_NAME_RE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.\-]*$")
+
+
+def resolve_singular() -> str:
+    """Absolute path of the Singular binary, fixed before any solver runs."""
+    found = shutil.which(os.environ.get("SINGULAR_BIN", "Singular"))
+    if not found:
+        raise SystemExit("Singular not found on PATH")
+    path = Path(found).resolve()
+    if ROOT in path.parents:
+        raise SystemExit(f"refusing a Singular binary inside the workspace: {path}")
+    return str(path)
+
+
+SINGULAR = ""  # resolved in evaluate(), before the first solver runs
 
 EXPERIMENTS = {
     1: "single_missing_axiom",
@@ -194,28 +214,50 @@ def run_singular(script: str, timeout: float) -> str:
     return proc.stdout
 
 
+def strip_nonzero_content(expr: str, names: list[str], nonzero: list[str]) -> str:
+    """Divide a polynomial by its largest monomial factor in nonzero variables."""
+    poly = parse_poly(expr, names, TARGET_LIMITS)
+    nz = {names.index(v) for v in nonzero if v in names}
+    mins = [min(e[i] for e in poly.terms) if i in nz else 0 for i in range(poly.nvars)]
+    terms = {tuple(a - b for a, b in zip(e, mins)): c for e, c in poly.terms.items()}
+    return Poly(poly.nvars, terms).to_string(names)
+
+
 def scoring_script(inst: dict, sets: list) -> str:
     public, hidden = inst["public"], inst["hidden"]
     nonzero = public["nonzero_variables"]
+    hnz = "*".join(nonzero) if nonzero else "1"
     lines = [
         f"ring R = 0, (t, {', '.join(public['variables'])}), dp;",
         "short = 0;",
         "poly one = 1;",
-        f"poly hnz = {'*'.join(nonzero) if nonzero else '1'};",
+        f"poly hnz = {hnz};",
         "int der; int ntr; int rec;",
         "ideal G; ideal JK; ideal JS;",
     ]
     for i, a in enumerate(hidden["full_axioms"], 1):
         lines.append(f"poly a{i} = {a};")
     lines.append("ideal FULL = " + ", ".join(f"a{i}" for i in range(1, len(hidden["full_axioms"]) + 1)) + ";")
-    lines.append("ideal FS = std(FULL);")
+    # Soundness is judged on the complete theory away from the locus where a
+    # nonzero quantity vanishes: u is sound iff u*hnz lies in the radical of
+    # FULL, i.e. u lies in the radical of FULL saturated by hnz (SATF).
+    saturated = hidden.get("full_saturated")
+    if saturated:
+        lines.append("ideal SATF = " + ", ".join(saturated) + ";")
+        lines.append("ideal SFS = std(SATF);")
+        rabinowitsch = "std(SATF + ideal(1 - t*{u}))"
+    else:
+        lines.append("ideal SFS = std(FULL);")
+        rabinowitsch = "std(FULL + ideal(1 - t*hnz*{u}))"
     known = public["known_axioms"]
     for i, a in enumerate(known, 1):
         lines.append(f"poly k{i} = {a};")
     lines.append("ideal KNOWN = " + (", ".join(f"k{i}" for i in range(1, len(known) + 1)) or "0") + ";")
     for j, q in enumerate(public["targets"], 1):
         lines.append(f"poly q{j} = {q};")
-    lines.append("ideal KT = std(KNOWN + ideal(" + ", ".join(f"q{j}" for j in range(1, len(public["targets"]) + 1)) + "));")
+    stripped = [strip_nonzero_content(q, public["variables"], nonzero) for q in public["targets"]]
+    lines.append("ideal KT = std(KNOWN + ideal(" + ", ".join(f"q{j}" for j in range(1, len(public["targets"]) + 1))
+                 + ") + ideal(" + ", ".join(stripped) + "));")
     for i, r in enumerate(hidden["removed_axioms"], 1):
         lines.append(f"poly r{i} = {r};")
 
@@ -228,7 +270,7 @@ def scoring_script(inst: dict, sets: list) -> str:
                 lines += [
                     f"poly {u} = {p};",
                     f"int s{u} = 0;",
-                    f"if (size(reduce({u}, FS)) == 0) {{ s{u} = 1; }} else {{ G = std(FULL + ideal(1 - t*{u})); "
+                    f"if (size(reduce({u}, SFS)) == 0) {{ s{u} = 1; }} else {{ G = {rabinowitsch.format(u=u)}; "
                     f"if (size(reduce(one, G)) == 0) {{ s{u} = 1; }} }}",
                     f'print("POLY {u} " + string(s{u}));',
                 ]
@@ -364,6 +406,8 @@ def solver_digest(path: Path) -> str:
 
 
 def evaluate(args) -> dict:
+    global SINGULAR
+    SINGULAR = resolve_singular()
     instances = load_instances(Path(args.instances))
     if args.max_instances:
         kept, seen = [], {}

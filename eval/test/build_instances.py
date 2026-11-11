@@ -9,8 +9,17 @@ complete theory) never leaves this directory.
 
 Each instance is checked in Singular before it is kept:
   * every target lies in the ideal of the complete theory;
-  * no target lies in the ideal of the remaining (known) axioms;
-  * no removed axiom already lies in the ideal of known axioms + targets.
+  * some target does not follow from the remaining (known) axioms, not even
+    wherever the nonzero quantities are nonzero (ideal of the known axioms
+    saturated by their product);
+  * no removed axiom already lies in the ideal of known axioms + targets, where
+    the targets are also taken with their monomial factors in nonzero
+    quantities divided out (the evaluator's nontriviality test).
+
+The hidden part also stores a Groebner basis of the complete theory saturated
+by the product of the nonzero quantities (``full_saturated``): the evaluator's
+soundness test asks whether a proposed law holds on every solution of the
+complete theory at which those quantities are nonzero.
 """
 
 from __future__ import annotations
@@ -30,7 +39,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from polyutil import parse_poly  # noqa: E402
+from polyutil import Poly, parse_poly  # noqa: E402
 
 SLICE = "test"
 SYSTEMS_DIR = HERE / "systems"
@@ -40,6 +49,7 @@ ID_PREFIX = "T"
 MULTI_QUOTA = {2: 4, 3: 3}
 SCALES = [Fraction(1), Fraction(2), Fraction(3), Fraction(1, 2), Fraction(1, 3), Fraction(3, 2), Fraction(2, 3)]
 SYSTEM_LIMITS = {"max_terms": 5000, "max_degree": 60, "max_exponent": 40, "max_chars": 100000}
+SAT_LIMITS = {"max_terms": 50000, "max_degree": 200, "max_exponent": 200, "max_chars": 5000000, "max_int_digits": 5000}
 SINGULAR = os.environ.get("SINGULAR_BIN", "Singular")
 
 
@@ -113,13 +123,25 @@ def tagged(output: str, tag: str) -> list[list[str]]:
     return rows
 
 
-def preamble(sysd: dict) -> list[str]:
+def strip_nonzero_content(expr: str, names: list[str], nonzero: list[str]) -> str:
+    """Divide a polynomial by its largest monomial factor in nonzero variables."""
+    poly = parse_poly(expr, names, SYSTEM_LIMITS)
+    nz = {names.index(v) for v in nonzero}
+    mins = [min(e[i] for e in poly.terms) if i in nz else 0 for i in range(poly.nvars)]
+    if not any(mins):
+        return poly.to_string(names)
+    terms = {tuple(a - b for a, b in zip(e, mins)): c for e, c in poly.terms.items()}
+    return Poly(poly.nvars, terms).to_string(names)
+
+
+def preamble(sysd: dict, stripped: list[str] | None = None, nonzero: list[str] | None = None) -> list[str]:
     lines = [
         f"ring R = 0, (t, {', '.join(sysd['variables'])}), dp;",
         "short = 0;",
         "poly one = 1;",
-        "int ok; int wp; int nt;",
-        "ideal G; ideal KN; ideal KS; ideal KTS;",
+        f"poly hnz = {'*'.join(nonzero) if nonzero else '1'};",
+        "int ok; int wp; int nt; int ws;",
+        "ideal G; ideal KN; ideal KS; ideal KTS; ideal KSS;",
     ]
     for i, a in enumerate(sysd["axioms"], 1):
         lines.append(f"poly a{i} = {a};")
@@ -127,6 +149,7 @@ def preamble(sysd: dict) -> list[str]:
         lines.append(f"poly q{j} = {q};")
     lines.append("ideal FULL = " + ", ".join(f"a{i}" for i in range(1, len(sysd["axioms"]) + 1)) + ";")
     lines.append("ideal TARG = " + ", ".join(f"q{j}" for j in range(1, len(sysd["targets"]) + 1)) + ";")
+    lines.append("ideal TARGS = " + ", ".join(stripped or sysd["targets"]) + ";")
     return lines
 
 
@@ -135,11 +158,20 @@ def removal_block(sysd: dict, key: int, removed: tuple[int, ...]) -> list[str]:
     lines = [f"KN = {', '.join(known) if known else '0'};", "KS = std(KN);", "wp = 0;"]
     for j in range(1, len(sysd["targets"]) + 1):
         lines.append(f"if (size(reduce(q{j}, KS)) != 0) {{ wp = 1; }}")
-    lines += ["KTS = std(KN + TARG);", "nt = 1;"]
+    lines += ["KSS = std(KN + ideal(1 - t*hnz));", "ws = 0;"]
+    for j in range(1, len(sysd["targets"]) + 1):
+        lines.append(f"if (size(reduce(q{j}, KSS)) != 0) {{ ws = 1; }}")
+    lines += ["KTS = std(KN + TARG + TARGS);", "nt = 1;"]
     for i in removed:
         lines.append(f"if (size(reduce(a{i + 1}, KTS)) == 0) {{ nt = 0; }}")
-    lines.append(f'print("REM {key} " + string(wp) + " " + string(nt));')
+    lines.append(f'print("REM {key} " + string(wp) + " " + string(nt) + " " + string(ws));')
     return lines
+
+
+def removal_flags(out: str) -> dict:
+    """key -> (essential, nontrivial): essential = some target does not follow from
+    the known axioms even away from the zero locus of the nonzero quantities."""
+    return {int(r[0]): (r[1] == "1" and r[3] == "1", r[2] == "1") for r in tagged(out, "REM") if len(r) == 4}
 
 
 def system_checks(sysd: dict, timeout: float) -> dict:
@@ -152,18 +184,53 @@ def system_checks(sysd: dict, timeout: float) -> dict:
         lines.append(f"G = std(FULL + ideal(1 - t*{v}));")
         lines.append("ok = (size(reduce(one, G)) == 0);")
         lines.append(f'print("VAR {i} " + string(ok));')
-    for i in range(len(sysd["axioms"])):
-        lines += removal_block(sysd, i, (i,))
     lines.append("quit;")
     out = run_singular("\n".join(lines) + "\n", timeout)
     targets_ok = all(r[1] == "1" for r in tagged(out, "TGT")) and len(tagged(out, "TGT")) == len(sysd["targets"])
     forced_zero = {int(r[0]) - 1 for r in tagged(out, "VAR") if r[1] == "1"}
     if len(tagged(out, "VAR")) != len(sysd["variables"]):
         raise RuntimeError("variable checks incomplete")
-    singles = {int(r[0]): (r[1] == "1", r[2] == "1") for r in tagged(out, "REM")}
+    return {"targets_ok": targets_ok, "forced_zero": forced_zero}
+
+
+def single_checks(sysd: dict, stripped: list[str], nonzero: list[str], timeout: float) -> dict:
+    lines = preamble(sysd, stripped, nonzero)
+    for i in range(len(sysd["axioms"])):
+        lines += removal_block(sysd, i, (i,))
+    lines.append("quit;")
+    out = run_singular("\n".join(lines) + "\n", timeout)
+    singles = removal_flags(out)
     if set(singles) != set(range(len(sysd["axioms"]))):
         raise RuntimeError("single-removal checks incomplete")
-    return {"targets_ok": targets_ok, "forced_zero": forced_zero, "singles": singles}
+    return singles
+
+
+def saturated_basis(sysd: dict, nonzero: list[str], timeout: float) -> list[str]:
+    """Reduced dp Groebner basis of FULL : (product of nonzero variables)^infinity."""
+    variables = sysd["variables"]
+    lines = preamble(sysd)
+    hnz = "*".join(nonzero) if nonzero else "1"
+    lines += [
+        f"ideal SATF = eliminate(FULL + ideal(1 - t*{hnz}), t);",
+        f"ring S = 0, ({', '.join(variables)}), dp;",
+        "short = 0;",
+        "option(redSB);",
+        "ideal SG = std(imap(R, SATF));",
+        "int si;",
+        'for (si = 1; si <= ncols(SG); si++) { if (SG[si] != 0) { print("SAT " + string(SG[si])); } }',
+        'print("SATDONE " + string(ncols(SG)));',
+        "quit;",
+    ]
+    out = run_singular("\n".join(lines) + "\n", timeout)
+    if not tagged(out, "SATDONE"):
+        raise RuntimeError("saturation produced no output")
+    gens = []
+    for line in out.splitlines():
+        if line.startswith("SAT "):
+            gens.append(parse_poly(line[4:].strip(), variables, SAT_LIMITS).to_string(variables))
+    if not gens:
+        raise RuntimeError("empty saturation")
+    return gens
 
 
 def saturation_unit(sysd: dict, nonzero: list[str], timeout: float) -> bool:
@@ -181,18 +248,19 @@ def saturation_unit(sysd: dict, nonzero: list[str], timeout: float) -> bool:
     return rows[0][0] == "1"
 
 
-def multi_checks(sysd: dict, combos: list[tuple[int, ...]], timeout: float) -> dict:
+def multi_checks(sysd: dict, stripped: list[str], nonzero: list[str], combos: list[tuple[int, ...]],
+                 timeout: float) -> dict:
     if not combos:
         return {}
-    lines = preamble(sysd)
+    lines = preamble(sysd, stripped, nonzero)
     for key, combo in enumerate(combos):
         lines += removal_block(sysd, key, combo)
     lines.append("quit;")
     out = run_singular("\n".join(lines) + "\n", timeout)
-    return {int(r[0]): (r[1] == "1", r[2] == "1") for r in tagged(out, "REM")}
+    return removal_flags(out)
 
 
-def make_instance(name: str, sysd: dict, nonzero: list[str], removed: tuple[int, ...]) -> dict:
+def make_instance(name: str, sysd: dict, nonzero: list[str], removed: tuple[int, ...], saturated: list[str]) -> dict:
     digest = hashlib.sha256(f"{SEED}|{name}|{removed}".encode()).hexdigest()[:10]
     inst_id = f"{ID_PREFIX}{len(removed)}-{digest}"
     known = [a for i, a in enumerate(sysd["axioms"]) if i not in removed]
@@ -210,6 +278,7 @@ def make_instance(name: str, sysd: dict, nonzero: list[str], removed: tuple[int,
         "removed_indices": [i + 1 for i in removed],
         "removed_axioms": [sysd["axioms"][i] for i in removed],
         "full_axioms": sysd["axioms"],
+        "full_saturated": saturated,
     }
     return {"id": inst_id, "num_missing": len(removed), "public": public, "hidden": hidden}
 
@@ -242,8 +311,21 @@ def build(output: Path, timeout: float, only: list[str] | None = None) -> dict:
         if sat_unit:
             print(f"[build] {name}: nonzero saturation is the unit ideal; using no nonzero variables", flush=True)
             nonzero = []
-        singles = [i for i, (wp, nt) in sorted(checks["singles"].items()) if wp and nt]
-        essential = [i for i, (wp, _nt) in sorted(checks["singles"].items()) if wp]
+        try:
+            saturated = saturated_basis(sysd, nonzero, timeout)
+        except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            # The evaluator then tests soundness per polynomial (slower, same answer).
+            saturated = []
+            print(f"[build] {name}: saturation not precomputed ({type(exc).__name__}: {str(exc)[:200]})", flush=True)
+        stripped = [strip_nonzero_content(q, sysd["variables"], nonzero) for q in sysd["targets"]]
+        try:
+            single_flags = single_checks(sysd, stripped, nonzero, timeout)
+        except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            summary[name] = {"status": f"skipped: {type(exc).__name__}"}
+            print(f"[build] {name}: SKIPPED ({type(exc).__name__}: {str(exc)[:200]})", flush=True)
+            continue
+        singles = [i for i, (wp, nt) in sorted(single_flags.items()) if wp and nt]
+        essential = [i for i, (wp, _nt) in sorted(single_flags.items()) if wp]
         chosen: list[tuple[int, ...]] = [(i,) for i in singles]
         counts = {1: len(singles)}
         for size, quota in sorted(MULTI_QUOTA.items()):
@@ -251,7 +333,7 @@ def build(output: Path, timeout: float, only: list[str] | None = None) -> dict:
             rng.shuffle(combos)
             probe = combos[: 3 * quota + 2]
             try:
-                flags = multi_checks(sysd, probe, timeout)
+                flags = multi_checks(sysd, stripped, nonzero, probe, timeout)
             except (RuntimeError, subprocess.TimeoutExpired) as exc:
                 print(f"[build] {name}: multi-axiom checks failed ({type(exc).__name__})", flush=True)
                 flags = {}
@@ -259,13 +341,17 @@ def build(output: Path, timeout: float, only: list[str] | None = None) -> dict:
             chosen += picked
             counts[size] = len(picked)
         for removed in chosen:
-            instances.append(make_instance(name, sysd, nonzero, removed))
+            instances.append(make_instance(name, sysd, nonzero, removed, saturated))
         summary[name] = {
             "status": "ok",
             "num_variables": len(sysd["variables"]),
             "num_axioms": len(sysd["axioms"]),
             "num_nonzero_variables": len(nonzero),
             "essential_axioms": [i + 1 for i in essential],
+            "trivial_single_removals": [i + 1 for i, (wp, nt) in sorted(single_flags.items()) if wp and not nt],
+            "targets_with_nonzero_content": sum(1 for q, s in zip(sysd["targets"], stripped)
+                                                if parse_poly(q, sysd["variables"], SYSTEM_LIMITS).to_string(sysd["variables"]) != s),
+            "saturated_generators": len(saturated),
             "instances_by_missing": counts,
         }
         print(f"[build] {name}: {counts}", flush=True)
