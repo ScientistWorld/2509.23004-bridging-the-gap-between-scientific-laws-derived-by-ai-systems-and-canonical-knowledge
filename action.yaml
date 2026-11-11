@@ -1,5 +1,8 @@
-action: done
+# Once you set action to 'submit' or 'done', STOP immediately.
+# Do NOT sleep, poll, or wait for jobs. The system reads this file
+# only after your turn ends.
+action: pending
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Audit complete: genuine broader recovery earns no credit; five shortcuts score perfectly, empty results tie, and three reference seeds have zero test-score spread. Evidence in REDTEAM.md and redteam/."
+notes: ""
