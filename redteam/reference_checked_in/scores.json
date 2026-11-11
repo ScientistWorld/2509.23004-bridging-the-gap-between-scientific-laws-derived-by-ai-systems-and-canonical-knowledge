@@ -1,0 +1,123 @@
+{
+  "experiments": {
+    "exact_single_axiom_all_paper": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 61,
+          "cases_total": 75,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 56,
+          "derivable_candidate_rate": 0.7466666666666667,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 52,
+          "success_rate": 0.6933333333333334,
+          "success_signal": 0.6940266666666667
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 75,
+          "cases_total": 75,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0,
+          "success_signal": 0.0
+        }
+      }
+    },
+    "exact_single_axiom_core": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 11,
+          "cases_total": 11,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 11,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 11,
+          "success_rate": 1.0,
+          "success_signal": 1.001
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 11,
+          "cases_total": 11,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0,
+          "success_signal": 0.0
+        }
+      }
+    },
+    "kepler_pair_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 10,
+          "cases_total": 10,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 7,
+          "derivable_candidate_rate": 0.7,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 5,
+          "success_rate": 0.5,
+          "success_signal": 0.5005
+        }
+      }
+    },
+    "kepler_single_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 5,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 5,
+          "success_rate": 1.0,
+          "success_signal": 1.001
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 5,
+          "cases_total": 5,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0,
+          "success_signal": 0.0
+        }
+      }
+    },
+    "simple_harmonic_single_axiom": {
+      "results": {
+        "ai_noether_exact": {
+          "cases_completed": 6,
+          "cases_total": 6,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 6,
+          "derivable_candidate_rate": 1.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 6,
+          "success_rate": 1.0,
+          "success_signal": 1.001
+        },
+        "no_abduction_baseline": {
+          "cases_completed": 6,
+          "cases_total": 6,
+          "degenerate_candidate_count": 0,
+          "derivable_candidate_count": 0,
+          "derivable_candidate_rate": 0.0,
+          "nondegenerate_candidate_rate": 1.0,
+          "success_count": 0,
+          "success_rate": 0.0,
+          "success_signal": 0.0
+        }
+      }
+    }
+  }
+}

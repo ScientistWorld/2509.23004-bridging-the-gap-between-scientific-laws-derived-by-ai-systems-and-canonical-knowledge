@@ -1,0 +1,8 @@
+{
+  "base_commit": "356ce60",
+  "initial_dirty": [
+    "README.md (system device)",
+    "manifest.json (system device)",
+    "trajectory/turn_0001_raw.jsonl through turn_0008_raw.jsonl (system removed)"
+  ]
+}

@@ -1,0 +1,5 @@
+_state/
+**/work/
+**/evaluation.log
+**/generation.log
+__pycache__/
