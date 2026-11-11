@@ -42,7 +42,7 @@
         "explanation_rate": {
           "coefficient": 0.25,
           "higher_is_better": true,
-          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true consequence of the complete theory (vanishes on all its solutions), and none is already implied by the known axioms plus targets."
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true law of the complete theory wherever the declared nonzero quantities are nonzero (radical membership in the complete theory saturated by their product), and none is already implied by the known axioms, the targets and the targets divided by nonzero monomial factors."
         },
         "top1_success_rate": {
           "coefficient": 0.3,
@@ -52,7 +52,7 @@
         "unsound_rate": {
           "coefficient": 0.3,
           "higher_is_better": false,
-          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed."
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory where the nonzero quantities are nonzero (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed or whose sets could not be verified."
         },
         "failed_rate": {
           "coefficient": 0.0,
@@ -113,14 +113,14 @@
       "primary_metric": "explanation_rate",
       "metrics": {
         "recovery_rate": {
-          "coefficient": 0.5,
+          "coefficient": 0.0,
           "higher_is_better": true,
-          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero."
+          "description": "Diagnostic (not scored): fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom separately (decoupled recovery). With a single target this is out of reach for every honest method on the held-out slice (0 for the reference, all variants and baselines), so a nonzero coefficient would only reward noise."
         },
         "explanation_rate": {
           "coefficient": 1.0,
           "higher_is_better": true,
-          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true consequence of the complete theory (vanishes on all its solutions), and none is already implied by the known axioms plus targets."
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true law of the complete theory wherever the declared nonzero quantities are nonzero (radical membership in the complete theory saturated by their product), and none is already implied by the known axioms, the targets and the targets divided by nonzero monomial factors."
         },
         "top1_success_rate": {
           "coefficient": 0.3,
@@ -130,7 +130,7 @@
         "unsound_rate": {
           "coefficient": 0.3,
           "higher_is_better": false,
-          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed."
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory where the nonzero quantities are nonzero (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed or whose sets could not be verified."
         },
         "failed_rate": {
           "coefficient": 0.0,
@@ -191,14 +191,14 @@
       "primary_metric": "explanation_rate",
       "metrics": {
         "recovery_rate": {
-          "coefficient": 0.5,
+          "coefficient": 0.0,
           "higher_is_better": true,
-          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero."
+          "description": "Diagnostic (not scored): fraction of instances where one of the first five candidate sets is a valid explanation that also recovers every removed axiom separately (decoupled recovery). With a single target this is out of reach for every honest method on the held-out slice (0 for the reference, all variants and baselines), so a nonzero coefficient would only reward noise."
         },
         "explanation_rate": {
           "coefficient": 1.0,
           "higher_is_better": true,
-          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true consequence of the complete theory (vanishes on all its solutions), and none is already implied by the known axioms plus targets."
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true law of the complete theory wherever the declared nonzero quantities are nonzero (radical membership in the complete theory saturated by their product), and none is already implied by the known axioms, the targets and the targets divided by nonzero monomial factors."
         },
         "top1_success_rate": {
           "coefficient": 0.3,
@@ -208,7 +208,7 @@
         "unsound_rate": {
           "coefficient": 0.3,
           "higher_is_better": false,
-          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed."
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory where the nonzero quantities are nonzero (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed or whose sets could not be verified."
         },
         "failed_rate": {
           "coefficient": 0.0,

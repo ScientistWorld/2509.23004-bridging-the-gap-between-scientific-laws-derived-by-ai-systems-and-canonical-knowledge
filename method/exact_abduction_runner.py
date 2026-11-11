@@ -31,6 +31,8 @@ import argparse
 import itertools
 import json
 import os
+import platform
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -39,7 +41,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from polyutil import PolyError, parse_poly  # noqa: E402
+from polyutil import Poly, PolyError, parse_poly  # noqa: E402
 
 SINGULAR = os.environ.get("SINGULAR_BIN", "Singular")
 GEN_LIMITS = {"max_terms": 4000, "max_degree": 80, "max_exponent": 80, "max_chars": 200000, "max_int_digits": 400}
@@ -54,12 +56,36 @@ class Deadline:
         return self.end - time.monotonic()
 
 
+_NO_ASLR: list | None = None
+
+
+def no_aslr_prefix() -> list:
+    """['setarch', <arch>, '-R'] when AINOETHER_NO_ASLR=1 and it works here, else []."""
+    global _NO_ASLR
+    if _NO_ASLR is None:
+        _NO_ASLR = []
+        if os.environ.get("AINOETHER_NO_ASLR") == "1" and shutil.which("setarch"):
+            prefix = ["setarch", platform.machine(), "-R"]
+            try:
+                ok = subprocess.run(prefix + ["true"], capture_output=True, timeout=10).returncode == 0
+            except (OSError, subprocess.TimeoutExpired):
+                ok = False
+            if ok:
+                _NO_ASLR = prefix
+    return _NO_ASLR
+
+
 def run_singular(script: str, timeout: float, seed: int) -> str:
     with tempfile.TemporaryDirectory(prefix="ainoether_") as td:
         path = Path(td) / "job.sing"
         path.write_text(script)
+        cmd = [SINGULAR, "-q", f"--random={seed}", str(path)]
+        if no_aslr_prefix():
+            # Singular's minAss output can depend on memory layout; a fixed layout
+            # makes repeated runs return the same generators.
+            cmd = no_aslr_prefix() + cmd
         proc = subprocess.run(
-            [SINGULAR, "-q", f"--random={seed}", str(path)],
+            cmd,
             capture_output=True,
             stdin=subprocess.DEVNULL,
             text=True,
@@ -113,12 +139,18 @@ def decomposition_script(inst: dict, opts) -> str:
         ]
     else:
         lines.append("list M = minAss(ENC);")
+    kt = "KNOWN + TARG"
+    if opts.drop_restatements:
+        stripped = [strip_nonzero_content(q, variables, nonzero) for q in inst["targets"]]
+        kt += " + ideal(" + ", ".join(stripped) + ")"
     lines += [
-        "ideal KT = std(KNOWN + TARG);",
+        f"ideal KT = std({kt});",
         "int ci; int gi; poly g; int us; ideal P;",
+        "option(redSB);" if opts.canonical else "",
         'print("NCOMP " + string(size(M)));',
         "for (ci = 1; ci <= size(M); ci++) {",
-        "  P = M[ci];",
+        "  P = std(M[ci]);" if opts.canonical else "  P = M[ci];",
+        '  print("DIM " + string(ci) + " " + string(dim(std(P))));' if opts.dim_rank else "",
         "  for (gi = 1; gi <= ncols(P); gi++) {",
         "    g = P[gi];",
         "    if (g != 0) {",
@@ -158,7 +190,15 @@ def decomposition_script(inst: dict, opts) -> str:
     return "\n".join(lines) + "\n"
 
 
-def parse_components(output: str, variables: list[str]) -> tuple[int, list[list[str]], int]:
+def strip_nonzero_content(expr: str, names: list[str], nonzero: list[str]) -> str:
+    """Divide a polynomial by its largest monomial factor in nonzero variables."""
+    poly = parse_poly(expr, names, GEN_LIMITS)
+    nz = {names.index(v) for v in nonzero if v in names}
+    mins = [min(e[i] for e in poly.terms) if i in nz else 0 for i in range(poly.nvars)]
+    return Poly(poly.nvars, {tuple(a - b for a, b in zip(e, mins)): c for e, c in poly.terms.items()}).to_string(names)
+
+
+def parse_components(output: str, variables: list[str], dims: dict | None = None) -> tuple[int, list[list[str]], int]:
     comps: dict[int, list[str]] = {}
     total = 0
     ncomp = 0
@@ -166,6 +206,8 @@ def parse_components(output: str, variables: list[str]) -> tuple[int, list[list[
         parts = line.strip().split(" ", 3)
         if parts and parts[0] == "NCOMP" and len(parts) >= 2:
             ncomp = int(parts[1])
+        if dims is not None and len(parts) == 3 and parts[0] == "DIM":
+            dims[int(parts[1])] = int(parts[2])
         if len(parts) == 4 and parts[0] == "GEN":
             total += 1
             if parts[2] != "1":
@@ -180,23 +222,48 @@ def parse_components(output: str, variables: list[str]) -> tuple[int, list[list[
             bucket = comps.setdefault(int(parts[1]), [])
             if canon not in bucket:
                 bucket.append(canon)
-    return ncomp, [comps[k] for k in sorted(comps)], total
+    keys = sorted(comps)
+    if dims is not None:
+        # keep each component's dimension aligned with the returned list
+        aligned = {i: dims.get(k, -1) for i, k in enumerate(keys)}
+        dims.clear()
+        dims.update(aligned)
+    return ncomp, [comps[k] for k in keys], total
 
 
-def candidate_sets(components: list[list[str]], max_size: int, max_sets: int) -> list[list[str]]:
+def candidate_sets(components: list[list[str]], max_size: int, max_sets: int,
+                   origin: dict | None = None) -> list[list[str]]:
     seen: set[frozenset] = set()
     out: list[list[str]] = []
     for size in range(1, max_size + 1):
-        for comp in components:
+        for ci, comp in enumerate(components):
             for subset in itertools.combinations(comp, size):
                 key = frozenset(subset)
                 if len(key) != size or key in seen:
                     continue
                 seen.add(key)
+                if origin is not None:
+                    origin[len(out)] = ci
                 out.append(list(subset))
                 if len(out) >= max_sets:
                     return out
     return out
+
+
+def sign_definite(text: str, variables: list[str]) -> bool:
+    """True when all coefficients share one sign: no solution with all quantities positive."""
+    poly = parse_poly(text, variables, GEN_LIMITS)
+    signs = {c > 0 for c in poly.terms.values()}
+    return len(signs) == 1
+
+
+def twin_key(polys, variables: list[str]) -> frozenset:
+    """A set's polynomials up to the signs of their individual terms."""
+    out = []
+    for text in polys:
+        poly = parse_poly(text, variables, GEN_LIMITS)
+        out.append(tuple(sorted((e, abs(c)) for e, c in poly.integer_primitive().items())))
+    return frozenset(out)
 
 
 # ------------------------------------------------------------------- Reason
@@ -262,7 +329,19 @@ def solve(inst: dict, opts, deadline: Deadline, diag: dict) -> list[list[str]]:
     max_size = opts.max_set_size or int(inst["num_missing"])
     t0 = time.monotonic()
     out = run_singular(decomposition_script(inst, opts), max(2.0, opts.decomp_share * deadline.left()), opts.seed)
-    ncomp, components, total = parse_components(out, variables)
+    dims: dict = {}
+    ncomp, components, total = parse_components(out, variables, dims)
+    if opts.canonical:
+        # reduced Groebner bases are unique: order components canonically too
+        order = sorted(range(len(components)), key=lambda i: sorted(components[i]))
+        components = [sorted(components[i]) for i in order]
+        dims = {new: dims.get(old, -1) for new, old in enumerate(order)}
+    if opts.dim_rank:
+        # Theorem 1 (Section 3.5): the prime shared with the complete theory has
+        # the minimal height, i.e. the top dimension; visit those components first.
+        order = sorted(range(len(components)), key=lambda i: -dims.get(i, -1))
+        components = [components[i] for i in order]
+        dims = {new: dims.get(old, -1) for new, old in enumerate(order)}
     diag.update({"components": ncomp, "generators": total, "usable_generators": sum(map(len, components)),
                  "decompose_seconds": round(time.monotonic() - t0, 2)})
     if opts.no_reason:
@@ -274,7 +353,8 @@ def solve(inst: dict, opts, deadline: Deadline, diag: dict) -> list[list[str]]:
                     flat.append([g])
         diag["candidate_sets"] = len(flat)
         return flat
-    sets = candidate_sets(components, max_size, opts.max_sets)
+    origin: dict = {}
+    sets = candidate_sets(components, max_size, opts.max_sets, origin)
     diag["candidate_sets"] = len(sets)
     flags: dict[int, tuple[bool, bool, bool]] = {}
     t1 = time.monotonic()
@@ -314,6 +394,24 @@ def solve(inst: dict, opts, deadline: Deadline, diag: dict) -> list[list[str]]:
         strong_keys = {s for _k, s in strong_min}
         weak_min = sorted([x for x in minimal(accepted) if x[1] not in strong_keys], key=parsimony)
         ranked = strong_min + weak_min
+    if opts.dim_rank:
+        top = max(dims.values(), default=-1)
+        ranked = sorted(ranked, key=lambda item: dims.get(origin.get(item[0], -1), -1) < top)  # stable
+    if opts.sign_prior:
+        # Physical sign prior: a law whose terms all share one sign has no solution
+        # with all quantities positive.  Among sign twins (same terms, different
+        # signs) keep only the members with the fewest such laws; rank sets
+        # without them first.
+        definite = {k: sum(sign_definite(p, variables) for p in s) for k, s in ranked}
+        groups: dict = {}
+        for k, s in ranked:
+            groups.setdefault(twin_key(s, variables), []).append(k)
+        keep = set()
+        for members in groups.values():
+            best = min(definite[k] for k in members)
+            keep.update(k for k in members if definite[k] == best)
+        ranked = sorted([x for x in ranked if x[0] in keep], key=lambda item: definite[item[0]] > 0)
+        diag["sign_twins_dropped"] = len(definite) - len(keep)
     return [list(sets[k]) for k, _s in ranked]
 
 
@@ -336,6 +434,14 @@ def main() -> None:
     parser.add_argument("--no-reason", action="store_true", help="ablation: output generators without reasoning")
     parser.add_argument("--saturation-only", action="store_true",
                         help="alternative: one saturated component instead of primary decomposition")
+    parser.add_argument("--canonical", action="store_true",
+                        help="variant: reduced Groebner basis of each prime as its generators (unique, run-independent)")
+    parser.add_argument("--dim-rank", action="store_true",
+                        help="variant: rank candidates from top-dimensional components first (Theorem 1)")
+    parser.add_argument("--sign-prior", action="store_true",
+                        help="variant: drop sign twins that cannot hold with positive quantities and rank them last")
+    parser.add_argument("--drop-restatements", action="store_true",
+                        help="variant: also drop generators that restate the target divided by nonzero quantities")
     opts = parser.parse_args()
 
     inst = json.loads(Path(opts.instance).read_text())
@@ -346,6 +452,7 @@ def main() -> None:
     except Exception as exc:  # noqa: BLE001 - report an empty, well-formed answer
         diag["error"] = f"{type(exc).__name__}: {str(exc)[:300]}"
         sets = []
+    diag["no_aslr"] = bool(no_aslr_prefix())
     payload = {"method": opts.method_name, "candidate_sets": sets, "diagnostics": diag}
     out = Path(opts.output)
     tmp = out.with_suffix(".tmp")
