@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Build held-out multiple-consequence instances (resumable, backed up), oracle check, gym solvers on all four experiments (test+train, fresh), reference draws, honest variants, binomial brute-force and shortcut probes."
+notes: "Multiple-consequence experiment v2 (identifiable removals of 2-5 axioms): rebuild, oracle check, reference draws, baselines, best-first and greedy-completion variants, brute-force and shortcut probes on test and train."
