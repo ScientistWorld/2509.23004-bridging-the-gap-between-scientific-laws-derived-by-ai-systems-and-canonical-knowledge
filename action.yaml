@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Multiple-consequence experiment v2 (identifiable removals of 2-5 axioms): rebuild, oracle check, reference draws, baselines, best-first and greedy-completion variants, brute-force and shortcut probes on test and train."
+notes: "Iteration 13 final job: reference restored to the paper's every-subset enumeration (fixed 4000-subset count instead of 400); hidden test of gym solvers, reference redraws, old/5x budgets, better/weaker variants, brute force and all shortcut probes; train gym + variants; rank summaries; validate"

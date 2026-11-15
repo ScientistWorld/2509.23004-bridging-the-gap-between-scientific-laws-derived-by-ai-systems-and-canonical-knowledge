@@ -9,7 +9,8 @@ Implements the noiseless branch of the paper's Algorithm 1 (Appendix E.3):
              Generators already in <known axioms, targets> carry no new
              information and are dropped (as in the official code).
   Reason     each subset of one component's generators (size <= number of
-             missing axioms) is added to the known axioms.  It is accepted
+             missing axioms; smallest subsets first, up to a fixed count of
+             4000 subsets) is added to the known axioms.  It is accepted
              when every target lies in the projection of the augmented ideal
              onto the target's measured variables (weak test, ideal
              membership) and it does not force a declared nonzero quantity to
@@ -610,7 +611,13 @@ def main() -> None:
     parser.add_argument("--margin", type=float, default=6.0, help="seconds kept free before the time limit")
     parser.add_argument("--seed", type=int, default=1, help="Singular random seed")
     parser.add_argument("--max-set-size", type=int, default=0, help="0 = number of missing axioms")
-    parser.add_argument("--max-sets", type=int, default=400)
+    # The paper tests every subset of each component's generators (official code:
+    # no cap, 7200 s timeout).  4000 is a fixed count, not a time budget: on the
+    # held-out slice it enumerates every subset of 57 of 59 multiple-consequence
+    # instances (and of every other instance) and keeps each instance under ~8 s,
+    # far from the 60 s limit, so results do not depend on machine speed.
+    parser.add_argument("--max-sets", type=int, default=4000,
+                        help="cap on candidate subsets tested per instance (a count, deterministic)")
     parser.add_argument("--decomp-share", type=float, default=0.7, help="share of the budget for decomposition")
     parser.add_argument("--method-name", default="ai_noether_exact")
     # Variants used for gym hardening checks (defaults reproduce the paper's procedure).
