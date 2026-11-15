@@ -497,9 +497,33 @@ class PrivateFilesOffDisk:
         return False
 
 
+def restore_private_from_git() -> None:
+    """Crash recovery: a run killed while the private files were off disk (for
+    example SIGKILL on preemption) cannot write them back.  Put back their last
+    committed version before anything else runs."""
+    for path in PRIVATE_PATHS:
+        if path.exists():
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        try:
+            commits = subprocess.run(["git", "-C", str(ROOT), "rev-list", "HEAD", "--", rel], capture_output=True,
+                                     text=True, timeout=120, check=False).stdout.split()
+            for commit in commits:
+                if subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", f"{commit}:{rel}"],
+                                  capture_output=True, timeout=60, check=False).returncode == 0:
+                    subprocess.run(["git", "-C", str(ROOT), "checkout", commit, "--", rel], capture_output=True,
+                                   timeout=120, check=True)
+                    print(f"[eval {SLICE}] warning: restored missing {rel} from commit {commit[:10]}", flush=True)
+                    break
+        except (OSError, subprocess.SubprocessError) as exc:
+            print(f"[eval {SLICE}] warning: could not restore {rel} ({exc})", flush=True)
+
+
 def evaluate(args) -> dict:
     global SINGULAR
     SINGULAR = resolve_singular()
+    if Path(args.instances).resolve() == DEFAULT_INSTANCES.resolve():
+        restore_private_from_git()
     instances = load_instances(Path(args.instances))
     with PrivateFilesOffDisk(PRIVATE_PATHS):
         return run_all(args, instances)

@@ -1,0 +1,12 @@
+Variables: ["Eph", "h", "f", "lam", "c", "K", "W", "e", "Vs", "f0"]
+Equations:
+Eph - h*f
+f*lam - c
+K - Eph + W
+K - e*Vs
+W - h*f0
+
+Measured Variables: ["h", "c", "lam", "e", "Vs", "f0"]
+
+Target Polynomial:
+e*Vs*lam - h*c + h*f0*lam

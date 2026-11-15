@@ -1,0 +1,12 @@
+Variables: ["C", "d", "eps", "A", "Q", "V", "U", "Ef", "sig"]
+Equations:
+C*d - eps*A
+Q - C*V
+2*U - Q*V
+Ef*d - V
+eps*Ef - sig
+
+Measured Variables: ["eps", "A", "d", "U", "sig"]
+
+Target Polynomial:
+2*U*eps - A*d*sig^2

@@ -1,0 +1,12 @@
+Variables: ["E", "gam", "m", "c", "p", "v", "K", "lam", "h"]
+Equations:
+E - gam*m*c^2
+p - gam*m*v
+gam^2*c^2 - gam^2*v^2 - c^2
+K - E + m*c^2
+lam*p - h
+
+Measured Variables: ["m", "c", "K", "lam", "h"]
+
+Target Polynomial:
+K^2*lam^2 + 2*K*m*c^2*lam^2 - h^2*c^2
