@@ -143,14 +143,22 @@ def decomposition_script(inst: dict, opts) -> str:
     if opts.drop_restatements:
         stripped = [strip_nonzero_content(q, variables, nonzero) for q in inst["targets"]]
         kt += " + ideal(" + ", ".join(stripped) + ")"
+    degen = []
+    if opts.prune_degenerate:
+        # Appendix E.2: a component on which a physically nonzero quantity (or 1)
+        # vanishes describes a boundary case; its generators are not proposed.
+        degen = ["  PS = std(P); dg = 0;", "  if (size(reduce(one, PS)) == 0) { dg = 1; }"]
+        degen += [f"  if (size(reduce({v}, PS)) == 0) {{ dg = 1; }}" for v in nonzero]
+        degen.append('  print("DEGEN " + string(ci) + " " + string(dg));')
     lines += [
         f"ideal KT = std({kt});",
-        "int ci; int gi; poly g; int us; ideal P;",
+        "int ci; int gi; poly g; int us; ideal P;" + (" ideal PS; int dg; poly one = 1;" if degen else ""),
         "option(redSB);" if opts.canonical else "",
         'print("NCOMP " + string(size(M)));',
         "for (ci = 1; ci <= size(M); ci++) {",
         "  P = std(M[ci]);" if opts.canonical else "  P = M[ci];",
         '  print("DIM " + string(ci) + " " + string(dim(std(P))));' if opts.dim_rank else "",
+        *degen,
         "  for (gi = 1; gi <= ncols(P); gi++) {",
         "    g = P[gi];",
         "    if (g != 0) {",
@@ -202,10 +210,15 @@ def parse_components(output: str, variables: list[str], dims: dict | None = None
     comps: dict[int, list[str]] = {}
     total = 0
     ncomp = 0
+    degenerate = {int(ln.split()[1]) for ln in output.splitlines()
+                  if ln.startswith("DEGEN ") and len(ln.split()) == 3 and ln.split()[2] == "1"}
     for line in output.splitlines():
         parts = line.strip().split(" ", 3)
         if parts and parts[0] == "NCOMP" and len(parts) >= 2:
             ncomp = int(parts[1])
+        if len(parts) == 4 and parts[0] == "GEN" and int(parts[1]) in degenerate:
+            total += 1
+            continue
         if dims is not None and len(parts) == 3 and parts[0] == "DIM":
             dims[int(parts[1])] = int(parts[2])
         if len(parts) == 4 and parts[0] == "GEN":
@@ -247,6 +260,47 @@ def candidate_sets(components: list[list[str]], max_size: int, max_sets: int,
                 out.append(list(subset))
                 if len(out) >= max_sets:
                     return out
+    return out
+
+
+def candidate_sets_best_first(components: list[list[str]], max_size: int, max_sets: int, variables: list[str],
+                              origin: dict | None = None) -> list[list[str]]:
+    """Variant: test the simplest subsets first instead of all subsets in index order.
+
+    Generator cost = number of terms + total degree.  Each component keeps its
+    N simplest generators (N as large as the budget allows for subsets up to
+    max_size); all their subsets are visited in order of total cost."""
+    def cost(text: str) -> int:
+        poly = parse_poly(text, variables, GEN_LIMITS)
+        return poly.num_terms() + poly.total_degree()
+
+    def n_subsets(n: int) -> int:
+        from math import comb
+        return sum(comb(n, k) for k in range(1, max_size + 1))
+
+    keep = 1
+    while n_subsets(keep + 1) <= max_sets:
+        keep += 1
+    pool = []
+    for ci, comp in enumerate(components):
+        ranked = sorted(comp, key=lambda g: (cost(g), g))[:keep]
+        costs = [cost(g) for g in ranked]
+        for size in range(1, min(max_size, len(ranked)) + 1):
+            for idx in itertools.combinations(range(len(ranked)), size):
+                pool.append((sum(costs[i] for i in idx), size, ci, idx, [ranked[i] for i in idx]))
+    pool.sort(key=lambda x: x[:4])
+    seen: set[frozenset] = set()
+    out: list[list[str]] = []
+    for _c, _size, ci, _idx, subset in pool:
+        key = frozenset(subset)
+        if key in seen:
+            continue
+        seen.add(key)
+        if origin is not None:
+            origin[len(out)] = ci
+        out.append(subset)
+        if len(out) >= max_sets:
+            break
     return out
 
 
@@ -354,7 +408,10 @@ def solve(inst: dict, opts, deadline: Deadline, diag: dict) -> list[list[str]]:
         diag["candidate_sets"] = len(flat)
         return flat
     origin: dict = {}
-    sets = candidate_sets(components, max_size, opts.max_sets, origin)
+    if opts.best_first:
+        sets = candidate_sets_best_first(components, max_size, opts.max_sets, variables, origin)
+    else:
+        sets = candidate_sets(components, max_size, opts.max_sets, origin)
     diag["candidate_sets"] = len(sets)
     flags: dict[int, tuple[bool, bool, bool]] = {}
     t1 = time.monotonic()
@@ -442,6 +499,10 @@ def main() -> None:
                         help="variant: drop sign twins that cannot hold with positive quantities and rank them last")
     parser.add_argument("--drop-restatements", action="store_true",
                         help="variant: also drop generators that restate the target divided by nonzero quantities")
+    parser.add_argument("--prune-degenerate", action="store_true",
+                        help="variant: drop components on which a declared nonzero quantity vanishes")
+    parser.add_argument("--best-first", action="store_true",
+                        help="variant: visit candidate subsets simplest first (same budget of --max-sets)")
     opts = parser.parse_args()
 
     inst = json.loads(Path(opts.instance).read_text())

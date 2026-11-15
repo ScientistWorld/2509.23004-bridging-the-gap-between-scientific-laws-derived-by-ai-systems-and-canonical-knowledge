@@ -20,6 +20,26 @@ The hidden part also stores a Groebner basis of the complete theory saturated
 by the product of the nonzero quantities (``full_saturated``): the evaluator's
 soundness test asks whether a proposed law holds on every solution of the
 complete theory at which those quantities are nonzero.
+
+Multiple-consequence instances (experiment ``multiple_consequences``)
+----------------------------------------------------------------------
+Two, three or four axioms are removed and the solver receives several observed
+laws: the theory's own target(s) plus laws that an experiment measuring one more
+hidden quantity would observe.  Such a law is the simplest element involving
+that quantity of the elimination ideal of the complete theory onto the measured
+quantities plus it (divided by its nonzero monomial factor when the result is
+still in the ideal).  For a removal of r axioms the instance carries r observed
+laws in total (at least two); extra laws are drawn, in a seeded order, from those
+that do not follow from the remaining axioms wherever the nonzero quantities are
+nonzero.  A removal is kept when
+  * every removed axiom is needed: for each removed axiom some observed law does
+    not follow (wherever the nonzero quantities are nonzero) from the complete
+    theory without that axiom;
+  * no removed axiom lies in <known axioms, observed laws, observed laws divided
+    by their nonzero monomial factors> (the evaluator's nontriviality test).
+Whether each removed axiom follows from the known axioms and the observed laws
+wherever the nonzero quantities are nonzero is recorded in the hidden part
+(``identified``) as a diagnostic.
 """
 
 from __future__ import annotations
@@ -47,6 +67,11 @@ DEFAULT_OUTPUT = HERE / "instances.json"
 SEED = "ai-noether-abduction-test-v1"
 ID_PREFIX = "T"
 MULTI_QUOTA = {2: 4, 3: 3}
+MC_EXPERIMENT = "multiple_consequences"
+MC_QUOTA = {2: 3, 3: 3, 4: 2}
+MC_TRIES = 4
+MC_MAX_TERMS = 30
+MC_MAX_DEGREE = 12
 SCALES = [Fraction(1), Fraction(2), Fraction(3), Fraction(1, 2), Fraction(1, 3), Fraction(3, 2), Fraction(2, 3)]
 SYSTEM_LIMITS = {"max_terms": 5000, "max_degree": 60, "max_exponent": 40, "max_chars": 100000}
 SAT_LIMITS = {"max_terms": 50000, "max_degree": 200, "max_exponent": 200, "max_chars": 5000000, "max_int_digits": 5000}
@@ -283,8 +308,272 @@ def make_instance(name: str, sysd: dict, nonzero: list[str], removed: tuple[int,
     return {"id": inst_id, "num_missing": len(removed), "public": public, "hidden": hidden}
 
 
+# --------------------------------------------------------------------------
+# multiple-consequence instances
+# --------------------------------------------------------------------------
+
+def _simplicity(poly: Poly, text: str) -> tuple:
+    return (poly.num_terms(), poly.total_degree(), len(poly.used_variables()), len(text), text)
+
+
+def consequence_pool(sysd: dict, nonzero: list[str], timeout: float) -> list[dict]:
+    """One observed law per hidden quantity h: the simplest element involving h of
+    the elimination ideal of the complete theory onto (measured variables + h)."""
+    variables = sysd["variables"]
+    measured = set(sysd["measured"])
+    hidden = [v for v in variables if v not in measured]
+    if not hidden:
+        return []
+    head = [f"ring R = 0, ({', '.join(variables)}), dp;", "short = 0;", "option(redSB);", "int gi;", "ideal E;"]
+    for i, a in enumerate(sysd["axioms"], 1):
+        head.append(f"poly a{i} = {a};")
+    head.append("ideal FULL = " + ", ".join(f"a{i}" for i in range(1, len(sysd["axioms"]) + 1)) + ";")
+    out = ""
+    for idx, h in enumerate(hidden):
+        keep = [v for v in variables if v in measured or v == h]
+        elim = [v for v in hidden if v != h]
+        lines = list(head)
+        lines.append(f"E = eliminate(FULL, {'*'.join(elim)});" if elim else "E = FULL;")
+        lines += [
+            f"ring S = 0, ({', '.join(keep)}), dp;",
+            "short = 0;",
+            "option(redSB);",
+            "ideal G = std(imap(R, E));",
+            f"for (gi = 1; gi <= ncols(G); gi++) {{ if (G[gi] != 0) {{ print(\"ELIM {idx} \" + string(G[gi])); }} }}",
+            "quit;",
+        ]
+        try:
+            out += run_singular("\n".join(lines) + "\n", min(timeout, 120.0)) + "\n"
+        except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            print(f"[build] elimination for {h} skipped ({type(exc).__name__})", flush=True)
+    best: dict[int, tuple] = {}
+    for line in out.splitlines():
+        parts = line.strip().split(" ", 2)
+        if len(parts) != 3 or parts[0] != "ELIM":
+            continue
+        idx = int(parts[1])
+        poly = parse_poly(parts[2], variables, SYSTEM_LIMITS)
+        if variables.index(hidden[idx]) not in poly.used_variables():
+            continue
+        if poly.num_terms() > MC_MAX_TERMS or poly.total_degree() > MC_MAX_DEGREE:
+            continue  # keep observed laws of moderate size
+        text = poly.to_string(variables)
+        key = _simplicity(poly, text)
+        if idx not in best or key < best[idx][0]:
+            best[idx] = (key, text)
+    pool = []
+    for idx in sorted(best):
+        text = best[idx][1]
+        stripped = strip_nonzero_content(text, variables, nonzero)
+        pool.append({"source": hidden[idx], "poly": text, "stripped": stripped})
+    # Prefer the law divided by its nonzero monomial factor when that is still in the ideal.
+    todo = [p for p in pool if p["stripped"] != p["poly"]]
+    if todo:
+        lines = [f"ring R = 0, ({', '.join(variables)}), dp;", "short = 0;"]
+        for i, a in enumerate(sysd["axioms"], 1):
+            lines.append(f"poly a{i} = {a};")
+        lines.append("ideal FS = std(ideal(" + ", ".join(f"a{i}" for i in range(1, len(sysd["axioms"]) + 1)) + "));")
+        for k, p in enumerate(todo):
+            lines.append(f'print("MEM {k} " + string(size(reduce({p["stripped"]}, FS)) == 0));')
+        lines.append("quit;")
+        out = run_singular("\n".join(lines) + "\n", timeout)
+        member = {int(r[0]): r[1] == "1" for r in tagged(out, "MEM") if len(r) == 2}
+        for k, p in enumerate(todo):
+            if member.get(k):
+                p["poly"] = p["stripped"]
+    return [{"source": p["source"], "poly": p["poly"]} for p in pool]
+
+
+def mc_flag_script(sysd: dict, nonzero: list[str], laws: list[str], probes: list[tuple[int, ...]]) -> str:
+    """NEED i j: law j does not follow (generically) from the theory without axiom i.
+    INF k j: law j does not follow (generically) from the known axioms of probe k."""
+    lines = preamble(sysd, None, nonzero)
+    for j, q in enumerate(laws):
+        lines.append(f"poly c{j} = {q};")
+    m = len(sysd["axioms"])
+    for i in range(m):
+        rest = [f"a{k + 1}" for k in range(m) if k != i]
+        lines.append(f"G = std(ideal({', '.join(rest) if rest else '0'}) + ideal(1 - t*hnz));")
+        for j in range(len(laws)):
+            lines.append(f'print("NEED {i} {j} " + string(size(reduce(c{j}, G)) != 0));')
+    for k, removed in enumerate(probes):
+        known = [f"a{i + 1}" for i in range(m) if i not in removed]
+        lines.append(f"G = std(ideal({', '.join(known) if known else '0'}) + ideal(1 - t*hnz));")
+        for j in range(len(laws)):
+            lines.append(f'print("INF {k} {j} " + string(size(reduce(c{j}, G)) != 0));')
+    lines.append("quit;")
+    return "\n".join(lines) + "\n"
+
+
+def mc_candidate_script(sysd: dict, nonzero: list[str], laws: list[str],
+                        cands: list[tuple[tuple[int, ...], tuple[int, ...]]]) -> str:
+    """CAND k nt id_1..id_r for (removed, chosen laws): nontriviality and generic identification."""
+    variables = sysd["variables"]
+    lines = preamble(sysd, None, nonzero)
+    for j, q in enumerate(laws):
+        lines.append(f"poly c{j} = {q};")
+        lines.append(f"poly s{j} = {strip_nonzero_content(q, variables, nonzero)};")
+    m = len(sysd["axioms"])
+    for k, (removed, chosen) in enumerate(cands):
+        known = [f"a{i + 1}" for i in range(m) if i not in removed]
+        qs = ", ".join(f"c{j}" for j in chosen)
+        ss = ", ".join(f"s{j}" for j in chosen)
+        lines.append(f"KN = ideal({', '.join(known) if known else '0'});")
+        lines.append(f"KTS = std(KN + ideal({qs}) + ideal({ss}));")
+        lines.append(f"KS = std(KN + ideal({qs}) + ideal(1 - t*hnz));")
+        lines.append("nt = 1;")
+        for i in removed:
+            lines.append(f"if (size(reduce(a{i + 1}, KTS)) == 0) {{ nt = 0; }}")
+        ident = " + \" \" + ".join(f"string(size(reduce(a{i + 1}, KS)) == 0)" for i in removed)
+        lines.append(f'print("CAND {k} " + string(nt) + " " + {ident});')
+    lines.append("quit;")
+    return "\n".join(lines) + "\n"
+
+
+def make_mc_instance(name: str, sysd: dict, nonzero: list[str], removed: tuple[int, ...],
+                     laws: list[dict], chosen: tuple[int, ...], identified: list[bool],
+                     saturated: list[str]) -> dict:
+    variables = sysd["variables"]
+    targets = [laws[j]["poly"] for j in chosen]
+    sources = [laws[j]["source"] for j in chosen]
+    digest = hashlib.sha256(f"{SEED}|mc|{name}|{removed}|{sources}".encode()).hexdigest()[:10]
+    inst_id = f"{ID_PREFIX}C{len(removed)}-{digest}"
+    used: set[int] = set()
+    for q in targets:
+        used |= parse_poly(q, variables, SYSTEM_LIMITS).used_variables()
+    measured = list(sysd["measured"]) + [v for i, v in enumerate(variables)
+                                         if i in used and v not in set(sysd["measured"])]
+    public = {
+        "id": inst_id,
+        "num_missing": len(removed),
+        "variables": variables,
+        "measured_variables": measured,
+        "nonzero_variables": nonzero,
+        "known_axioms": [a for i, a in enumerate(sysd["axioms"]) if i not in removed],
+        "targets": targets,
+    }
+    hidden = {
+        "system": name,
+        "removed_indices": [i + 1 for i in removed],
+        "removed_axioms": [sysd["axioms"][i] for i in removed],
+        "full_axioms": sysd["axioms"],
+        "full_saturated": saturated,
+        "consequence_sources": sources,
+        "identified": identified,
+    }
+    return {"id": inst_id, "experiment": MC_EXPERIMENT, "num_missing": len(removed), "public": public, "hidden": hidden}
+
+
+def build_mc(name: str, sysd: dict, nonzero: list[str], saturated: list[str], timeout: float) -> tuple[list[dict], dict]:
+    """Multiple-consequence instances of one theory (see module docstring)."""
+    rng = random.Random(f"{SEED}|mc|{name}")
+    variables = sysd["variables"]
+    pool = consequence_pool(sysd, nonzero, timeout)
+    laws = [{"source": "target", "poly": q} for q in sysd["targets"]] + pool
+    n_target = len(sysd["targets"])
+    m = len(sysd["axioms"])
+    probes: list[tuple[int, ...]] = []
+    for size, quota in sorted(MC_QUOTA.items()):
+        combos = [c for c in itertools.combinations(range(m), size) if m - size >= 1]
+        rng.shuffle(combos)
+        probes += combos[: 3 * quota + 4]
+    if not probes or not pool:
+        return [], {"pool": len(pool), "instances_by_missing": {}}
+    out = run_singular(mc_flag_script(sysd, nonzero, [l["poly"] for l in laws], probes), timeout)
+    need = {(int(r[0]), int(r[1])): r[2] == "1" for r in tagged(out, "NEED") if len(r) == 3}
+    inf = {(int(r[0]), int(r[1])): r[2] == "1" for r in tagged(out, "INF") if len(r) == 3}
+    if len(need) != m * len(laws) or len(inf) != len(probes) * len(laws):
+        raise RuntimeError("multiple-consequence flags incomplete")
+    cands: list[tuple[tuple[int, ...], tuple[int, ...]]] = []
+    owner: list[int] = []
+    for k, removed in enumerate(probes):
+        size = len(removed)
+        extra = max(1, max(size, 2) - n_target)
+        informative = [j for j in range(n_target, len(laws)) if inf[(k, j)]]
+        if len(informative) < extra:
+            continue
+        order = list(informative)
+        random.Random(f"{SEED}|mc|{name}|{removed}").shuffle(order)
+        seen: set[frozenset] = set()
+        tries = 0
+        for start in range(len(order)):
+            pick = [order[(start + i) % len(order)] for i in range(extra)]
+            key = frozenset(pick)
+            if key in seen:
+                continue
+            seen.add(key)
+            chosen = tuple(range(n_target)) + tuple(sorted(pick))
+            if not any(inf[(k, j)] for j in chosen):
+                continue
+            if not all(any(need[(i, j)] for j in chosen) for i in removed):
+                continue
+            cands.append((removed, chosen))
+            owner.append(k)
+            tries += 1
+            if tries >= MC_TRIES:
+                break
+    if not cands:
+        return [], {"pool": len(pool), "instances_by_missing": {}}
+    out = run_singular(mc_candidate_script(sysd, nonzero, [l["poly"] for l in laws], cands), timeout)
+    flags = {int(r[0]): r[1:] for r in tagged(out, "CAND")}
+    if len(flags) != len(cands):
+        raise RuntimeError("multiple-consequence candidate checks incomplete")
+    picked: dict[tuple[int, ...], tuple[tuple[int, ...], list[bool]]] = {}
+    for c, (removed, chosen) in enumerate(cands):
+        if removed in picked or flags[c][0] != "1":
+            continue
+        picked[removed] = (chosen, [x == "1" for x in flags[c][1:]])
+    instances: list[dict] = []
+    counts: dict[int, int] = {}
+    for size, quota in sorted(MC_QUOTA.items()):
+        for removed in [p for p in probes if len(p) == size]:
+            if counts.get(size, 0) >= quota or removed not in picked:
+                continue
+            chosen, identified = picked[removed]
+            instances.append(make_mc_instance(name, sysd, nonzero, removed, laws, chosen, identified, saturated))
+            counts[size] = counts.get(size, 0) + 1
+    return instances, {
+        "pool": len(pool),
+        "pool_sources": [p["source"] for p in pool],
+        "instances_by_missing": counts,
+        "identified_all": sum(1 for i in instances if all(i["hidden"]["identified"])),
+    }
+
+
+def build_mc_only(output: Path, timeout: float) -> dict:
+    """Replace the multiple-consequence instances of an existing instance file,
+    keeping every other instance byte-identical."""
+    payload = json.loads(output.read_text())
+    legacy = [i for i in payload["instances"] if i.get("experiment") != MC_EXPERIMENT]
+    by_system: dict[str, dict] = {}
+    for inst in legacy:
+        by_system.setdefault(inst["hidden"]["system"], inst)
+    added: list[dict] = []
+    for name in sorted(by_system):
+        ref = by_system[name]
+        raw = parse_system_file(SYSTEMS_DIR / name / "system.txt")
+        sysd = disguise(raw, random.Random(f"{SEED}|{name}"))
+        if sysd["axioms"] != ref["hidden"]["full_axioms"]:
+            raise RuntimeError(f"{name}: rebuilt theory differs from the stored one")
+        nonzero = ref["public"]["nonzero_variables"]
+        try:
+            insts, info = build_mc(name, sysd, nonzero, ref["hidden"]["full_saturated"], timeout)
+        except (RuntimeError, subprocess.TimeoutExpired) as exc:
+            insts, info = [], {"status": f"skipped: {type(exc).__name__}"}
+        added += insts
+        payload["systems"].setdefault(name, {})["multiple_consequences"] = info
+        print(f"[build] {name}: multiple consequences {info.get('instances_by_missing')}", flush=True)
+    payload["instances"] = legacy + added
+    tmp = output.with_suffix(".tmp")
+    tmp.write_text(json.dumps(payload, indent=1, sort_keys=True))
+    tmp.replace(output)
+    print(f"[build] wrote {len(legacy)} + {len(added)} instances to {output}", flush=True)
+    return payload
+
+
 def build(output: Path, timeout: float, only: list[str] | None = None) -> dict:
     instances: list[dict] = []
+    mc_instances: list[dict] = []
     summary: dict = {}
     for sys_dir in sorted(p for p in SYSTEMS_DIR.iterdir() if (p / "system.txt").is_file()):
         name = sys_dir.name
@@ -355,6 +644,15 @@ def build(output: Path, timeout: float, only: list[str] | None = None) -> dict:
             "instances_by_missing": counts,
         }
         print(f"[build] {name}: {counts}", flush=True)
+        if chosen:
+            try:
+                insts, info = build_mc(name, sysd, nonzero, saturated, timeout)
+            except (RuntimeError, subprocess.TimeoutExpired) as exc:
+                insts, info = [], {"status": f"skipped: {type(exc).__name__}"}
+            mc_instances += insts
+            summary[name]["multiple_consequences"] = info
+            print(f"[build] {name}: multiple consequences {info.get('instances_by_missing')}", flush=True)
+    instances += mc_instances
     payload = {"slice": SLICE, "seed": SEED, "systems": summary, "instances": instances}
     output.parent.mkdir(parents=True, exist_ok=True)
     tmp = output.with_suffix(".tmp")
@@ -369,8 +667,13 @@ def main() -> None:
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--timeout", type=float, default=600.0)
     parser.add_argument("--only", nargs="*")
+    parser.add_argument("--mc-only", action="store_true",
+                        help="rebuild only the multiple-consequence instances of an existing file")
     args = parser.parse_args()
-    build(Path(args.output), args.timeout, args.only)
+    if args.mc_only:
+        build_mc_only(Path(args.output), args.timeout)
+    else:
+        build(Path(args.output), args.timeout, args.only)
 
 
 if __name__ == "__main__":

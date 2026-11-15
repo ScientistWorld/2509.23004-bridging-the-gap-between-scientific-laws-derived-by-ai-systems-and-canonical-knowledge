@@ -28,6 +28,8 @@ Per candidate set S (only the first TOP_K sets count):
   recovered   valid, and every removed axiom lies in <known, S> saturated by
               the instance's nonzero variables (equivalent to the complete
               theory wherever physical quantities are nonzero)
+  axioms      for a valid set, the number of removed axioms it recovers in that
+              sense (partial recovery, multiple-consequence experiment)
 A run that crashes, times out or writes malformed output fails the instance,
 which then receives the worst value of every scored metric.
 """
@@ -79,11 +81,18 @@ def resolve_singular() -> str:
 
 SINGULAR = ""  # resolved in evaluate(), before the first solver runs
 
-EXPERIMENTS = {
+EXPERIMENTS_BY_SIZE = {
     1: "single_missing_axiom",
     2: "two_missing_axioms",
     3: "three_missing_axioms",
 }
+MC_EXPERIMENT = "multiple_consequences"
+EXPERIMENTS = list(EXPERIMENTS_BY_SIZE.values()) + [MC_EXPERIMENT]
+
+
+def experiment_of(inst: dict) -> str:
+    """Experiment an instance belongs to (fixed by the instance file)."""
+    return inst.get("experiment") or EXPERIMENTS_BY_SIZE[inst["num_missing"]]
 
 
 # --------------------------------------------------------------------------
@@ -232,7 +241,7 @@ def scoring_script(inst: dict, sets: list) -> str:
         "short = 0;",
         "poly one = 1;",
         f"poly hnz = {hnz};",
-        "int der; int ntr; int rec;",
+        "int der; int ntr; int rec; int nrec;",
         "ideal G; ideal JK; ideal JS;",
     ]
     for i, a in enumerate(hidden["full_axioms"], 1):
@@ -290,16 +299,18 @@ def scoring_script(inst: dict, sets: list) -> str:
             lines.append(f"if (size(reduce({u}, KT)) == 0) {{ ntr = 0; }}")
         sound_all = " && ".join(f"(s{u} == 1)" for u in us)
         miss = " || ".join(f"(size(reduce(r{i}, JK)) != 0)" for i in range(1, nr + 1))
-        lines.append("rec = 0;")
+        lines.append("rec = 0; nrec = 0;")
         lines.append(f"if ((der == 1) && (ntr == 1) && {sound_all}) {{")
-        lines.append("  rec = 1;")
+        lines.append(f"  nrec = {nr};")
         lines.append(f"  if ({miss}) {{")
         lines.append(f"    JS = std(KNOWN + {ideal_s} + ideal(1 - t*hnz));")
+        lines.append("    nrec = 0;")
         for i in range(1, nr + 1):
-            lines.append(f"    if (size(reduce(r{i}, JS)) != 0) {{ rec = 0; }}")
+            lines.append(f"    if (size(reduce(r{i}, JS)) == 0) {{ nrec = nrec + 1; }}")
         lines.append("  }")
+        lines.append(f"  if (nrec == {nr}) {{ rec = 1; }}")
         lines.append("}")
-        lines.append(f'print("SET {k} " + string(der) + " " + string(ntr) + " " + string(rec));')
+        lines.append(f'print("SET {k} " + string(der) + " " + string(ntr) + " " + string(rec) + " " + string(nrec));')
     lines.append("quit;")
     return "\n".join(lines) + "\n"
 
@@ -314,13 +325,13 @@ def score_sets(inst: dict, sets: list) -> tuple[list, str | None]:
     except (subprocess.TimeoutExpired, RuntimeError) as exc:
         return verdicts, f"scoring_failed: {type(exc).__name__}: {str(exc)[:400]}"
     sound: dict[str, bool] = {}
-    flags: dict[int, tuple[bool, bool, bool]] = {}
+    flags: dict[int, tuple[bool, bool, bool, int]] = {}
     for line in out.splitlines():
         parts = line.split()
         if len(parts) == 3 and parts[0] == "POLY":
             sound[parts[1]] = parts[2] == "1"
-        elif len(parts) == 5 and parts[0] == "SET":
-            flags[int(parts[1])] = (parts[2] == "1", parts[3] == "1", parts[4] == "1")
+        elif len(parts) == 6 and parts[0] == "SET":
+            flags[int(parts[1])] = (parts[2] == "1", parts[3] == "1", parts[4] == "1", int(parts[5]))
     names: dict[str, str] = {}
     for s in sets:
         for p in s or []:
@@ -332,7 +343,7 @@ def score_sets(inst: dict, sets: list) -> tuple[list, str | None]:
         if k not in flags or any(names[p] not in sound for p in s):
             error = "scoring_incomplete"
             continue
-        der, ntr, rec = flags[k]
+        der, ntr, rec, nrec = flags[k]
         snd = all(sound[names[p]] for p in s)
         valid = der and snd and ntr
         verdicts[k] = {
@@ -342,12 +353,14 @@ def score_sets(inst: dict, sets: list) -> tuple[list, str | None]:
             "valid": valid,
             "unsound": der and not snd,
             "recovered": valid and rec,
+            "axioms_recovered": nrec if valid else 0,
         }
     return verdicts, error
 
 
 def evaluate_instance(inst: dict, status: str, data) -> dict:
-    record = {"id": inst["id"], "num_missing": inst["num_missing"], "status": status}
+    record = {"id": inst["id"], "experiment": experiment_of(inst), "num_missing": inst["num_missing"],
+              "status": status}
     sets = extract_sets(data, inst["public"]) if status == "ok" else None
     if sets is None:
         record.update({"failed": True, "status": status if status != "ok" else "invalid_output"})
@@ -365,13 +378,15 @@ def evaluate_instance(inst: dict, status: str, data) -> dict:
 
 def instance_outcome(record: dict) -> dict:
     if record["failed"]:
-        return {"failed": 1, "recovered": 0, "valid": 0, "unsound": 1, "top1_recovered": 0, "top1_valid": 0, "sets": 0}
+        return {"failed": 1, "recovered": 0, "valid": 0, "axiom_fraction": 0.0, "unsound": 1, "top1_recovered": 0,
+                "top1_valid": 0, "sets": 0}
     v = [x for x in record["verdicts"]]
     first = v[0] if v else None
     return {
         "failed": 0,
         "recovered": int(any(x and x["recovered"] for x in v)),
         "valid": int(any(x and x["valid"] for x in v)),
+        "axiom_fraction": max([x.get("axioms_recovered", 0) for x in v if x] + [0]) / max(1, record["num_missing"]),
         # sets the evaluator could not verify count against the constraint
         "unsound": int(any(x and x["unsound"] for x in v) or bool(record.get("scoring_error"))),
         "top1_recovered": int(bool(first and first["recovered"])),
@@ -380,13 +395,15 @@ def instance_outcome(record: dict) -> dict:
     }
 
 
-def aggregate(records: list[dict], size: int, total: int) -> dict:
-    outs = [instance_outcome(r) for r in records if r["num_missing"] == size]
+def aggregate(records: list[dict], experiment: str, total: int) -> dict:
+    outs = [instance_outcome(r) for r in records if r["experiment"] == experiment]
     n = total
     def rate(key: str) -> float:
         return sum(o[key] for o in outs) / n if n else 0.0
-    top1_key = "top1_recovered" if size == 1 else "top1_valid"
-    return {
+    # Recovery is the goal of the single-axiom and multiple-consequence experiments;
+    # with one observed law and several missing axioms only an explanation is.
+    top1_key = "top1_recovered" if experiment in ("single_missing_axiom", MC_EXPERIMENT) else "top1_valid"
+    row = {
         "recovery_rate": rate("recovered"),
         "explanation_rate": rate("valid"),
         "top1_success_rate": rate(top1_key),
@@ -395,6 +412,9 @@ def aggregate(records: list[dict], size: int, total: int) -> dict:
         "mean_candidate_sets": sum(o["sets"] for o in outs) / n if n else 0.0,
         "instances": n,
     }
+    if experiment == MC_EXPERIMENT:
+        row["axiom_recovery_rate"] = rate("axiom_fraction")
+    return row
 
 
 # --------------------------------------------------------------------------
@@ -409,14 +429,17 @@ def evaluate(args) -> dict:
     global SINGULAR
     SINGULAR = resolve_singular()
     instances = load_instances(Path(args.instances))
+    if args.experiments:
+        instances = [i for i in instances if experiment_of(i) in set(args.experiments)]
     if args.max_instances:
         kept, seen = [], {}
         for inst in instances:
-            seen[inst["num_missing"]] = seen.get(inst["num_missing"], 0) + 1
-            if seen[inst["num_missing"]] <= args.max_instances:
+            exp = experiment_of(inst)
+            seen[exp] = seen.get(exp, 0) + 1
+            if seen[exp] <= args.max_instances:
                 kept.append(inst)
         instances = kept
-    totals = {size: sum(1 for i in instances if i["num_missing"] == size) for size in EXPERIMENTS}
+    totals = {exp: sum(1 for i in instances if experiment_of(i) == exp) for exp in EXPERIMENTS}
     solvers = discover_solvers(Path(args.solvers_dir))
     if args.only:
         solvers = [(n, p) for n, p in solvers if n in set(args.only)]
@@ -425,7 +448,7 @@ def evaluate(args) -> dict:
         "slice": SLICE,
         "time_limit_seconds": TIME_LIMIT_SECONDS,
         "top_k": TOP_K,
-        "experiments": {name: {"results": {}} for name in EXPERIMENTS.values()},
+        "experiments": {name: {"results": {}} for name in EXPERIMENTS},
     }
     details: dict = {}
     for name, path in solvers:
@@ -460,8 +483,8 @@ def evaluate(args) -> dict:
                 f"rec={out['recovered']} valid={out['valid']} unsound={out['unsound']} t={elapsed:.1f}s",
                 flush=True,
             )
-        for size, exp in EXPERIMENTS.items():
-            scores["experiments"][exp]["results"][name] = aggregate(records, size, totals[size])
+        for exp in EXPERIMENTS:
+            scores["experiments"][exp]["results"][name] = aggregate(records, exp, totals[exp])
         details[name] = {"records": records, "seconds": round(time.monotonic() - started, 1)}
         print(f"[eval {SLICE}] {name} done in {details[name]['seconds']}s", flush=True)
     if args.details_out:
@@ -477,6 +500,7 @@ def main() -> None:
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
     parser.add_argument("--only", nargs="*", help="evaluate only these solver names (merged into --output)")
     parser.add_argument("--max-instances", type=int, default=0, help="smoke test: first N per experiment")
+    parser.add_argument("--experiments", nargs="*", help="development: only instances of these experiments")
     parser.add_argument("--cache-dir", default="", help="optional resumable cache of solver outputs")
     parser.add_argument("--details-out", default="", help="optional per-instance verdict dump")
     args = parser.parse_args()
