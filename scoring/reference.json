@@ -1,5 +1,5 @@
 {
-  "_note": "Scored rows under results are the gym's own runs on the held-out slice, copied from scoring/scores_test.json (iteration 12: the reference and both baselines rerun end to end from the final code; three reference draws agree to within one instance per metric, see HARDENING.md). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate in two_missing_axioms / three_missing_axioms (decoupled recovery from a single observed law) is a diagnostic; decoupled recovery is scored in multiple_consequences, where the observed laws determine the removed axioms.",
+  "_note": "Scored rows under results are the gym's own runs on the held-out slice, copied from scoring/scores_test.json (iteration 12, fresh run of the final code; Singular's minAss returns different generating sets from run to run, which moves the weighted score by about +-0.005 on the first three experiments and not at all on multiple_consequences, see HARDENING.md). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate in the single-target experiments (decoupled recovery) is a diagnostic: 0 for every honest method there. Weights (0.30/0.25/0.20/0.25) were changed in iteration 12 when multiple_consequences was added.",
   "_paper_reported": {
     "single_axiom_recovery": {
       "value": 0.9733,
@@ -276,12 +276,12 @@
         "axiom_recovery_rate": {
           "coefficient": 0.0,
           "higher_is_better": true,
-          "description": "Diagnostic (not scored): mean over instances of the largest fraction of the removed axioms that one valid candidate set among the first five recovers. Equal to recovery_rate in this experiment for the same reason as explanation_rate."
+          "description": "Diagnostic: mean over instances of the largest fraction of the removed axioms that one valid candidate set among the first five recovers. Every instance here is identifiable (the observed laws and the known axioms imply each removed axiom wherever the nonzero quantities are nonzero), so a valid set recovers every removed axiom and this equals recovery_rate; coefficient 0 to avoid counting recovery twice."
         },
         "explanation_rate": {
           "coefficient": 0.0,
           "higher_is_better": true,
-          "description": "Diagnostic (not scored): fraction of instances where one of the first five candidate sets is a valid explanation (derives every observed law, sound, nontrivial). Here the observed laws determine the removed axioms, so every valid explanation also recovers them: this equals recovery_rate and would only double its weight."
+          "description": "Diagnostic: fraction of instances where one of the first five candidate sets is a valid explanation (derives every observed law, sound, nontrivial). On these identifiable instances a valid set always recovers every removed axiom, so this equals recovery_rate; coefficient 0."
         },
         "top1_success_rate": {
           "coefficient": 0.3,
