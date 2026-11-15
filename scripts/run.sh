@@ -17,6 +17,12 @@ python eval/train/evaluate.py --solvers-dir hardening/solvers_mc \
   --output hardening/scores_train_variants_final.json --details-out eval/train/_runs/variants_final_details.json \
   --cache-dir eval/train/_cache/iter12_final_h 2>&1 | filter
 
+stamp "hidden test: git-history shortcut against the final committed instances"
+FORGE_PATH=hardening/scores_test_gitlookup_final.json python eval/test/evaluate.py \
+  --solvers-dir hardening/solvers_shortcuts --only shortcut_oracle_git_lookup \
+  --output hardening/scores_test_gitlookup_final.json --details-out eval/test/_runs/gitlookup_final_details.json \
+  --cache-dir eval/test/_cache/iter12_final_s 2>&1 | filter
+
 stamp "summaries"
 python hardening/mc_report.py summary scoring/scores_train.json eval/train/_runs/gym_details.json \
   hardening/scores_train_variants_final.json eval/train/_runs/variants_final_details.json \
