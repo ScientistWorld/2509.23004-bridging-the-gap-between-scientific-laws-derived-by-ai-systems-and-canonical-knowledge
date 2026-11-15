@@ -10,8 +10,8 @@
   ground truth are fixed by `eval/`. Do not modify `eval/`, the instance files,
   or the scoring files; scores written anywhere else are not read.
 * Do not read evaluator files (`eval/`, instance files, cached outputs, or their
-  copies in the repository history) from a solver, and do not hardcode benchmark
-  laws, removed axioms or reference outputs.
+  copies in the repository history or in job logs under `jobs/`) from a solver,
+  and do not hardcode benchmark laws, removed axioms or reference outputs.
   The held-out theories are not available to methods.
 * Proposed axioms must be justified by the instance itself; the evaluator checks
   them against the complete theory, so contradictions, zero-forcing laws, copies

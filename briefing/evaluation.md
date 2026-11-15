@@ -50,6 +50,9 @@ checks are exact Groebner basis computations in Singular:
 * **recovered** = valid, and every removed axiom lies in the ideal of the known
   axioms plus the set, saturated by the declared nonzero variables.
 
+With several targets (multiple-consequence experiment) a set derives only when
+it makes every target derivable.
+
 A run that crashes, exceeds the time limit, or writes malformed JSON fails the
 instance: it receives the worst value in every scored metric.
 
@@ -57,10 +60,11 @@ instance: it receives the worst value in every scored metric.
 
 | metric | direction | meaning |
 |---|---|---|
-| `recovery_rate` | higher | instances where some considered set is recovered (scored for single-axiom removals; a diagnostic with coefficient 0 for multi-axiom removals) |
-| `explanation_rate` | higher | instances where some considered set is valid |
-| `top1_success_rate` | higher | instances whose first set succeeds (recovered for single-axiom, valid for multi-axiom) |
+| `recovery_rate` | higher | instances where some considered set is recovered (scored for single-axiom and multiple-consequence removals; a diagnostic with coefficient 0 for the single-target two- and three-axiom removals) |
+| `explanation_rate` | higher | instances where some considered set is valid (scored for two- and three-axiom removals; elsewhere a diagnostic) |
+| `top1_success_rate` | higher | instances whose first set succeeds (recovered for single-axiom and multiple-consequence instances, valid for two- and three-axiom instances) |
 | `unsound_rate` | lower | instances where some considered set derives the targets but is unsound, plus failed instances and instances whose sets the evaluator could not verify |
+| `axiom_recovery_rate` | higher | multiple-consequence only: mean fraction of the removed axioms recovered by the best valid set; a diagnostic (every instance is identifiable, so it equals `recovery_rate`) |
 | `failed_rate`, `mean_candidate_sets`, `instances` | — | diagnostics, not scored |
 
 Denominators are the fixed instance counts of the slice. Every solver on disk
@@ -68,9 +72,13 @@ gets a row in every experiment.
 
 ## Experiments and ranking
 
-`single_missing_axiom` (weight 0.40, primary `recovery_rate`),
-`two_missing_axioms` (0.35, primary `explanation_rate`),
-`three_missing_axioms` (0.25, primary `explanation_rate`). A method's rank sums,
+`single_missing_axiom` (weight 0.30, primary `recovery_rate`; 64 held-out
+instances), `two_missing_axioms` (0.25, primary `explanation_rate`; 55),
+`three_missing_axioms` (0.20, primary `explanation_rate`; 40),
+`multiple_consequences` (0.25, primary `recovery_rate`; 59 instances with two to
+five removed axioms and several observed laws). Every experiment also scores
+`top1_success_rate` (coefficient 0.3) and the constraint `unsound_rate` (0.3).
+A method's rank sums,
 over experiments and scored metrics, weight times coefficient magnitude times
 its improvement over the reference in the metric's better direction, each
 metric normalized by its spread across ranked attempts. Coefficients are in

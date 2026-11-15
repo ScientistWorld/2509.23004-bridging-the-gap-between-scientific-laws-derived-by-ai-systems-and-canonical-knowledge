@@ -1,5 +1,5 @@
 {
-  "_note": "Scored rows under results are the gym's own runs on the held-out slice, copied from scoring/scores_test.json (iteration 12, fresh run of the final code; Singular's minAss returns different generating sets from run to run, which moves the weighted score by about +-0.005 on the first three experiments and not at all on multiple_consequences, see HARDENING.md). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate in the single-target experiments (decoupled recovery) is a diagnostic: 0 for every honest method there. Weights (0.30/0.25/0.20/0.25) were changed in iteration 12 when multiple_consequences was added.",
+  "_note": "Scored rows under results are the gym's own runs on the held-out slice, copied from scoring/scores_test.json (iteration 13, fresh run of the final code, whose reference tests every subset of each component's generators up to a fixed count of 4000 subsets instead of the earlier 400; see HARDENING.md). Singular's minAss returns different generating sets from run to run, which moves the weighted score by about +-0.005 on the first three experiments and not at all on multiple_consequences; this run is the median of four draws. The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate in the single-target experiments (decoupled recovery) is a diagnostic: 0 for every honest method there. Weights (0.30/0.25/0.20/0.25) were set in iteration 12 when multiple_consequences was added.",
   "_paper_reported": {
     "single_axiom_recovery": {
       "value": 0.9733,
@@ -80,9 +80,9 @@
           "explanation_rate": 1.0,
           "failed_rate": 0.0,
           "instances": 64,
-          "mean_candidate_sets": 3.09375,
+          "mean_candidate_sets": 3.15625,
           "recovery_rate": 1.0,
-          "top1_success_rate": 0.84375,
+          "top1_success_rate": 0.828125,
           "unsound_rate": 0.34375
         },
         "enumerative_baseline": {
@@ -158,10 +158,10 @@
           "explanation_rate": 0.6545454545454545,
           "failed_rate": 0.0,
           "instances": 55,
-          "mean_candidate_sets": 1.7818181818181817,
+          "mean_candidate_sets": 1.7636363636363637,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.6,
-          "unsound_rate": 0.16363636363636364
+          "unsound_rate": 0.14545454545454545
         },
         "enumerative_baseline": {
           "type": "baseline",
@@ -236,10 +236,10 @@
           "explanation_rate": 0.3,
           "failed_rate": 0.0,
           "instances": 40,
-          "mean_candidate_sets": 0.625,
+          "mean_candidate_sets": 0.775,
           "recovery_rate": 0.0,
-          "top1_success_rate": 0.3,
-          "unsound_rate": 0.05
+          "top1_success_rate": 0.275,
+          "unsound_rate": 0.075
         },
         "enumerative_baseline": {
           "type": "baseline",
@@ -317,13 +317,13 @@
       "results": {
         "ai_noether_exact": {
           "type": "proposed",
-          "axiom_recovery_rate": 0.6949152542372882,
-          "explanation_rate": 0.6949152542372882,
+          "axiom_recovery_rate": 0.864406779661017,
+          "explanation_rate": 0.864406779661017,
           "failed_rate": 0.0,
           "instances": 59,
-          "mean_candidate_sets": 2.6610169491525424,
-          "recovery_rate": 0.6949152542372882,
-          "top1_success_rate": 0.6949152542372882,
+          "mean_candidate_sets": 3.694915254237288,
+          "recovery_rate": 0.864406779661017,
+          "top1_success_rate": 0.864406779661017,
           "unsound_rate": 0.0
         },
         "enumerative_baseline": {

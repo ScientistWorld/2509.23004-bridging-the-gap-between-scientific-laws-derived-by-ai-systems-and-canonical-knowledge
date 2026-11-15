@@ -1,8 +1,14 @@
 # Reproduction Milestones
 
-**Current: core_claim_plus**
+**Current: secondary_claims**
 
 ## Progress Log
+
+### [2026-11-15 11:00] - secondary_claims
+- Hardening (iterations 12-13): added the scored `multiple_consequences` experiment (paper Section 3.3). It has 59 held-out and 42 train identifiable removals of 2-5 axioms with several observed laws, including four larger held-out theories. The reference recovers 0.864 on test and 0.857 on train. A sparse-law variant recovers 0.949 on test (+6/-1 paired) and 1.000 on train.
+- Reference restored to the paper's every-subset Reason step (fixed 4000-subset count instead of 400; 5x more ties). Weights 0.30/0.25/0.20/0.25.
+- Reproduced in the paper's direction: single-axiom recovery (1.000), coupled multi-axiom explanation (two 0.655 / three 0.300 on test; 0.500 / 0.394 on train), and exact recovery from multiple consequences. Baselines are far below. Noisy pathway and LLM/cvc5 baselines are not reproduced.
+- Held-out example lines removed from job logs; held-out solver caches deleted. The git-history answer leak remains (+0.41), left to the shortcut grader. Details in HARDENING.md.
 
 ### [2026-11-11 11:00] - core_claim_plus
 - Hardening (iteration 11): soundness is now judged wherever the physically nonzero quantities are nonzero (the old test flagged true laws such as virial relations as false); nontriviality also excludes the target divided by nonzero factors; builders reject removals whose target still follows generically.

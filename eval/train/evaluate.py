@@ -2,7 +2,8 @@
 """Visible train evaluator for polynomial abduction solvers.
 
 The evaluator owns everything on the scoring side: the instances (built from
-complete theories that exist only in ``eval/test``), the per-instance time
+the public theories in ``data/systems_and_phenomena`` and
+``data/systems_mc_train``), the per-instance time
 limit, the candidate budget, and the ground truth.  It runs every solver found
 in ``scripts/solvers/*.sh`` on every instance:
 

@@ -13,7 +13,10 @@ which runs `method/exact_abduction_runner.py` on one instance:
    `<known axioms, targets>` carry no new information and are dropped (as in the
    official code's `generate_candidate_sets`).
 3. **Reason**: every subset of one component's generators with at most
-   `num_missing` elements is added to the known axioms. A set is accepted when
+   `num_missing` elements is added to the known axioms (smallest subsets
+   first; at most 4000 subsets per instance, a fixed count that covers every
+   subset of all held-out instances but two multiple-consequence ones, so the
+   result does not depend on machine speed; the official code has no cap). A set is accepted when
    each target lies in the elimination ideal onto the target's measured
    variables (weak test, ideal membership) and the augmented theory does not
    force a declared nonzero quantity (or 1) to zero (degeneracy filtering,
@@ -35,13 +38,19 @@ in two other monomial orders), `--saturation-only` (one saturated component
 instead of a primary decomposition), `--canonical` (reduced Groebner basis of
 each prime as its generators), `--dim-rank` (top-dimensional components first),
 `--sign-prior` (sign-based filtering and ranking of candidates),
-`--drop-restatements`, `--no-rank`, `--max-set-size`, `--no-degenerate-filter`,
-`--no-reason`; `AINOETHER_NO_ASLR=1` runs Singular with a fixed memory layout.
+`--drop-restatements`, `--prune-degenerate` (skip components on which a
+nonzero quantity vanishes), `--best-first` (simplest subsets first),
+`--greedy-closure` (per component, a greedy completion by independent simplest
+generators), `--sparse-laws` (two-term laws of the saturated encoded ideal as one
+more component), `--max-sets` (subset budget), `--no-rank`, `--max-set-size`,
+`--no-degenerate-filter`, `--no-reason`; `AINOETHER_NO_ASLR=1` runs Singular
+with a fixed memory layout.
 
 Singular's `minAss` returns different (equally valid) generating sets of the
 same prime components from run to run, also with a fixed `--random` seed and a
 fixed memory layout, as in the official code. The reference's outputs therefore
-vary on about 15% of instances; its weighted score moves by about +-0.005.
+vary on about 15% of instances; its weighted score moves by about +-0.005 (not
+at all on the multiple-consequence experiment).
 
 The paper's noisy pathway (numerical irreducible decomposition with witness
 sets, symbolic regression, KeYmaera X existential reasoning) is not

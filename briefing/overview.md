@@ -15,12 +15,17 @@ add information, and does it recover the removed axioms.
 
 * Train slice: the paper's twelve public benchmark theories (75 single-axiom
   removals as in the paper's Table 6, plus samples of two- and three-axiom
-  removals as in Table 3).
-* Test slice (held out): fourteen further physical theories that exist only on
+  removals as in Table 3), and four larger public extensions of them.
+* Test slice (held out): eighteen further physical theories that exist only on
   the evaluator side.
+* Four experiments: one, two or three missing axioms with one observed law, and
+  two to five missing axioms with several observed laws that together determine
+  them (the paper's multiple-consequence setting, Section 3.3).
 
 The reference solver implements the paper's exact Encode–Decompose–Reason
 pipeline; the baselines are an empty answer and a syntax-guided enumerator.
 The reference recovers every held-out single removal but often ranks a false
 alternative first or proposes false laws next to the right one; two- and
-three-axiom removals are where it falls short most, as in the paper.
+three-axiom removals are where it falls short most, as in the paper. With
+several observed laws it recovers most removed axioms exactly, but misses some
+of the four- and five-axiom removals.

@@ -1,8 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
-milestone: core_claim_plus
-notes: "Iteration 13 final job: reference restored to the paper's every-subset enumeration (fixed 4000-subset count instead of 400); hidden test of gym solvers, reference redraws, old/5x budgets, better/weaker variants, brute force and all shortcut probes; train gym + variants; rank summaries; validate"
+milestone: secondary_claims
+notes: "Final hardening: scored multiple_consequences experiment (2-5 removed axioms, larger held-out theories; reference 0.864, sparse-law variant 0.949, +6/-1, zero reference noise there); reference restored to the paper's every-subset Reason step (4000-subset count; 400 now -0.057, 20000 ties); better variants +0.033..+0.080 vs noise span 0.0056; all shortcut probes at the bottom except git-history (+0.41, left to grader); held-out examples redacted from job logs; docs, reference.json, HARDENING.md updated; validate passes"

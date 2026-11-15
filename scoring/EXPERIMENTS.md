@@ -2,10 +2,10 @@
 
 All experiments use the same interface and checks (see `briefing/evaluation.md`).
 Each instance removes axioms from a complete polynomial theory; a solver sees the
-remaining axioms, the target law(s), which variables are measured or nonzero, and
-how many axioms are missing. Only the first five ranked candidate sets count.
+remaining axioms, the observed law(s), which variables are measured or nonzero,
+and how many axioms are missing. Only the first five ranked candidate sets count.
 
-## single_missing_axiom (weight 0.40)
+## single_missing_axiom (weight 0.30)
 
 Establishes whether a method can reconstruct one missing law of a theory from
 the rest of the theory and an observed consequence, without data for the missing
@@ -16,7 +16,7 @@ near-complete success on its benchmark, so this experiment mainly checks that a
 method keeps this capability, ranks the right law first and does not propose
 false laws alongside it.
 
-## two_missing_axioms (weight 0.35)
+## two_missing_axioms (weight 0.25)
 
 Establishes whether a method can still explain an observed law when two laws are
 missing. The targets often do not pin down each missing law separately, so the
@@ -25,13 +25,28 @@ that makes the targets derivable, is true in the complete theory, and adds
 information beyond the targets. Exact recovery of both laws separately is
 reported as a diagnostic only: with a single observed target it is out of reach
 for every method tried so far. The paper reports roughly half of such cases
-solved; this is where better methods can show headroom.
+solved.
 
-## three_missing_axioms (weight 0.25)
+## three_missing_axioms (weight 0.20)
 
 The same question with three missing laws (at most three proposed polynomials).
-The paper reports roughly a quarter of such cases solved; most of the remaining
-headroom of the gym is here.
+The paper reports roughly a quarter of such cases solved.
+
+## multiple_consequences (weight 0.25)
+
+Establishes whether a method can recover several missing laws exactly, not just
+a coupled substitute, when more of their consequences are observed. Two to five
+axioms are removed and several observed laws are given (the theory's target plus
+laws that further experiments, each also measuring one otherwise unmeasured
+quantity, would observe). The observed laws are chosen so that, together with
+the remaining axioms, they determine every removed axiom on the physical locus,
+so every instance is solvable in principle. The primary metric is exact recovery
+of all removed axioms by one set of at most `num_missing` polynomials. The paper
+shows this effect of multiple consequences on one relativistic theory; here it is
+measured across many theories, including four larger held-out theories (8-10
+axioms, 12-16 variables) and removals of four and five axioms, beyond the
+paper's scale. Most of the gym's recovery headroom is in the four- and
+five-axiom removals of this experiment.
 
 ## Constraint in every experiment
 
@@ -46,4 +61,4 @@ by asserting too much; true laws in an unfamiliar form are not penalized.
 
 `no_abduction_baseline` keeps the incomplete theory (scores zero on every
 benefit metric). `enumerative_baseline` tries small binomial laws by brute force
-for a few seconds per instance.
+(a fixed number of grammar candidates per instance).
