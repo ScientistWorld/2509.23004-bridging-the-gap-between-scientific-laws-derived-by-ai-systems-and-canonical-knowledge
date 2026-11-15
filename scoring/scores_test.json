@@ -3,13 +3,13 @@
     "multiple_consequences": {
       "results": {
         "ai_noether_exact": {
-          "axiom_recovery_rate": 0.6949152542372882,
-          "explanation_rate": 0.6949152542372882,
+          "axiom_recovery_rate": 0.864406779661017,
+          "explanation_rate": 0.864406779661017,
           "failed_rate": 0.0,
           "instances": 59,
-          "mean_candidate_sets": 2.6610169491525424,
-          "recovery_rate": 0.6949152542372882,
-          "top1_success_rate": 0.6949152542372882,
+          "mean_candidate_sets": 3.694915254237288,
+          "recovery_rate": 0.864406779661017,
+          "top1_success_rate": 0.864406779661017,
           "unsound_rate": 0.0
         },
         "enumerative_baseline": {
@@ -40,9 +40,9 @@
           "explanation_rate": 1.0,
           "failed_rate": 0.0,
           "instances": 64,
-          "mean_candidate_sets": 3.09375,
+          "mean_candidate_sets": 3.15625,
           "recovery_rate": 1.0,
-          "top1_success_rate": 0.84375,
+          "top1_success_rate": 0.828125,
           "unsound_rate": 0.34375
         },
         "enumerative_baseline": {
@@ -71,10 +71,10 @@
           "explanation_rate": 0.3,
           "failed_rate": 0.0,
           "instances": 40,
-          "mean_candidate_sets": 0.625,
+          "mean_candidate_sets": 0.775,
           "recovery_rate": 0.0,
-          "top1_success_rate": 0.3,
-          "unsound_rate": 0.05
+          "top1_success_rate": 0.275,
+          "unsound_rate": 0.075
         },
         "enumerative_baseline": {
           "explanation_rate": 0.05,
@@ -102,10 +102,10 @@
           "explanation_rate": 0.6545454545454545,
           "failed_rate": 0.0,
           "instances": 55,
-          "mean_candidate_sets": 1.7818181818181817,
+          "mean_candidate_sets": 1.7636363636363637,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.6,
-          "unsound_rate": 0.16363636363636364
+          "unsound_rate": 0.14545454545454545
         },
         "enumerative_baseline": {
           "explanation_rate": 0.09090909090909091,

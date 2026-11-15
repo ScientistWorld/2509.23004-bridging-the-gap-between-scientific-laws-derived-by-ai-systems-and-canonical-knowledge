@@ -3,14 +3,14 @@
     "multiple_consequences": {
       "results": {
         "ai_noether_exact": {
-          "axiom_recovery_rate": 0.5634920634920635,
-          "explanation_rate": 0.5952380952380952,
+          "axiom_recovery_rate": 0.8571428571428571,
+          "explanation_rate": 0.8571428571428571,
           "failed_rate": 0.0,
           "instances": 42,
-          "mean_candidate_sets": 1.9523809523809523,
-          "recovery_rate": 0.5476190476190477,
-          "top1_success_rate": 0.5,
-          "unsound_rate": 0.19047619047619047
+          "mean_candidate_sets": 3.0238095238095237,
+          "recovery_rate": 0.8571428571428571,
+          "top1_success_rate": 0.8333333333333334,
+          "unsound_rate": 0.0
         },
         "enumerative_baseline": {
           "axiom_recovery_rate": 0.0,
@@ -40,9 +40,9 @@
           "explanation_rate": 1.0,
           "failed_rate": 0.0,
           "instances": 58,
-          "mean_candidate_sets": 3.206896551724138,
+          "mean_candidate_sets": 3.3793103448275863,
           "recovery_rate": 1.0,
-          "top1_success_rate": 0.8275862068965517,
+          "top1_success_rate": 0.8448275862068966,
           "unsound_rate": 0.46551724137931033
         },
         "enumerative_baseline": {
@@ -71,10 +71,10 @@
           "explanation_rate": 0.3939393939393939,
           "failed_rate": 0.0,
           "instances": 33,
-          "mean_candidate_sets": 1.303030303030303,
+          "mean_candidate_sets": 1.6363636363636365,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.30303030303030304,
-          "unsound_rate": 0.06060606060606061
+          "unsound_rate": 0.09090909090909091
         },
         "enumerative_baseline": {
           "explanation_rate": 0.0,
