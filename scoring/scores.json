@@ -1,23 +1,57 @@
 {
   "experiments": {
+    "multiple_consequences": {
+      "results": {
+        "ai_noether_exact": {
+          "axiom_recovery_rate": 0.5634920634920635,
+          "explanation_rate": 0.5952380952380952,
+          "failed_rate": 0.0,
+          "instances": 42,
+          "mean_candidate_sets": 1.9523809523809523,
+          "recovery_rate": 0.5476190476190477,
+          "top1_success_rate": 0.5,
+          "unsound_rate": 0.19047619047619047
+        },
+        "enumerative_baseline": {
+          "axiom_recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 42,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        },
+        "no_abduction_baseline": {
+          "axiom_recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 42,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        }
+      }
+    },
     "single_missing_axiom": {
       "results": {
         "ai_noether_exact": {
           "explanation_rate": 1.0,
           "failed_rate": 0.0,
           "instances": 58,
-          "mean_candidate_sets": 3.3793103448275863,
+          "mean_candidate_sets": 3.206896551724138,
           "recovery_rate": 1.0,
-          "top1_success_rate": 0.8448275862068966,
+          "top1_success_rate": 0.8275862068965517,
           "unsound_rate": 0.46551724137931033
         },
         "enumerative_baseline": {
-          "explanation_rate": 0.2413793103448276,
+          "explanation_rate": 0.27586206896551724,
           "failed_rate": 0.0,
           "instances": 58,
-          "mean_candidate_sets": 0.7931034482758621,
-          "recovery_rate": 0.2413793103448276,
-          "top1_success_rate": 0.22413793103448276,
+          "mean_candidate_sets": 0.8275862068965517,
+          "recovery_rate": 0.27586206896551724,
+          "top1_success_rate": 0.25862068965517243,
           "unsound_rate": 0.22413793103448276
         },
         "no_abduction_baseline": {

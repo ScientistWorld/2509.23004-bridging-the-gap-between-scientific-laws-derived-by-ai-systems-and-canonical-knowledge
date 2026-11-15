@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Exploration of the new multiple-consequence experiment: build instances (test+train), oracle check, reference draws, search variants, binomial brute-force probe, baselines and a shortcut probe on it."
+notes: "Build held-out multiple-consequence instances (resumable, backed up), oracle check, gym solvers on all four experiments (test+train, fresh), reference draws, honest variants, binomial brute-force and shortcut probes."
