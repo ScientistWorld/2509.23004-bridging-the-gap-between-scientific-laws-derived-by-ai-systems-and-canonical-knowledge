@@ -24,23 +24,23 @@ complete theory at which those quantities are nonzero.
 
 Multiple-consequence instances (experiment ``multiple_consequences``)
 ----------------------------------------------------------------------
-Two, three or four axioms are removed and the solver receives several observed
-laws: the theory's own target(s) plus laws that an experiment measuring one more
+Two to five axioms are removed and the solver receives several observed laws:
+the theory's own target(s) plus laws that an experiment measuring one more
 hidden quantity would observe.  Such a law is the simplest element involving
 that quantity of the elimination ideal of the complete theory onto the measured
 quantities plus it (divided by its nonzero monomial factor when the result is
-still in the ideal).  For a removal of r axioms the instance carries r observed
-laws in total (at least two); extra laws are drawn, in a seeded order, from those
-that do not follow from the remaining axioms wherever the nonzero quantities are
-nonzero.  A removal is kept when
+still in the ideal).  Extra laws are added, in a seeded order and only among
+those that do not follow from the remaining axioms wherever the nonzero
+quantities are nonzero, until the observed laws determine the removed axioms:
+every removed axiom follows from the known axioms and the observed laws wherever
+the nonzero quantities are nonzero (the situation of the paper's Theorem 1, in
+which a prime component of <known, observed laws> contains the missing axioms).
+A removal is kept only when such a set of observed laws exists and
   * every removed axiom is needed: for each removed axiom some observed law does
     not follow (wherever the nonzero quantities are nonzero) from the complete
     theory without that axiom;
   * no removed axiom lies in <known axioms, observed laws, observed laws divided
     by their nonzero monomial factors> (the evaluator's nontriviality test).
-Whether each removed axiom follows from the known axioms and the observed laws
-wherever the nonzero quantities are nonzero is recorded in the hidden part
-(``identified``) as a diagnostic.
 """
 
 from __future__ import annotations
@@ -69,8 +69,8 @@ SEED = "ai-noether-abduction-train-v1"
 ID_PREFIX = "V"
 MULTI_QUOTA = {2: 3, 3: 3}
 MC_EXPERIMENT = "multiple_consequences"
-MC_QUOTA = {2: 3, 3: 3, 4: 2}
-MC_TRIES = 4
+MC_QUOTA = {2: 2, 3: 3, 4: 3, 5: 3}
+MC_ORDERS = 2
 MC_MAX_TERMS = 30
 MC_MAX_DEGREE = 12
 SCALES = [Fraction(1), Fraction(2), Fraction(3), Fraction(1, 2), Fraction(1, 3), Fraction(3, 2), Fraction(2, 3)]
@@ -477,7 +477,7 @@ def build_mc(name: str, sysd: dict, nonzero: list[str], saturated: list[str], ti
     for size, quota in sorted(MC_QUOTA.items()):
         combos = [c for c in itertools.combinations(range(m), size) if m - size >= 1]
         rng.shuffle(combos)
-        probes += combos[: 3 * quota + 4]
+        probes += combos[: 4 * quota + 4]
     if not probes or not pool:
         return [], {"pool": len(pool), "instances_by_missing": {}}
     out = run_singular(mc_flag_script(sysd, nonzero, [l["poly"] for l in laws], probes), timeout)
@@ -486,33 +486,22 @@ def build_mc(name: str, sysd: dict, nonzero: list[str], saturated: list[str], ti
     if len(need) != m * len(laws) or len(inf) != len(probes) * len(laws):
         raise RuntimeError("multiple-consequence flags incomplete")
     cands: list[tuple[tuple[int, ...], tuple[int, ...]]] = []
-    owner: list[int] = []
+    seen_cands: set = set()
     for k, removed in enumerate(probes):
-        size = len(removed)
-        extra = max(1, max(size, 2) - n_target)
         informative = [j for j in range(n_target, len(laws)) if inf[(k, j)]]
-        if len(informative) < extra:
-            continue
-        order = list(informative)
-        random.Random(f"{SEED}|mc|{name}|{removed}").shuffle(order)
-        seen: set[frozenset] = set()
-        tries = 0
-        for start in range(len(order)):
-            pick = [order[(start + i) % len(order)] for i in range(extra)]
-            key = frozenset(pick)
-            if key in seen:
-                continue
-            seen.add(key)
-            chosen = tuple(range(n_target)) + tuple(sorted(pick))
-            if not any(inf[(k, j)] for j in chosen):
-                continue
-            if not all(any(need[(i, j)] for j in chosen) for i in removed):
-                continue
-            cands.append((removed, chosen))
-            owner.append(k)
-            tries += 1
-            if tries >= MC_TRIES:
-                break
+        for attempt in range(MC_ORDERS):
+            order = list(informative)
+            random.Random(f"{SEED}|mc|{name}|{removed}|{attempt}").shuffle(order)
+            # growing prefixes of the seeded order: the first that identifies every
+            # removed axiom (and passes the other checks) is kept
+            for size_extra in range(1, len(order) + 1):
+                chosen = tuple(range(n_target)) + tuple(sorted(order[:size_extra]))
+                if not all(any(need[(i, j)] for j in chosen) for i in removed):
+                    continue
+                if (removed, chosen) in seen_cands:
+                    continue
+                seen_cands.add((removed, chosen))
+                cands.append((removed, chosen))
     if not cands:
         return [], {"pool": len(pool), "instances_by_missing": {}}
     out = run_singular(mc_candidate_script(sysd, nonzero, [l["poly"] for l in laws], cands), timeout)
@@ -521,9 +510,10 @@ def build_mc(name: str, sysd: dict, nonzero: list[str], saturated: list[str], ti
         raise RuntimeError("multiple-consequence candidate checks incomplete")
     picked: dict[tuple[int, ...], tuple[tuple[int, ...], list[bool]]] = {}
     for c, (removed, chosen) in enumerate(cands):
-        if removed in picked or flags[c][0] != "1":
+        identified = [x == "1" for x in flags[c][1:]]
+        if removed in picked or flags[c][0] != "1" or not all(identified):
             continue
-        picked[removed] = (chosen, [x == "1" for x in flags[c][1:]])
+        picked[removed] = (chosen, identified)
     instances: list[dict] = []
     counts: dict[int, int] = {}
     for size, quota in sorted(MC_QUOTA.items()):

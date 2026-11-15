@@ -304,6 +304,51 @@ def candidate_sets_best_first(components: list[list[str]], max_size: int, max_se
     return out
 
 
+def generator_cost(text: str, variables: list[str]) -> int:
+    poly = parse_poly(text, variables, GEN_LIMITS)
+    return poly.num_terms() + poly.total_degree()
+
+
+def greedy_closure_sets(inst: dict, components: list[list[str]], max_size: int, deadline: "Deadline",
+                        seed: int) -> list[list[str]]:
+    """Variant: complete each component greedily (Theorem 1 guided).
+
+    If the observed laws determine the missing axioms, a prime component of
+    <known, laws> contains them.  Walk the component's generators simplest
+    first and keep a generator only when it is not already implied by the known
+    axioms and the generators kept so far (wherever the nonzero quantities are
+    nonzero); stop after max_size kept generators.  Each component yields one
+    candidate set of independent simple laws."""
+    variables = inst["variables"]
+    nonzero = inst.get("nonzero_variables") or []
+    hnz = "*".join(nonzero) if nonzero else "1"
+    lines = [f"ring R = 0, (t, {', '.join(variables)}), dp;", "short = 0;"]
+    for i, a in enumerate(inst["known_axioms"], 1):
+        lines.append(f"poly k{i} = {a};")
+    known = ", ".join(f"k{i}" for i in range(1, len(inst["known_axioms"]) + 1)) or "0"
+    lines += [f"ideal KNOWN = {known};", "ideal S; ideal G; int cnt; poly g;"]
+    order: dict[int, list[str]] = {}
+    for ci, comp in enumerate(components):
+        ranked = sorted(comp, key=lambda g: (generator_cost(g, variables), g))
+        order[ci] = ranked
+        lines += ["S = KNOWN;", f"G = std(S + ideal(1 - t*{hnz}));", "cnt = 0;"]
+        for gi, g in enumerate(ranked):
+            lines += [f"g = {g};",
+                      f"if (cnt < {max_size}) {{ if (size(reduce(g, G)) != 0) {{ S = S + ideal(g); "
+                      f"G = std(S + ideal(1 - t*{hnz})); cnt = cnt + 1; print(\"GREEDY {ci} {gi}\"); }} }}"]
+    lines.append("quit;")
+    if deadline.left() < 2.0:
+        return []
+    out = run_singular("\n".join(lines) + "\n", deadline.left() - 1.0, seed)
+    picked: dict[int, list[str]] = {}
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) == 3 and parts[0] == "GREEDY":
+            ci, gi = int(parts[1]), int(parts[2])
+            picked.setdefault(ci, []).append(order[ci][gi])
+    return [picked[ci] for ci in sorted(picked)]
+
+
 def sign_definite(text: str, variables: list[str]) -> bool:
     """True when all coefficients share one sign: no solution with all quantities positive."""
     poly = parse_poly(text, variables, GEN_LIMITS)
@@ -412,6 +457,14 @@ def solve(inst: dict, opts, deadline: Deadline, diag: dict) -> list[list[str]]:
         sets = candidate_sets_best_first(components, max_size, opts.max_sets, variables, origin)
     else:
         sets = candidate_sets(components, max_size, opts.max_sets, origin)
+    if opts.greedy_closure:
+        greedy = greedy_closure_sets(inst, components, max_size, deadline, opts.seed)
+        diag["greedy_sets"] = len(greedy)
+        known_keys = {frozenset(x) for x in sets}
+        extra = [g for g in greedy if frozenset(g) not in known_keys]
+        # greedy completions are tested first; the budget stays max_sets
+        sets = (extra + sets)[: opts.max_sets]
+        origin = {}
     diag["candidate_sets"] = len(sets)
     flags: dict[int, tuple[bool, bool, bool]] = {}
     t1 = time.monotonic()
@@ -503,6 +556,8 @@ def main() -> None:
                         help="variant: drop components on which a declared nonzero quantity vanishes")
     parser.add_argument("--best-first", action="store_true",
                         help="variant: visit candidate subsets simplest first (same budget of --max-sets)")
+    parser.add_argument("--greedy-closure", action="store_true",
+                        help="variant: also test, per component, the greedy completion by independent simplest generators")
     opts = parser.parse_args()
 
     inst = json.loads(Path(opts.instance).read_text())
