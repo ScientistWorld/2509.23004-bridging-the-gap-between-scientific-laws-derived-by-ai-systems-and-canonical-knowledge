@@ -3,30 +3,30 @@
     "multiple_consequences": {
       "results": {
         "ai_noether_exact": {
-          "axiom_recovery_rate": 0.4364035087719298,
-          "explanation_rate": 0.5657894736842105,
+          "axiom_recovery_rate": 0.6949152542372882,
+          "explanation_rate": 0.6949152542372882,
           "failed_rate": 0.0,
-          "instances": 76,
-          "mean_candidate_sets": 2.1578947368421053,
-          "recovery_rate": 0.3815789473684211,
-          "top1_success_rate": 0.34210526315789475,
-          "unsound_rate": 0.10526315789473684
+          "instances": 59,
+          "mean_candidate_sets": 2.6610169491525424,
+          "recovery_rate": 0.6949152542372882,
+          "top1_success_rate": 0.6949152542372882,
+          "unsound_rate": 0.0
         },
         "enumerative_baseline": {
           "axiom_recovery_rate": 0.0,
           "explanation_rate": 0.0,
           "failed_rate": 0.0,
-          "instances": 76,
-          "mean_candidate_sets": 0.18421052631578946,
+          "instances": 59,
+          "mean_candidate_sets": 0.0,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.0,
-          "unsound_rate": 0.013157894736842105
+          "unsound_rate": 0.0
         },
         "no_abduction_baseline": {
           "axiom_recovery_rate": 0.0,
           "explanation_rate": 0.0,
           "failed_rate": 0.0,
-          "instances": 76,
+          "instances": 59,
           "mean_candidate_sets": 0.0,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.0,
@@ -71,10 +71,10 @@
           "explanation_rate": 0.3,
           "failed_rate": 0.0,
           "instances": 40,
-          "mean_candidate_sets": 0.775,
+          "mean_candidate_sets": 0.625,
           "recovery_rate": 0.0,
-          "top1_success_rate": 0.275,
-          "unsound_rate": 0.075
+          "top1_success_rate": 0.3,
+          "unsound_rate": 0.05
         },
         "enumerative_baseline": {
           "explanation_rate": 0.05,
@@ -102,10 +102,10 @@
           "explanation_rate": 0.6545454545454545,
           "failed_rate": 0.0,
           "instances": 55,
-          "mean_candidate_sets": 1.7272727272727273,
+          "mean_candidate_sets": 1.7818181818181817,
           "recovery_rate": 0.0,
           "top1_success_rate": 0.6,
-          "unsound_rate": 0.12727272727272726
+          "unsound_rate": 0.16363636363636364
         },
         "enumerative_baseline": {
           "explanation_rate": 0.09090909090909091,
