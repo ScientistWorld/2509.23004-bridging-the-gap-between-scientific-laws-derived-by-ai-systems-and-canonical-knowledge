@@ -1,0 +1,15 @@
+Variables: ["Q", "C", "Vc", "Uc", "Ul", "Lind", "I", "w", "T", "Pi", "f", "Z"]
+Equations:
+Q - C*Vc
+2*Uc - Q*Vc
+2*Ul - Lind*I^2
+w^2*Lind*C - 1
+I - w*Q
+w*T - 2*Pi
+f*T - 1
+Z*w*C - 1
+
+Measured Variables: ["C", "Vc", "Lind", "I", "T", "Pi"]
+
+Target Polynomial:
+AUTO

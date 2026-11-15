@@ -1,0 +1,16 @@
+Variables: ["ad", "T", "omega", "theta", "sintheta", "d", "g", "L", "j", "Pi", "Tj", "m", "vmax", "Emax", "Ep"]
+Equations:
+ad-g*sintheta
+d-L*theta
+T*omega-2*Pi
+d*omega^2-ad
+Tj-j*T
+sintheta - theta
+vmax - omega*d
+2*Emax - m*vmax^2
+2*Ep*L - m*g*d^2
+
+Measured Variables: ["d", "g", "L", "j", "Pi", "Tj"]
+
+Target Polynomial:
+d*g*Tj^2-4*d*L*j^2*Pi^2

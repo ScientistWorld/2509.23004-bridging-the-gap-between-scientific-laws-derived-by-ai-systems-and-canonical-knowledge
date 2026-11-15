@@ -71,7 +71,7 @@ CANDIDATE_LIMITS = {"max_chars": 4000, "max_terms": 400, "max_degree": 24, "max_
 TARGET_LIMITS = {"max_terms": 5000, "max_degree": 80, "max_exponent": 80, "max_chars": 100000, "max_int_digits": 200}
 SOLVER_NAME_RE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_.\-]*$")
 # Evaluator-private files that a solver must not read while it runs.
-PRIVATE_PATHS = [HERE / "instances.json", HERE / "systems"]
+PRIVATE_PATHS = [HERE / "instances.json", HERE / "systems", HERE / "systems_mc"]
 
 
 def resolve_singular() -> str:

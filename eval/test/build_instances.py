@@ -63,6 +63,8 @@ from polyutil import Poly, parse_poly  # noqa: E402
 
 SLICE = "test"
 SYSTEMS_DIR = HERE / "systems"
+# Larger theories used only by the multiple-consequence experiment.
+SYSTEMS_MC_DIR = HERE / "systems_mc"
 DEFAULT_OUTPUT = HERE / "instances.json"
 SEED = "ai-noether-abduction-test-v1"
 ID_PREFIX = "T"
@@ -94,7 +96,8 @@ def parse_system_file(path: Path) -> dict:
         "variables": names(vars_m.group(1)),
         "equations": [ln.strip() for ln in eqs_m.group(1).splitlines() if ln.strip()],
         "measured": names(meas_m.group(1)),
-        "targets": [ln.strip() for ln in targ_m.group(1).splitlines() if ln.strip()],
+        # "AUTO": the target is computed by elimination onto the measured variables
+        "targets": [ln.strip() for ln in targ_m.group(1).splitlines() if ln.strip() and ln.strip() != "AUTO"],
     }
 
 
@@ -173,8 +176,8 @@ def preamble(sysd: dict, stripped: list[str] | None = None, nonzero: list[str] |
     for j, q in enumerate(sysd["targets"], 1):
         lines.append(f"poly q{j} = {q};")
     lines.append("ideal FULL = " + ", ".join(f"a{i}" for i in range(1, len(sysd["axioms"]) + 1)) + ";")
-    lines.append("ideal TARG = " + ", ".join(f"q{j}" for j in range(1, len(sysd["targets"]) + 1)) + ";")
-    lines.append("ideal TARGS = " + ", ".join(stripped or sysd["targets"]) + ";")
+    lines.append("ideal TARG = " + (", ".join(f"q{j}" for j in range(1, len(sysd["targets"]) + 1)) or "0") + ";")
+    lines.append("ideal TARGS = " + (", ".join(stripped or sysd["targets"]) or "0") + ";")
     return lines
 
 
@@ -530,6 +533,80 @@ def build_mc(name: str, sysd: dict, nonzero: list[str], saturated: list[str], ti
     }
 
 
+def auto_target(sysd: dict, nonzero: list[str], timeout: float) -> str:
+    """Simplest element of the elimination ideal of the complete theory onto the
+    measured variables (divided by its nonzero monomial factor if still in the ideal)."""
+    variables = sysd["variables"]
+    measured = [v for v in variables if v in set(sysd["measured"])]
+    hidden = [v for v in variables if v not in set(measured)]
+    lines = [f"ring R = 0, ({', '.join(variables)}), dp;", "short = 0;", "option(redSB);", "int gi;"]
+    for i, a in enumerate(sysd["axioms"], 1):
+        lines.append(f"poly a{i} = {a};")
+    lines.append("ideal FULL = " + ", ".join(f"a{i}" for i in range(1, len(sysd["axioms"]) + 1)) + ";")
+    lines.append("ideal FS = std(FULL);")
+    lines.append(f"ideal E = eliminate(FULL, {'*'.join(hidden)});" if hidden else "ideal E = FULL;")
+    lines += [f"ring S = 0, ({', '.join(measured)}), dp;", "short = 0;", "option(redSB);", "ideal G = std(imap(R, E));",
+              'for (gi = 1; gi <= ncols(G); gi++) { if (G[gi] != 0) { print("ELIM " + string(G[gi])); } }', "quit;"]
+    out = run_singular("\n".join(lines) + "\n", timeout)
+    best = None
+    for line in out.splitlines():
+        if line.startswith("ELIM "):
+            poly = parse_poly(line[5:].strip(), variables, SYSTEM_LIMITS)
+            text = poly.to_string(variables)
+            key = _simplicity(poly, text)
+            if best is None or key < best[0]:
+                best = (key, text)
+    if best is None:
+        raise RuntimeError("no relation among the measured variables")
+    text = best[1]
+    stripped = strip_nonzero_content(text, variables, nonzero)
+    if stripped != text:
+        lines = [f"ring R = 0, ({', '.join(variables)}), dp;", "short = 0;"]
+        for i, a in enumerate(sysd["axioms"], 1):
+            lines.append(f"poly a{i} = {a};")
+        lines.append("ideal FS = std(ideal(" + ", ".join(f"a{i}" for i in range(1, len(sysd["axioms"]) + 1)) + "));")
+        lines += [f'print("MEM " + string(size(reduce({stripped}, FS)) == 0));', "quit;"]
+        if tagged(run_singular("\n".join(lines) + "\n", timeout), "MEM") == [["1"]]:
+            text = stripped
+    return text
+
+
+def prepare_mc_system(name: str, timeout: float) -> tuple[dict, list[str], list[str]]:
+    """Disguise, check and saturate one theory of SYSTEMS_MC_DIR (same steps as build())."""
+    raw = parse_system_file(SYSTEMS_MC_DIR / name / "system.txt")
+    sysd = disguise(raw, random.Random(f"{SEED}|{name}"))
+    checks = system_checks(sysd, timeout)
+    if not checks["targets_ok"]:
+        raise RuntimeError("target not derivable from the complete theory")
+    nonzero = [v for i, v in enumerate(sysd["variables"]) if i not in checks["forced_zero"]]
+    if saturation_unit(sysd, nonzero, timeout):
+        nonzero = []
+    saturated = saturated_basis(sysd, nonzero, timeout)
+    if not sysd["targets"]:
+        sysd["targets"] = [auto_target(sysd, nonzero, timeout)]
+    return sysd, nonzero, saturated
+
+
+def build_mc_extra(timeout: float, summary: dict) -> list[dict]:
+    """Multiple-consequence instances of the larger theories in SYSTEMS_MC_DIR."""
+    out: list[dict] = []
+    if not SYSTEMS_MC_DIR.is_dir():
+        return out
+    for sys_dir in sorted(p for p in SYSTEMS_MC_DIR.iterdir() if (p / "system.txt").is_file()):
+        name = sys_dir.name
+        try:
+            sysd, nonzero, saturated = prepare_mc_system(name, timeout)
+            insts, info = build_mc(name, sysd, nonzero, saturated, timeout)
+            info.update({"num_variables": len(sysd["variables"]), "num_axioms": len(sysd["axioms"]),
+                         "target": sysd["targets"][0]})
+        except (RuntimeError, subprocess.TimeoutExpired, ValueError) as exc:
+            insts, info = [], {"status": f"skipped: {type(exc).__name__}: {str(exc)[:200]}"}
+        out += insts
+        summary.setdefault(name, {"status": "multiple-consequence theory"})["multiple_consequences"] = info
+        print(f"[build] {name} (larger theory): multiple consequences {info.get('instances_by_missing', info)}", flush=True)
+    return out
+
+
 def build_mc_only(output: Path, timeout: float) -> dict:
     """Replace the multiple-consequence instances of an existing instance file,
     keeping every other instance byte-identical."""
@@ -553,6 +630,7 @@ def build_mc_only(output: Path, timeout: float) -> dict:
         added += insts
         payload["systems"].setdefault(name, {})["multiple_consequences"] = info
         print(f"[build] {name}: multiple consequences {info.get('instances_by_missing')}", flush=True)
+    added += build_mc_extra(timeout, payload["systems"])
     payload["instances"] = legacy + added
     tmp = output.with_suffix(".tmp")
     tmp.write_text(json.dumps(payload, indent=1, sort_keys=True))
@@ -642,7 +720,7 @@ def build(output: Path, timeout: float, only: list[str] | None = None) -> dict:
             mc_instances += insts
             summary[name]["multiple_consequences"] = info
             print(f"[build] {name}: multiple consequences {info.get('instances_by_missing')}", flush=True)
-    instances += mc_instances
+    instances += mc_instances + build_mc_extra(timeout, summary)
     payload = {"slice": SLICE, "seed": SEED, "systems": summary, "instances": instances}
     output.parent.mkdir(parents=True, exist_ok=True)
     tmp = output.with_suffix(".tmp")

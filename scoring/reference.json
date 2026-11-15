@@ -31,7 +31,7 @@
   "experiments": {
     "single_missing_axiom": {
       "description": "One axiom is removed from a complete polynomial theory; recover it from the remaining axioms and the target relation (held-out theories, anonymized and unit-rescaled).",
-      "weight": 0.4,
+      "weight": 0.3,
       "primary_metric": "recovery_rate",
       "metrics": {
         "recovery_rate": {
@@ -109,7 +109,7 @@
     },
     "two_missing_axioms": {
       "description": "Two axioms are removed; propose at most two polynomials that, added to the remaining axioms, make the target derivable while staying true in the complete theory.",
-      "weight": 0.35,
+      "weight": 0.25,
       "primary_metric": "explanation_rate",
       "metrics": {
         "recovery_rate": {
@@ -187,7 +187,7 @@
     },
     "three_missing_axioms": {
       "description": "Three axioms are removed; propose at most three polynomials that, added to the remaining axioms, make the target derivable while staying true in the complete theory.",
-      "weight": 0.25,
+      "weight": 0.2,
       "primary_metric": "explanation_rate",
       "metrics": {
         "recovery_rate": {
@@ -262,6 +262,59 @@
           "instances": 40
         }
       }
+    },
+    "multiple_consequences": {
+      "description": "Two to five axioms are removed and several observed laws are given (the theory's target plus laws seen by experiments that also measure one hidden quantity), chosen so that together with the remaining axioms they determine every removed axiom; recover the removed axioms themselves (at most num_missing polynomials per set). Includes four larger held-out theories (8-10 axioms, 12-16 variables) used only here.",
+      "weight": 0.25,
+      "primary_metric": "recovery_rate",
+      "metrics": {
+        "recovery_rate": {
+          "coefficient": 1.0,
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation of every observed law that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero (decoupled recovery)."
+        },
+        "axiom_recovery_rate": {
+          "coefficient": 0.5,
+          "higher_is_better": true,
+          "description": "Mean over instances of the largest fraction of the removed axioms that one valid candidate set among the first five recovers (partial decoupled recovery)."
+        },
+        "explanation_rate": {
+          "coefficient": 0.25,
+          "higher_is_better": true,
+          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true law of the complete theory wherever the declared nonzero quantities are nonzero (radical membership in the complete theory saturated by their product), and none is already implied by the known axioms, the targets and the targets divided by nonzero monomial factors."
+        },
+        "top1_success_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": true,
+          "description": "Fraction of instances whose first-ranked candidate set already recovers every removed axiom."
+        },
+        "unsound_rate": {
+          "coefficient": 0.3,
+          "higher_is_better": false,
+          "description": "Constraint: fraction of instances whose first five candidate sets include a set that derives the targets but is false in the complete theory where the nonzero quantities are nonzero (contradiction, forcing a physical quantity to zero, or a stronger-than-true law), plus every instance whose run failed or whose sets could not be verified."
+        },
+        "failed_rate": {
+          "coefficient": 0.0,
+          "higher_is_better": false,
+          "description": "Diagnostic: fraction of instances whose run crashed, timed out or wrote malformed output (already counted as worst in every scored metric)."
+        },
+        "mean_candidate_sets": {
+          "coefficient": 0.0,
+          "higher_is_better": false,
+          "description": "Diagnostic: average number of candidate sets considered per instance (at most five)."
+        },
+        "instances": {
+          "coefficient": 0.0,
+          "higher_is_better": true,
+          "description": "Diagnostic: number of instances in this experiment, fixed by the evaluator."
+        }
+      },
+      "_paper_reported": {
+        "note": "Section 3.3: with three consequences the relativistic-laws system recovers the three removed axioms A2, A3, A5 exactly (decoupled); Table 3 reports 17/21 pair and 24/35 triple successes for that multi-consequence system. The paper has no aggregate decoupled-recovery rate and no four- or five-axiom removals; not on this experiment's scale.",
+        "relativistic_laws_pairs": "17/21",
+        "relativistic_laws_triples": "24/35"
+      },
+      "results": {}
     }
   }
 }

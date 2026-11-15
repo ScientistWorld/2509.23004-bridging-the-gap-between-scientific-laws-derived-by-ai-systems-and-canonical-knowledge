@@ -1,0 +1,15 @@
+Variables: ["F", "q", "v", "B", "m", "r", "p", "lam", "h", "K", "w", "T", "Pi", "I"]
+Equations:
+F - q*v*B
+F*r - m*v^2
+p - m*v
+lam*p - h
+2*K*m - p^2
+v - w*r
+w*T - 2*Pi
+I*T - q
+
+Measured Variables: ["q", "B", "m", "r", "h", "lam", "K", "T", "Pi"]
+
+Target Polynomial:
+AUTO

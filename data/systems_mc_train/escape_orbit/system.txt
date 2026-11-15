@@ -1,0 +1,14 @@
+Variables: ["Eki", "Ugi", "G", "M", "m", "ve", "r", "vc", "Fg", "Fc", "Kc"]
+Equations:
+2*Eki - m*ve^2
+Ugi*r + G*M*m
+Eki + Ugi
+Fg*r^2 - G*M*m
+Fc*r - m*vc^2
+Fg - Fc
+2*Kc - m*vc^2
+
+Measured Variables: ["G", "M", "m", "ve", "r"]
+
+Target Polynomial:
+2*G*M*m - m*ve^2*r

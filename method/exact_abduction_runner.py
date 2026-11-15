@@ -349,6 +349,77 @@ def greedy_closure_sets(inst: dict, components: list[list[str]], max_size: int, 
     return [picked[ci] for ci in sorted(picked)]
 
 
+def sparse_laws(inst: dict, deadline: "Deadline", seed: int, pool: int = 40) -> list[str]:
+    """Variant: two-term laws of the abduced ideal.
+
+    Saturate <known axioms, targets> by the product of the nonzero quantities
+    (every element is then a law wherever those quantities are nonzero), compute
+    normal forms of all monomials up to degree 3 or 4, and read off every
+    binomial c1*m1 - c2*m2 (coprime monomials with proportional normal forms).
+    The simplest ones not already in <known, targets, stripped targets> form one
+    extra candidate component."""
+    from fractions import Fraction
+    from math import comb
+    variables = inst["variables"]
+    n = len(variables)
+    nonzero = inst.get("nonzero_variables") or []
+    hnz = "*".join(nonzero) if nonzero else "1"
+    deg = 4 if comb(n + 4, 4) <= 1500 else 3
+    monos = [tuple([0] * n)]
+    for d in range(1, deg + 1):
+        for combo in itertools.combinations_with_replacement(range(n), d):
+            exp = [0] * n
+            for i in combo:
+                exp[i] += 1
+            monos.append(tuple(exp))
+
+    def mono(exp) -> str:
+        return "*".join((variables[i] if e == 1 else f"{variables[i]}^{e}") for i, e in enumerate(exp) if e) or "1"
+
+    known = ", ".join(inst["known_axioms"]) or "0"
+    targets = ", ".join(inst["targets"])
+    lines = [f"ring R = 0, (t, {', '.join(variables)}), dp;", "short = 0;",
+             f"ideal SAT = eliminate(ideal({known}) + ideal({targets}) + ideal(1 - t*{hnz}), t);",
+             f"ring S = 0, ({', '.join(variables)}), dp;", "short = 0;", "option(redSB);",
+             "ideal SG = std(imap(R, SAT));"]
+    lines += [f'print("NF {k} " + string(reduce(poly({mono(m)}), SG)));' for k, m in enumerate(monos)]
+    lines.append("quit;")
+    if deadline.left() < 3.0:
+        return []
+    out = run_singular("\n".join(lines) + "\n", 0.5 * deadline.left(), seed)
+    limits = dict(GEN_LIMITS, max_terms=20000, max_chars=2000000, max_degree=200, max_exponent=200)
+    groups: dict = {}
+    for line in out.splitlines():
+        parts = line.split(" ", 2)
+        if len(parts) != 3 or parts[0] != "NF":
+            continue
+        nf = parse_poly(parts[2], variables, limits)
+        if nf.is_zero():
+            continue
+        lead = max(nf.terms, key=lambda e: (sum(e), e))
+        c = nf.terms[lead]
+        groups.setdefault(tuple(sorted((e, v / c) for e, v in nf.terms.items())), []).append((monos[int(parts[1])], c))
+    found = []
+    for members in groups.values():
+        for (m1, c1), (m2, c2) in itertools.combinations(members, 2):
+            if any(a and b for a, b in zip(m1, m2)):
+                continue
+            poly = Poly(n, {m1: Fraction(c2), m2: -Fraction(c1)})
+            found.append((max(sum(m1), sum(m2)), sum(m1) + sum(m2), poly.to_string(variables)))
+    found.sort()
+    cands = [f[2] for f in found[: 4 * pool]]
+    if not cands or deadline.left() < 2.0:
+        return []
+    stripped = [strip_nonzero_content(q, variables, nonzero) for q in inst["targets"]]
+    lines = [f"ring R = 0, ({', '.join(variables)}), dp;", "short = 0;",
+             f"ideal KT = std(ideal({known}) + ideal({targets}) + ideal({', '.join(stripped)}));"]
+    lines += [f'print("NT {k} " + string(size(reduce({g}, KT)) != 0));' for k, g in enumerate(cands)]
+    lines.append("quit;")
+    out = run_singular("\n".join(lines) + "\n", deadline.left() - 1.0, seed)
+    keep = {int(p[1]) for p in (ln.split() for ln in out.splitlines()) if len(p) == 3 and p[0] == "NT" and p[2] == "1"}
+    return [g for k, g in enumerate(cands) if k in keep][:pool]
+
+
 def sign_definite(text: str, variables: list[str]) -> bool:
     """True when all coefficients share one sign: no solution with all quantities positive."""
     poly = parse_poly(text, variables, GEN_LIMITS)
@@ -452,6 +523,12 @@ def solve(inst: dict, opts, deadline: Deadline, diag: dict) -> list[list[str]]:
                     flat.append([g])
         diag["candidate_sets"] = len(flat)
         return flat
+    if opts.sparse_laws:
+        sparse = sparse_laws(inst, deadline, opts.seed)
+        diag["sparse_laws"] = len(sparse)
+        if sparse:
+            components = [sparse] + components
+            dims = {i + 1: d for i, d in dims.items()}
     origin: dict = {}
     if opts.best_first:
         sets = candidate_sets_best_first(components, max_size, opts.max_sets, variables, origin)
@@ -556,6 +633,8 @@ def main() -> None:
                         help="variant: drop components on which a declared nonzero quantity vanishes")
     parser.add_argument("--best-first", action="store_true",
                         help="variant: visit candidate subsets simplest first (same budget of --max-sets)")
+    parser.add_argument("--sparse-laws", action="store_true",
+                        help="variant: add two-term laws of the saturated <known, targets> as one more component")
     parser.add_argument("--greedy-closure", action="store_true",
                         help="variant: also test, per component, the greedy completion by independent simplest generators")
     opts = parser.parse_args()

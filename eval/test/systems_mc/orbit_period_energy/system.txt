@@ -1,0 +1,16 @@
+Variables: ["Fg", "Fc", "G", "M", "m", "r", "v", "K", "U", "E", "w", "T", "Pi", "L"]
+Equations:
+Fg*r^2 - G*M*m
+Fc*r - m*v^2
+Fg - Fc
+2*K - m*v^2
+U*r + G*M*m
+E - K - U
+v - w*r
+w*T - 2*Pi
+L - m*v*r
+
+Measured Variables: ["G", "M", "m", "r", "E", "T", "Pi", "L"]
+
+Target Polynomial:
+2*E*r + G*M*m
