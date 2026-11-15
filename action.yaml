@@ -1,6 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: done
+action: submit
+gpus: 0
+test: false
 milestone: core_claim_plus
-notes: "Hardened: soundness modulo nonzero quantities, stripped-target nontriviality, well-posed instances, private files off disk during solver runs (+1.08 lookup shortcut now -1.23); sign-prior variant beats reference by +0.05 vs +-0.005 noise; git-history leak left (see HARDENING.md)"
+notes: "Exploration of the new multiple-consequence experiment: build instances (test+train), oracle check, reference draws, search variants, binomial brute-force probe, baselines and a shortcut probe on it."
