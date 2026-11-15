@@ -1,5 +1,5 @@
 {
-  "_note": "Scored rows under results are the gym's own runs on the held-out slice (copied from scoring/scores_test.json; the ai_noether_exact row is the median of three runs of the final reference code: Singular's minAss returns different generating sets from run to run, which moves the weighted score by about +-0.005, see HARDENING.md). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate (decoupled recovery) is a diagnostic: 0 for every honest method on the held-out slice.",
+  "_note": "Scored rows under results are the gym's own runs on the held-out slice, copied from scoring/scores_test.json (iteration 12: the reference and both baselines rerun end to end from the final code; three reference draws agree to within one instance per metric, see HARDENING.md). The paper's reported numbers are kept under _paper_reported: they were measured on the paper's twelve public theories (this gym's train slice) with a 7200 s timeout, Macaulay2/Singular and the paper's own success criterion, so they are not on the held-out scale. Multi-axiom recovery_rate in two_missing_axioms / three_missing_axioms (decoupled recovery from a single observed law) is a diagnostic; decoupled recovery is scored in multiple_consequences, where the observed laws determine the removed axioms.",
   "_paper_reported": {
     "single_axiom_recovery": {
       "value": 0.9733,
@@ -77,33 +77,33 @@
       "results": {
         "ai_noether_exact": {
           "type": "proposed",
-          "recovery_rate": 1.0,
           "explanation_rate": 1.0,
+          "failed_rate": 0.0,
+          "instances": 64,
+          "mean_candidate_sets": 3.09375,
+          "recovery_rate": 1.0,
           "top1_success_rate": 0.84375,
-          "unsound_rate": 0.34375,
-          "failed_rate": 0.0,
-          "mean_candidate_sets": 3.078125,
-          "instances": 64
-        },
-        "no_abduction_baseline": {
-          "type": "baseline",
-          "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
-          "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 64
+          "unsound_rate": 0.34375
         },
         "enumerative_baseline": {
           "type": "baseline",
-          "recovery_rate": 0.4375,
           "explanation_rate": 0.4375,
-          "top1_success_rate": 0.390625,
-          "unsound_rate": 0.15625,
           "failed_rate": 0.0,
+          "instances": 64,
           "mean_candidate_sets": 1.125,
-          "instances": 64
+          "recovery_rate": 0.4375,
+          "top1_success_rate": 0.390625,
+          "unsound_rate": 0.15625
+        },
+        "no_abduction_baseline": {
+          "type": "baseline",
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 64,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
         }
       }
     },
@@ -155,33 +155,33 @@
       "results": {
         "ai_noether_exact": {
           "type": "proposed",
-          "recovery_rate": 0.0,
           "explanation_rate": 0.6545454545454545,
-          "top1_success_rate": 0.6,
-          "unsound_rate": 0.14545454545454545,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 1.7454545454545454,
-          "instances": 55
-        },
-        "no_abduction_baseline": {
-          "type": "baseline",
+          "instances": 55,
+          "mean_candidate_sets": 1.7818181818181817,
           "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
-          "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 55
+          "top1_success_rate": 0.6,
+          "unsound_rate": 0.16363636363636364
         },
         "enumerative_baseline": {
           "type": "baseline",
-          "recovery_rate": 0.0,
           "explanation_rate": 0.09090909090909091,
-          "top1_success_rate": 0.09090909090909091,
-          "unsound_rate": 0.03636363636363636,
           "failed_rate": 0.0,
+          "instances": 55,
           "mean_candidate_sets": 0.34545454545454546,
-          "instances": 55
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.09090909090909091,
+          "unsound_rate": 0.03636363636363636
+        },
+        "no_abduction_baseline": {
+          "type": "baseline",
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 55,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
         }
       }
     },
@@ -233,33 +233,33 @@
       "results": {
         "ai_noether_exact": {
           "type": "proposed",
-          "recovery_rate": 0.0,
           "explanation_rate": 0.3,
-          "top1_success_rate": 0.275,
-          "unsound_rate": 0.05,
           "failed_rate": 0.0,
-          "mean_candidate_sets": 0.725,
-          "instances": 40
-        },
-        "no_abduction_baseline": {
-          "type": "baseline",
+          "instances": 40,
+          "mean_candidate_sets": 0.625,
           "recovery_rate": 0.0,
-          "explanation_rate": 0.0,
-          "top1_success_rate": 0.0,
-          "unsound_rate": 0.0,
-          "failed_rate": 0.0,
-          "mean_candidate_sets": 0.0,
-          "instances": 40
+          "top1_success_rate": 0.3,
+          "unsound_rate": 0.05
         },
         "enumerative_baseline": {
           "type": "baseline",
-          "recovery_rate": 0.0,
           "explanation_rate": 0.05,
-          "top1_success_rate": 0.05,
-          "unsound_rate": 0.0,
           "failed_rate": 0.0,
+          "instances": 40,
           "mean_candidate_sets": 0.125,
-          "instances": 40
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.05,
+          "unsound_rate": 0.0
+        },
+        "no_abduction_baseline": {
+          "type": "baseline",
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 40,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
         }
       }
     },
@@ -274,14 +274,14 @@
           "description": "Fraction of instances where one of the first five candidate sets is a valid explanation of every observed law that also recovers every removed axiom: with the known axioms it implies each removed axiom wherever the declared nonzero quantities are nonzero (decoupled recovery)."
         },
         "axiom_recovery_rate": {
-          "coefficient": 0.5,
+          "coefficient": 0.0,
           "higher_is_better": true,
-          "description": "Mean over instances of the largest fraction of the removed axioms that one valid candidate set among the first five recovers (partial decoupled recovery)."
+          "description": "Diagnostic (not scored): mean over instances of the largest fraction of the removed axioms that one valid candidate set among the first five recovers. Equal to recovery_rate in this experiment for the same reason as explanation_rate."
         },
         "explanation_rate": {
-          "coefficient": 0.25,
+          "coefficient": 0.0,
           "higher_is_better": true,
-          "description": "Fraction of instances where one of the first five candidate sets is a valid explanation: added to the known axioms it makes every target derivable (ideal membership), every proposed polynomial is a true law of the complete theory wherever the declared nonzero quantities are nonzero (radical membership in the complete theory saturated by their product), and none is already implied by the known axioms, the targets and the targets divided by nonzero monomial factors."
+          "description": "Diagnostic (not scored): fraction of instances where one of the first five candidate sets is a valid explanation (derives every observed law, sound, nontrivial). Here the observed laws determine the removed axioms, so every valid explanation also recovers them: this equals recovery_rate and would only double its weight."
         },
         "top1_success_rate": {
           "coefficient": 0.3,
@@ -314,7 +314,41 @@
         "relativistic_laws_pairs": "17/21",
         "relativistic_laws_triples": "24/35"
       },
-      "results": {}
+      "results": {
+        "ai_noether_exact": {
+          "type": "proposed",
+          "axiom_recovery_rate": 0.6949152542372882,
+          "explanation_rate": 0.6949152542372882,
+          "failed_rate": 0.0,
+          "instances": 59,
+          "mean_candidate_sets": 2.6610169491525424,
+          "recovery_rate": 0.6949152542372882,
+          "top1_success_rate": 0.6949152542372882,
+          "unsound_rate": 0.0
+        },
+        "enumerative_baseline": {
+          "type": "baseline",
+          "axiom_recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 59,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        },
+        "no_abduction_baseline": {
+          "type": "baseline",
+          "axiom_recovery_rate": 0.0,
+          "explanation_rate": 0.0,
+          "failed_rate": 0.0,
+          "instances": 59,
+          "mean_candidate_sets": 0.0,
+          "recovery_rate": 0.0,
+          "top1_success_rate": 0.0,
+          "unsound_rate": 0.0
+        }
+      }
     }
   }
 }
